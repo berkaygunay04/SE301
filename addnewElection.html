@@ -13,6 +13,22 @@
      <!-- GOOGLE FONTS-->
    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
 </head>
+<style>
+.textareaStyle{
+  width: 50%;
+  height: 80px;
+}
+.addButton{
+  width: 180px;
+  text-align: center;
+  margin-top: 10px;
+  background-color: #74ced3;
+}
+
+.addButton:hover{
+  background-color: #a2eaee;
+}
+</style>
 <body>
 
 
@@ -79,12 +95,12 @@
                   </div>
 
                   <div>
-                    <textarea style="width:50%"id="textarea1" placeholder="Your Ouestion"></textarea>
+                    <textarea class="textareaStyle" id="textarea1" placeholder="Your Ouestion"></textarea>
                     <br>
                     <input placeholder="Enter Answer"></input><br>
                     <input placeholder="Enter Answer"></input><br>
                     <input placeholder="Enter Answer"></input><br>
-                    <button>Add Election</button>
+                    <button type="button" class="addButton">Add Election</button>
                   </div>
 
            <!-- /. PAGE INNER  -->
