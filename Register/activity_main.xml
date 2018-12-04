@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/parentlayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/login"
+    tools:context="com.company.uaybtalha.talha.MainActivity">
+
+    <TextView
+        android:id="@+id/uyari"
+        android:layout_width="228dp"
+        android:layout_height="50dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="142dp"
+        android:text="Bu işlem birkaç saniye sürebilir."
+        android:textAlignment="center" />
+
+    <TextView
+        android:id="@+id/uyari1"
+        android:layout_width="300dp"
+        android:layout_height="55dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="126dp"
+        android:text="Lütfen kayıt olmak için başına 0 yazmadan telefon numaranızı giriniz"
+        android:textAlignment="center" />
+
+    <RelativeLayout
+        android:id="@+id/şifre"
+        android:layout_width="229dp"
+        android:layout_height="251dp"
+        android:layout_alignTop="@+id/tel"
+        android:layout_centerHorizontal="true">
+
+        <EditText
+            android:id="@+id/editText4"
+            android:layout_width="229dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:ems="10"
+            android:inputType="textPassword" />
+
+        <br.com.simplepass.loading_button_lib.customViews.CircularProgressButton
+            android:id="@+id/kodgir"
+            android:layout_width="118dp"
+            android:layout_height="38dp"
+            android:layout_alignParentBottom="true"
+
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="54dp"
+            android:background="@drawable/shape_default"
+            android:text="Giriş"
+            app:spinning_bar_color="#FFF"
+            app:spinning_bar_padding="6dp"
+            app:spinning_bar_width="4dp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/tel"
+        android:layout_width="232dp"
+        android:layout_height="250dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="91dp">
+
+        <EditText
+            android:id="@+id/editText2"
+            android:layout_width="233dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:inputType="phone"
+            android:maxLength="14"
+            android:phoneNumber="true" />
+
+        <br.com.simplepass.loading_button_lib.customViews.CircularProgressButton
+            android:id="@+id/progress"
+            android:layout_width="118dp"
+            android:layout_height="38dp"
+            android:layout_alignParentBottom="true"
+
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="54dp"
+            android:background="@drawable/shape_default"
+            android:text="İleri"
+            app:spinning_bar_color="#FFF"
+            app:spinning_bar_padding="6dp"
+            app:spinning_bar_width="4dp" />
+    </RelativeLayout>
+
+    <ProgressBar
+        android:id="@+id/progressloading3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="200dp"
+        android:indeterminate="true"
+        android:theme="@style/ProgressBar" />
+</RelativeLayout>
