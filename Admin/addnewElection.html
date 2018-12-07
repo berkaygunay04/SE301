@@ -13,6 +13,22 @@
      <!-- GOOGLE FONTS-->
    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
 </head>
+<style>
+.textareaStyle{
+  width: 50%;
+  height: 80px;
+}
+.addButton{
+  width: 180px;
+  text-align: center;
+  margin-top: 10px;
+  background-color: #74ced3;
+}
+
+.addButton:hover{
+  background-color: #a2eaee;
+}
+</style>
 <body>
 
 
@@ -71,21 +87,20 @@
               <div class="row">
                   <div class="col-lg-12 ">
                       <div class="alert alert-info">
-                        <!-- WARNING: BURADA DA NOTİFİCATİON DURUMUNU SCRİPT YAZIP,
-                      BEKLEYEN ELECTİONLARI SAY VE NOTİFİCATİON OLARAK BELİRT! -->
-                           <strong> You must all input box full for adding. </strong> 
+
+                           <strong> You must all input box full for adding. </strong>
                       </div>
 
                   </div>
                   </div>
 
                   <div>
-                    <textarea style="width:50%"id="textarea1" placeholder="Your Ouestion"></textarea>
+                    <textarea class="textareaStyle" id="textarea1" placeholder="Your Ouestion"></textarea>
                     <br>
-                    <input placeholder="Enter Answer"></input><br>
-                    <input placeholder="Enter Answer"></input><br>
-                    <input placeholder="Enter Answer"></input><br>
-                    <button>Add Election</button>
+                    <input id="answer1" placeholder="Enter Answer"></input><br>
+                    <input id="answer2" placeholder="Enter Answer"></input><br>
+                    <input id="answer3" placeholder="Enter Answer"></input><br>
+                    <button type="button" class="addButton" onclick="addElection()">Add Election</button>
                   </div>
 
            <!-- /. PAGE INNER  -->
@@ -147,6 +162,22 @@
         console.error('Sign Out Error', error);
       });
     }
+
+    function addElection(){
+      var question = document.getElementById("textarea1").value
+      var answer1 = document.getElementById("answer1").value
+      var answer2 = document.getElementById("answer2").value
+      var answer3 = document.getElementById("answer3").value
+
+      if(question == "" || answer1 == "" || answer2 == "" || answer3 == ""){
+        alert("Please fill the blank");
+      }else{
+        alert("Your election is added");
+        // Database dizaynının tam olarak netleşmesini bekliyorum.
+      }
+
+    }
+
     </script>
 
 
