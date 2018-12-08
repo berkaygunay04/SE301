@@ -39,6 +39,9 @@ public class LoginActivity extends AppCompatActivity {
         Button clickButton = (Button) findViewById(R.id.login);
         final EditText edt1 = (EditText) findViewById(R.id.email);
         final EditText edt2 = (EditText) findViewById(R.id.password);
+
+        Button forgotPass = (Button) findViewById(R.id.forgotPass);
+
         clickButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -47,7 +50,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 if(TextUtils.isEmpty(email)){
                     Toast.makeText(getApplicationContext(),"Please enter your E-mail",Toast.LENGTH_SHORT).show();
-                    
+
                 }
                 else if(TextUtils.isEmpty(parola)){
                     Toast.makeText(getApplicationContext(),"Please enter your Password",Toast.LENGTH_SHORT).show();
@@ -75,6 +78,14 @@ public class LoginActivity extends AppCompatActivity {
                             });
                 }
 
+            }
+        });
+
+        forgotPass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intocan = new Intent(LoginActivity.this, forgotPassword.class);
+                startActivity(intocan);
             }
         });
     }

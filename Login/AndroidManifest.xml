@@ -19,6 +19,10 @@
         <activity android:name=".MainActivity">
 
         </activity>
+        <activity android:name=".forgotPassword">
+
+        </activity>
+
     </application>
 
 </manifest>
