@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     >
     <LinearLayout
+        android:id="@+id/login1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -24,22 +25,36 @@
             android:id="@+id/password"
             android:inputType="textPassword"
             />
+
         <Button
+            android:id="@+id/login"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="@android:color/holo_red_light"
             android:text="Login"
-            android:background="#3f76ff"
-            android:textColor="#fff"
-            android:id="@+id/login"/>
+            android:textColor="#fff" />
 
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/registertext"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/login1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:onClick="openActivity15"
+        android:textSize="18sp"
+        android:textStyle="bold" />
 
     <Button
         android:id="@+id/forgotPass"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
+        android:layout_height="33dp"
+        android:layout_below="@id/registertext"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="114dp"
-        android:text="Forgot Password" />
+        android:layout_marginTop="10dp"
+        android:background="@android:color/holo_red_light"
+        android:text="Forgot Password"
+        android:textColor="#fff" />
 </RelativeLayout>
