@@ -63,6 +63,7 @@ Button b;
                 String id=apply.push().getKey();
                 SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd / HH:mm:ss");
                 apply.child("Elections").child(spinner.getSelectedItem().toString()).child(id).child("DateType").setValue(sdf1.format(tarih));
+                apply.child("Elections").child(spinner.getSelectedItem().toString()).child(id).child("Type").setValue("User Type");
                 apply.child("Elections").child(spinner.getSelectedItem().toString()).child(id).child("VoteCount").setValue(0);
                 apply.child("Elections").child(spinner.getSelectedItem().toString()).child(id).child("Option1").setValue(Option1.getText().toString());
                 apply.child("Elections").child(spinner.getSelectedItem().toString()).child(id).child("Option2").setValue(Option2.getText().toString());
