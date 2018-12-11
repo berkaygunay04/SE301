@@ -17,6 +17,7 @@
 .textareaStyle{
   width: 50%;
   height: 80px;
+  margin-top: 5px;
 }
 .addButton{
   width: 180px;
@@ -95,12 +96,20 @@
                   </div>
 
                   <div>
+                    <select id="CategorySelect">
+                      <option value="Category" disabled selected>Select Category</option>
+                      <option value="Cinema">Cinema</option>
+                      <option value="Culture">Culture</option>
+                      <option value="History">History</option>
+                      <option value="Sports">Sports</option>
+                    </select>
+                    <input id="electionName" placeholder="Enter Election Name"></input><br>
                     <textarea class="textareaStyle" id="textarea1" placeholder="Your Ouestion"></textarea>
                     <br>
-                    <input placeholder="Enter Answer"></input><br>
-                    <input placeholder="Enter Answer"></input><br>
-                    <input placeholder="Enter Answer"></input><br>
-                    <button type="button" class="addButton">Add Election</button>
+                    <input id="answer1" placeholder="Enter Answer"></input><br>
+                    <input id="answer2" placeholder="Enter Answer"></input><br>
+                    <input id="answer3" placeholder="Enter Answer"></input><br>
+                    <button type="button" class="addButton" onclick="addElection()">Add Election</button>
                   </div>
 
            <!-- /. PAGE INNER  -->
@@ -162,6 +171,63 @@
         console.error('Sign Out Error', error);
       });
     }
+
+    function addElection(){
+      var yourQuestion = document.getElementById("textarea1").value
+      var answer1 = document.getElementById("answer1").value
+      var answer2 = document.getElementById("answer2").value
+      var answer3 = document.getElementById("answer3").value
+      var electionName = document.getElementById("electionName").value
+      var category = document.getElementById("CategorySelect").value;
+      var tarih = currentDay();
+      var tarih2 = currentTime();
+      var tarihSon = tarih + " / " + tarih2;
+
+      console.log(category);
+
+      if(yourQuestion == "" || answer1 == "" || answer2 == "" || answer3 == "" || electionName == ""){
+        alert("Please fill the blank");
+      }else if(category == "Category"){
+        alert("Please Select the Category");
+      }else{
+        firebase.database().ref("Elections").child(category).push().set({
+          DateType: tarihSon,
+          ElectionName: electionName,
+          Option1: answer1,
+          Option2: answer2,
+          Option3: answer3,
+          Question: yourQuestion,
+          Type: "Admin Election",
+          VoteCount: 0
+        });
+        alert("Adding is Success");
+        timedRefresh(1);
+        // Database dizaynının tam olarak netleşmesini bekliyorum.
+      }
+
+    }
+
+    function currentTime(){
+    var currentdate = new Date();
+    var datetime =  currentdate.getHours() + ":"
+                    + currentdate.getMinutes() + ":"
+                    + currentdate.getSeconds();
+    console.log(datetime);
+    return datetime;
+    }
+
+    function currentDay(){
+    var dateObj = new Date();
+    var month = ("0" + (dateObj.getMonth() + 1)).slice(-2); //months from 1-12
+    var day = ("0" + dateObj.getDate()).slice(-2)
+    var year = dateObj.getFullYear();
+    return newdate = year + "-" + month + "-" + day;
+    }
+
+    function timedRefresh(timeoutPeriod) {
+    setTimeout("location.reload(true);",timeoutPeriod); // otomatik refresh.
+    }
+
     </script>
 
 
