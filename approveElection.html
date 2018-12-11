@@ -22,7 +22,6 @@
 .addButton{
   width: 180px;
   text-align: center;
-  margin-top: 10px;
   background-color: #74ced3;
 }
 
@@ -106,6 +105,7 @@
                     <div class="main-list" id="list_div">
                       <div class="list-item">
                         <h3>Waiting Elections For Approve or Rejected</h3>
+
                         <div class="butonClass">
                         </div>
                       </div>
@@ -192,7 +192,12 @@
                 if(snapshot2.key == snapshot4.key){
                   count += 1;
                   document.getElementById("strongID").innerHTML = "Waiting " + count + " election for Approve or Reject "
-                  list_div.innerHTML += "<div><table style='width:100%;margin-bottom:20px' border='1px solid black'><tr>" + count + "</tr><tr><th>Sender</th><th>Category</th><th>Election Name</th><th>Ouestion</th><th>Option1</th><th>Option2</th><th>Option3</th></tr><tr><td> " + snapshot3.val().name + " </td><td><b>" + snapshot.key + "</b></td><td>" + snapshot2.val().ElectionName + "</td><td><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td style='text-decoration:underline'>" + snapshot2.val().Option1 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option2 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option3 + "</td><td><th><button style='background-color:#75e10e;color:white' class='buttons'>Approve</button></th><th><button style='background-color:#e7280d;color:white' class='buttons'>Reject</button></th></td></tr></table></div>"
+                  if(count % 2 == 0){
+                    list_div.innerHTML += "<div style='background-color:#eeeaea'><table style='width:100%' border='1px solid black'><tr>" + count + "</tr><tr><th>Sender</th><th>Category</th><th>Election Name</th><th>Ouestion</th><th>Option1</th><th>Option2</th><th>Option3</th></tr><tr><td> " + snapshot3.val().name + " </td><td><b>" + snapshot.key + "</b></td><td>" + snapshot2.val().ElectionName + "</td><td><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td style='text-decoration:underline'>" + snapshot2.val().Option1 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option2 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option3 + "</td><td><th><button onclick='approve()' style='background-color:#75e10e;color:white' class='buttons'>Approve</button></th><th><button onclick='reject()' style='background-color:#e7280d;color:white' class='buttons'>Reject</button></th></td></tr></table></div>"
+                  }else{
+                    list_div.innerHTML += "<div style='background-color:#f9f9f9'><table style='width:100%' border='1px solid black'><tr>" + count + "</tr><tr><th>Sender</th><th>Category</th><th>Election Name</th><th>Ouestion</th><th>Option1</th><th>Option2</th><th>Option3</th></tr><tr><td> " + snapshot3.val().name + " </td><td><b>" + snapshot.key + "</b></td><td>" + snapshot2.val().ElectionName + "</td><td><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td style='text-decoration:underline'>" + snapshot2.val().Option1 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option2 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option3 + "</td><td><th><button onclick='approve()' style='background-color:#75e10e;color:white' class='buttons'>Approve</button></th><th><button onclick='reject()' style='background-color:#e7280d;color:white' class='buttons'>Reject</button></th></td></tr></table></div>"
+
+                  }
                 }
               });
             });
@@ -203,6 +208,14 @@
       });
     }
     electionlariCek();
+
+    function approve(){
+      alert("Approved!");
+    }
+
+    function reject(){
+      alert("Rejected!");
+    }
 
     function currentTime(){
     var currentdate = new Date();
