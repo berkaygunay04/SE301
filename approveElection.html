@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+      <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>I-Voted Admin</title>
+	<!-- BOOTSTRAP STYLES-->
+    <link href="assets/css/bootstrap.css" rel="stylesheet" />
+     <!-- FONTAWESOME STYLES-->
+    <link href="assets/css/font-awesome.css" rel="stylesheet" />
+        <!-- CUSTOM STYLES-->
+    <link href="assets/css/custom.css" rel="stylesheet" />
+     <!-- GOOGLE FONTS-->
+   <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+</head>
+<style>
+.textareaStyle{
+  width: 50%;
+  height: 80px;
+  margin-top: 5px;
+}
+.addButton{
+  width: 180px;
+  text-align: center;
+  margin-top: 10px;
+  background-color: #74ced3;
+}
+
+.addButton:hover{
+  background-color: #a2eaee;
+}
+
+
+
+.buttons:hover {
+  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
+}
+</style>
+<body>
+
+
+<form id="formAdminMain">
+  <div id="wrapper">
+       <div class="navbar navbar-inverse navbar-fixed-top">
+          <div class="adjust-nav">
+              <div class="navbar-header">
+                  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
+                      <span class="icon-bar"></span>
+                      <span class="icon-bar"></span>
+                      <span class="icon-bar"></span>
+                  </button>
+                  <a class="navbar-brand" href="#">
+                      <img src="assets/img/vote.png" />
+
+                  </a>
+
+              </div>
+          </div>
+      </div>
+      <!-- /. NAV TOP  -->
+      <nav class="navbar-default navbar-side" role="navigation">
+          <div class="sidebar-collapse">
+              <ul class="nav" id="main-menu">
+
+
+
+                  <li class="active-link">
+                      <a href="index.html" ><i class="fa fa-desktop "></i>Dashboard <span class="badge">Main</span></a>
+                  </li>
+                   <li>
+                      <a href="changePassword.html"><i class="fa fa-edit "></i>Change Password</a>
+                  </li>
+
+                  <li>
+                     <a onclick="logout1()" href="#"><i class="fa fa-power-off "></i>Logout</a>
+                 </li>
+
+
+
+              </ul>
+            </div>
+
+      </nav>
+      <!-- /. NAV SIDE  -->
+      <div id="page-wrapper" >
+          <div id="page-inner">
+              <div class="row">
+                  <div class="col-lg-12">
+                   <h2>APPROVE ELECTION</h2>
+                  </div>
+              </div>
+               <!-- /. ROW  -->
+                <hr />
+              <div class="row">
+                  <div class="col-lg-12 ">
+                      <div class="alert alert-info">
+
+                           <strong id="strongID"></strong>
+                      </div>
+
+                  </div>
+                  </div>
+
+                  <div>
+
+                    <div class="main-list" id="list_div">
+                      <div class="list-item">
+                        <h3>Waiting Elections For Approve or Rejected</h3>
+                        <div class="butonClass">
+                        </div>
+                      </div>
+                    </div>
+
+                  </div>
+
+           <!-- /. PAGE INNER  -->
+          </div>
+       <!-- /. PAGE WRAPPER  -->
+      </div>
+  <div class="footer">
+
+
+          <div class="row">
+              <div class="col-lg-12" >
+                  &copy;  2018 | Design by: <a style="color:#fff;" target="_blank">SE301-Voted Group</a>
+              </div>
+          </div>
+      </div>
+
+</from>
+
+
+     <!-- /. WRAPPER  -->
+    <!-- SCRIPTS -AT THE BOTOM TO REDUCE THE LOAD TIME-->
+    <!-- JQUERY SCRIPTS -->
+    <script src="assets/js/jquery-1.10.2.js"></script>
+      <!-- BOOTSTRAP SCRIPTS -->
+    <script src="assets/js/bootstrap.min.js"></script>
+      <!-- CUSTOM SCRIPTS -->
+    <script src="assets/js/custom.js"></script>
+
+
+<script src="https://www.gstatic.com/firebasejs/5.7.0/firebase.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyDpEfxHmFK0q0lpVFWK7DmpE7vgLLgPhr0",
+    authDomain: "vote-a0e5a.firebaseapp.com",
+    databaseURL: "https://vote-a0e5a.firebaseio.com",
+    projectId: "vote-a0e5a",
+    storageBucket: "vote-a0e5a.appspot.com",
+    messagingSenderId: "384488603364"
+  };
+  firebase.initializeApp(config);
+</script>
+
+    <script>
+    firebase.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        // User is signed in.
+        document.getElementById("formAdminLogin").action = "admin.html";
+        document.getElementById("formAdminLogin").submit();
+      } else {
+        // No user is signed in.
+        document.getElementById("formAdminMain").action = "login.html";
+        document.getElementById("formAdminMain").submit();
+      }
+    });
+    function logout1(){
+      firebase.auth().signOut().then(function() {
+        console.log('Signed Out');
+      }, function(error) {
+        console.error('Sign Out Error', error);
+      });
+    }
+
+    var count = 0;
+    var electionlariCek = function(){
+
+      const list_div = document.querySelector("#list_div");
+      var userRef = firebase.database().ref().child("Elections");
+      userRef.on("child_added",function(snapshot){
+        var userRef2 = firebase.database().ref().child("Elections").child(snapshot.key);
+
+        userRef2.on("child_added",function(snapshot2){
+          if(snapshot2.val().AdminOnay == false){
+
+            var userRef3 = firebase.database().ref().child("Kullanıcılar");
+            userRef3.on("child_added",function(snapshot3){
+              var userRef4 = firebase.database().ref().child("Kullanıcılar").child(snapshot3.key).child("Elections");
+              userRef4.on("child_added",function(snapshot4){
+                if(snapshot2.key == snapshot4.key){
+                  count += 1;
+                  document.getElementById("strongID").innerHTML = "Waiting " + count + " election for Approve or Reject "
+                  list_div.innerHTML += "<div><table style='width:100%;margin-bottom:20px' border='1px solid black'><tr>" + count + "</tr><tr><th>Sender</th><th>Category</th><th>Election Name</th><th>Ouestion</th><th>Option1</th><th>Option2</th><th>Option3</th></tr><tr><td> " + snapshot3.val().name + " </td><td><b>" + snapshot.key + "</b></td><td>" + snapshot2.val().ElectionName + "</td><td><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td style='text-decoration:underline'>" + snapshot2.val().Option1 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option2 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option3 + "</td><td><th><button style='background-color:#75e10e;color:white' class='buttons'>Approve</button></th><th><button style='background-color:#e7280d;color:white' class='buttons'>Reject</button></th></td></tr></table></div>"
+                }
+              });
+            });
+          }
+          console.log(snapshot2.val().AdminOnay);
+
+        });
+      });
+    }
+    electionlariCek();
+
+    function currentTime(){
+    var currentdate = new Date();
+    var datetime =  currentdate.getHours() + ":"
+                    + currentdate.getMinutes() + ":"
+                    + currentdate.getSeconds();
+    console.log(datetime);
+    return datetime;
+    }
+
+    function currentDay(){
+    var dateObj = new Date();
+    var month = ("0" + (dateObj.getMonth() + 1)).slice(-2); //months from 1-12
+    var day = ("0" + dateObj.getDate()).slice(-2)
+    var year = dateObj.getFullYear();
+    return newdate = year + "-" + month + "-" + day;
+    }
+
+    function timedRefresh(timeoutPeriod) {
+    setTimeout("location.reload(true);",timeoutPeriod); // otomatik refresh.
+    }
+
+    </script>
+
+</body>
+</html>

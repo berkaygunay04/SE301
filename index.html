@@ -27,7 +27,7 @@
                       <span class="icon-bar"></span>
                   </button>
                   <a class="navbar-brand" href="#">
-                      <img src="assets/img/elec1.png" />
+                      <img src="assets/img/vote.png" />
 
                   </a>
 
@@ -82,10 +82,10 @@
                           <div class="row text-center pad-top">
                 <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6">
                     <div class="div-square">
-                         <a href="#" >
+                         <a href="approveElection.html" >
                            <!-- WARNING: KAC TANE BEKLEYEN VAR İSE BADGE YE ONU BASTIR.
                          BURADA BİR TANE SCRİPT YAPIP, ELECTİONLARDAN BEKLEYENLERİ SAY! -->
-  <i class="fa fa-check fa-5x"><span style="background-color:red" class="badge">3</span></i>
+  <i class="fa fa-check fa-5x"><span id="spanID" style="background-color:red" class="badge"></span></i>
                     <h4>Approve Election</h4>
                     </a>
                     </div>
@@ -95,7 +95,7 @@
 
                 <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6">
                     <div class="div-square">
-                         <a href="#" >
+                         <a href="addnewElection.html" >
   <i class="fa fa-plus fa-5x"></i>
                     <h4>Add New Election</h4>
                     </a>
@@ -151,19 +151,20 @@
       <!-- CUSTOM SCRIPTS -->
     <script src="assets/js/custom.js"></script>
 
-    <script src="https://www.gstatic.com/firebasejs/5.5.9/firebase.js"></script>
-    <script>
-      // Initialize Firebase
-      var config = {
-        apiKey: "AIzaSyCsVp8pC33If_R_NPhiHCrX7spyuz1oFdI",
-        authDomain: "votingapp-c67f7.firebaseapp.com",
-        databaseURL: "https://votingapp-c67f7.firebaseio.com",
-        projectId: "votingapp-c67f7",
-        storageBucket: "votingapp-c67f7.appspot.com",
-        messagingSenderId: "728928914244"
-      };
-      firebase.initializeApp(config);
-    </script>
+
+<script src="https://www.gstatic.com/firebasejs/5.7.0/firebase.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyDpEfxHmFK0q0lpVFWK7DmpE7vgLLgPhr0",
+    authDomain: "vote-a0e5a.firebaseapp.com",
+    databaseURL: "https://vote-a0e5a.firebaseio.com",
+    projectId: "vote-a0e5a",
+    storageBucket: "vote-a0e5a.appspot.com",
+    messagingSenderId: "384488603364"
+  };
+  firebase.initializeApp(config);
+</script>
 
     <script>
     firebase.auth().onAuthStateChanged(function(user) {
@@ -184,6 +185,36 @@
         console.error('Sign Out Error', error);
       });
     }
+
+    var count = 0;
+    var electionlariCek = function(){
+
+      const list_div = document.querySelector("#list_div");
+      var userRef = firebase.database().ref().child("Elections");
+      userRef.on("child_added",function(snapshot){
+        var userRef2 = firebase.database().ref().child("Elections").child(snapshot.key);
+
+        userRef2.on("child_added",function(snapshot2){
+          if(snapshot2.val().AdminOnay == false){
+
+            var userRef3 = firebase.database().ref().child("Kullanıcılar");
+            userRef3.on("child_added",function(snapshot3){
+              var userRef4 = firebase.database().ref().child("Kullanıcılar").child(snapshot3.key).child("Elections");
+              userRef4.on("child_added",function(snapshot4){
+                if(snapshot2.key == snapshot4.key){
+                  count += 1;
+
+                  document.getElementById("spanID").innerHTML = count
+                }
+              });
+            });
+          }
+          console.log(snapshot2.val().AdminOnay);
+
+        });
+      });
+    }
+    electionlariCek();
     </script>
 
 
