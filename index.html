@@ -44,8 +44,14 @@
                   <li class="active-link">
                       <a href="index.html" ><i class="fa fa-desktop "></i>Dashboard <span class="badge">Main</span></a>
                   </li>
+                  <li>
+                     <a href="allUsers.html"><i class="fa fa-users "></i>Users</a>
+                 </li>
+                 <li>
+                    <a href="allElections.html"><i class="fa fa-edit "></i>All Elections</a>
+                </li>
                    <li>
-                      <a href="changePassword.html"><i class="fa fa-edit "></i>Change Password</a>
+                      <a href="changePassword.html"><i class="fa fa-lock "></i>Change Password</a>
                   </li>
 
                   <li>
@@ -63,7 +69,7 @@
           <div id="page-inner">
               <div class="row">
                   <div class="col-lg-12">
-                   <h2>ADMIN DASHBOARD</h2>
+                   <h2>ADMİN DASHBOARD</h2>
                   </div>
               </div>
                <!-- /. ROW  -->
@@ -73,7 +79,7 @@
                       <div class="alert alert-info">
                         <!-- WARNING: BURADA DA NOTİFİCATİON DURUMUNU SCRİPT YAZIP,
                       BEKLEYEN ELECTİONLARI SAY VE NOTİFİCATİON OLARAK BELİRT! -->
-                           <strong>Welcome ! </strong> There is not notification today.
+                           <strong>Welcome ! </strong> <p id="welcomeID">There is not notification today.</p>
                       </div>
 
                   </div>
@@ -106,7 +112,7 @@
 
                 <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6">
                     <div class="div-square">
-                         <a href="#" >
+                         <a href="allElections.html" >
   <i class="fa fa-trash-o fa-5x"></i>
                     <h4>Delete Election</h4>
                     </a>
@@ -115,7 +121,7 @@
 
                 <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6">
                     <div class="div-square">
-                         <a href="#" >
+                         <a href="allUsers.html" >
   <i class="fa fa-users fa-5x"></i>
                     <h4>Delete Users</h4>
                     </a>
@@ -204,6 +210,7 @@
                 if(snapshot2.key == snapshot4.key){
                   count += 1;
 
+                  document.getElementById("welcomeID").innerHTML = "You have " + count + " elections waiting today."
                   document.getElementById("spanID").innerHTML = count
                 }
               });

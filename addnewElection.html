@@ -44,7 +44,7 @@
                       <span class="icon-bar"></span>
                   </button>
                   <a class="navbar-brand" href="#">
-                      <img src="assets/img/elec1.png" />
+                      <img src="assets/img/vote.png" />
 
                   </a>
 
@@ -58,12 +58,19 @@
 
 
 
-                  <li class="active-link">
+                  <li>
                       <a href="index.html" ><i class="fa fa-desktop "></i>Dashboard <span class="badge">Main</span></a>
                   </li>
+                  <li>
+                     <a href="allUsers.html"><i class="fa fa-users "></i>Users</a>
+                 </li>
+                 <li>
+                    <a href="allElections.html"><i class="fa fa-edit "></i>All Elections</a>
+                </li>
                    <li>
-                      <a href="changePassword.html"><i class="fa fa-edit "></i>Change Password</a>
+                      <a href="changePassword.html"><i class="fa fa-lock "></i>Change Password</a>
                   </li>
+
 
                   <li>
                      <a onclick="logout1()" href="#"><i class="fa fa-power-off "></i>Logout</a>
@@ -101,7 +108,7 @@
                       <option value="Cinema">Cinema</option>
                       <option value="Culture">Culture</option>
                       <option value="History">History</option>
-                      <option value="Sports">Sports</option>
+                      <option value="Sport">Sport</option>
                     </select>
                     <input id="electionName" placeholder="Enter Election Name"></input><br>
                     <textarea class="textareaStyle" id="textarea1" placeholder="Your Ouestion"></textarea>
@@ -138,19 +145,20 @@
       <!-- CUSTOM SCRIPTS -->
     <script src="assets/js/custom.js"></script>
 
-    <script src="https://www.gstatic.com/firebasejs/5.5.9/firebase.js"></script>
-    <script>
-      // Initialize Firebase
-      var config = {
-        apiKey: "AIzaSyCsVp8pC33If_R_NPhiHCrX7spyuz1oFdI",
-        authDomain: "votingapp-c67f7.firebaseapp.com",
-        databaseURL: "https://votingapp-c67f7.firebaseio.com",
-        projectId: "votingapp-c67f7",
-        storageBucket: "votingapp-c67f7.appspot.com",
-        messagingSenderId: "728928914244"
-      };
-      firebase.initializeApp(config);
-    </script>
+
+<script src="https://www.gstatic.com/firebasejs/5.7.0/firebase.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyDpEfxHmFK0q0lpVFWK7DmpE7vgLLgPhr0",
+    authDomain: "vote-a0e5a.firebaseapp.com",
+    databaseURL: "https://vote-a0e5a.firebaseio.com",
+    projectId: "vote-a0e5a",
+    storageBucket: "vote-a0e5a.appspot.com",
+    messagingSenderId: "384488603364"
+  };
+  firebase.initializeApp(config);
+</script>
 
     <script>
     firebase.auth().onAuthStateChanged(function(user) {
@@ -196,12 +204,16 @@
           Option1: answer1,
           Option2: answer2,
           Option3: answer3,
+          Option1C: 0,
+          Option2C: 0,
+          Option3C: 0,
+          AdminOnay: true,
           Question: yourQuestion,
           Type: "Admin Election",
           VoteCount: 0
         });
         alert("Adding is Success");
-        timedRefresh(1);
+      //  timedRefresh(1);
         // Database dizaynının tam olarak netleşmesini bekliyorum.
       }
 
