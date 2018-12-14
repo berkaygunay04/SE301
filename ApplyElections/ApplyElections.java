@@ -22,14 +22,17 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class ApplyElections extends AppCompatActivity {
+    FirebaseAuth mAuth=FirebaseAuth.getInstance();
     EditText ElectionName, Question, Option1, Option2, Option3;
     private DatabaseReference apply = FirebaseDatabase.getInstance().getReference();
+     private DatabaseReference menuL5= FirebaseDatabase.getInstance().getReference("Kullanıcılar").child(mAuth.getCurrentUser().getUid());
     Spinner spinner;
     Date tarih = new Date();
 
 
+
     SimpleDateFormat sdf,sdf2,sdf3;
-Button b;
+    Button b;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -68,8 +71,15 @@ Button b;
                 apply.child("Elections").child(spinner.getSelectedItem().toString()).child(id).child("Option1").setValue(Option1.getText().toString());
                 apply.child("Elections").child(spinner.getSelectedItem().toString()).child(id).child("Option2").setValue(Option2.getText().toString());
                 apply.child("Elections").child(spinner.getSelectedItem().toString()).child(id).child("Option3").setValue(Option3.getText().toString());
+
+                apply.child("Elections").child(spinner.getSelectedItem().toString()).child(id).child("Option1C").setValue(0);
+                apply.child("Elections").child(spinner.getSelectedItem().toString()).child(id).child("Option2C").setValue(0);
+                apply.child("Elections").child(spinner.getSelectedItem().toString()).child(id).child("Option3C").setValue(0);
+
                 apply.child("Elections").child(spinner.getSelectedItem().toString()).child(id).child("ElectionName").setValue(ElectionName.getText().toString());
                 apply.child("Elections").child(spinner.getSelectedItem().toString()).child(id).child("Question").setValue(Question.getText().toString());
+                apply.child("Elections").child(spinner.getSelectedItem().toString()).child(id).child("AdminOnay").setValue(false);
+                menuL5.child("Elections").child(id).setValue(id);
                 AlertDialog.Builder builder1=new AlertDialog.Builder(ApplyElections.this);
                 builder1.setTitle("Confirmation");
                 builder1.setMessage("Your election apply is received to us!");
@@ -84,7 +94,6 @@ Button b;
                 builder1.show();
             }
         });
-
 
     }
 }
