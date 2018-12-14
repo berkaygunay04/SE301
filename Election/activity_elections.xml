@@ -1,11 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     tools:context=".Elections"
     >
+<LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
 
         <RelativeLayout
             android:id="@+id/relativelection"
@@ -37,3 +42,14 @@
         android:isScrollContainer="true"
         />
 </LinearLayout>
+
+    <TextView
+        android:id="@+id/noelection"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text="There is no election at this time."
+        android:textColor="@color/black"
+        android:visibility="invisible" />
+</RelativeLayout>
