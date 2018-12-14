@@ -44,6 +44,7 @@ public class Elections extends AppCompatActivity {//bütün electionları burda 
     Toolbar toolbarelections;
     EditText ürünara;
     ListView listView;
+    TextView thereisno;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,19 +82,25 @@ public class Elections extends AppCompatActivity {//bütün electionları burda 
                             String date = ds1.child("DateType").getValue(String.class);
                             String type = ds1.child("Type").getValue(String.class);
 
-                            if (type.equals("Admin Election")) {
-                                adapter.addItem(new ElectionObject(name, date, R.drawable.adnmin, id));
-                            }else{
-                                adapter.addItem(new ElectionObject(name, date, R.drawable.user1, id));
-                            }
+                            if(type!=null){
+                              if (type.equals("Admin Election")) {
+                                     adapter.addItem(new ElectionObject(name, date, R.drawable.adnmin, id));
+                                     listOfElections.add(new ElectionObject(name, date, R.drawable.adnmin, id));
+                                 }else{
+                                     adapter.addItem(new ElectionObject(name, date, R.drawable.user1, id));
+                                      listOfElections.add(new ElectionObject(name, date, R.drawable.user1, id));
+                           }
+                          }
                         }
 
                     }
 
                 }
-
-                
-
+                 if(listOfElections.isEmpty()){
+                    thereisno.setVisibility(View.VISIBLE);
+                }else{
+                    thereisno.setVisibility(View.INVISIBLE);
+                }
             }
 
             @Override
@@ -253,10 +260,12 @@ public class Elections extends AppCompatActivity {//bütün electionları burda 
                             String date = ds1.child("DateType").getValue(String.class);
                             String type = ds1.child("Type").getValue(String.class);
 
-                            if (type.equals("Admin Election")) {
+                          if (type.equals("Admin Election")) {
                                 adapter.addItem(new ElectionObject(name, date, R.drawable.adnmin, id));
+                                listOfElections.add(new ElectionObject(name, date, R.drawable.adnmin, id));
                             }else{
                                 adapter.addItem(new ElectionObject(name, date, R.drawable.user1, id));
+                                listOfElections.add(new ElectionObject(name, date, R.drawable.user1, id));
                             }
                         }
 
