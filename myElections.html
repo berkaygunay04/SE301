@@ -44,14 +44,14 @@
                   <li>
                       <a href="index.html" ><i class="fa fa-desktop "></i>Dashboard <span class="badge">Main</span></a>
                   </li>
-                  <li class="active-link">
-                     <a href="#"><i class="fa fa-users "></i>Users</a>
+                  <li>
+                     <a href="allUsers.html"><i class="fa fa-users "></i>Users</a>
                  </li>
                  <li>
                     <a href="allElections.html"><i class="fa fa-edit "></i>All Elections</a>
                 </li>
-                <li>
-                   <a href="myElections.html"><i class="fa fa-folder-open "></i>My Elections</a>
+                <li class="active-link">
+                   <a href="#"><i class="fa fa-folder-open "></i>My Elections</a>
                </li>
                    <li>
                       <a href="changePassword.html"><i class="fa fa-lock "></i>Change Password</a>
@@ -72,7 +72,7 @@
           <div id="page-inner">
               <div class="row">
                   <div class="col-lg-12">
-                   <h2>ALL USERS</h2>
+                   <h2>MY ELECTIONS</h2>
                   </div>
               </div>
                <!-- /. ROW  -->
@@ -82,21 +82,19 @@
                       <div class="alert alert-info">
                         <!-- WARNING: BURADA DA NOTİFİCATİON DURUMUNU SCRİPT YAZIP,
                       BEKLEYEN ELECTİONLARI SAY VE NOTİFİCATİON OLARAK BELİRT! -->
-                           <strong> You can see all the users below. </strong>
+                           <strong> You can see your all election below. </strong>
                       </div>
 
                   </div>
                   </div>
-                <!-- /. ROW  -->
-            <div class="row text-center pad-top">
 
+              <div class="main-list" id="list_div3">
+                <div class="list-item">
+                  <h3>My Elections</h3>
 
-          //main
+                </div>
+              </div>
 
-
-
-            </div>
-               <!-- /. ROW  -->
 
            <!-- /. PAGE INNER  -->
           </div>
@@ -140,9 +138,11 @@
 </script>
 
     <script>
+    var currentUserID = "";
     firebase.auth().onAuthStateChanged(function(user) {
       if (user) {
         // User is signed in.
+        currentUserID = user.uid
         document.getElementById("formAdminLogin").action = "admin.html";
         document.getElementById("formAdminLogin").submit();
       } else {
@@ -158,6 +158,24 @@
         console.error('Sign Out Error', error);
       });
     }
+    count7 = 0;
+    var getMyElections = function(){
+      const list_div3 = document.querySelector("#list_div3");
+      firebase.database().ref("Elections").on("child_added",function(snapshot){
+        firebase.database().ref("Elections").child(snapshot.key).on("child_added",function(snapshot2){
+          if(snapshot2.val().userID == currentUserID){
+            count7 += 1;
+            if(count7 % 2 == 0){
+                list_div3.innerHTML += "<div style='background-color:#eeeaea'><table style='width:100%' border='1px solid black'><tr>" + count7 + "</tr><tr><th>Category</th><th>Election Name</th><th>Ouestion</th><th>Option1</th><th>Option2</th><th>Option3</th><th>Durum</th></tr><tr><td><b>" + snapshot.key + "</b></td><td>" + snapshot2.val().ElectionName + "</td><td><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td style='text-decoration:underline'>" + snapshot2.val().Option1 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option2 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option3 + "</td><td><b style='color:green'>Devam ediyor..</b></td><td><th><button onclick='Delete(\"" +  currentUserID + "\",\"" +  snapshot2.key + "\")' style='background-color:#e7280d;color:white' class='buttons'>Delete</button></th></td></tr></table></div>"
+            }else{
+                list_div3.innerHTML += "<div style='background-color:#f9f9f9'><table style='width:100%' border='1px solid black'><tr>" + count7 + "</tr><tr><th>Category</th><th>Election Name</th><th>Ouestion</th><th>Option1</th><th>Option2</th><th>Option3</th><th>Durum</th></tr><tr><td><b>" + snapshot.key + "</b></td><td>" + snapshot2.val().ElectionName + "</td><td><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td style='text-decoration:underline'>" + snapshot2.val().Option1 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option2 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option3 + "</td><td><b style='color:green'>Devam ediyor..</b></td><td><th><button onclick='Delete(\"" +  currentUserID + "\",\"" +  snapshot2.key + "\")' style='background-color:#e7280d;color:white' class='buttons'>Delete</button></th></td></tr></table></div>"
+            }
+
+          }
+        });
+      });
+    }
+    getMyElections();
 
     </script>
 

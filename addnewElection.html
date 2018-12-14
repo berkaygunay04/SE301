@@ -67,6 +67,9 @@
                  <li>
                     <a href="allElections.html"><i class="fa fa-edit "></i>All Elections</a>
                 </li>
+                <li>
+                   <a href="myElections.html"><i class="fa fa-my "></i>My Elections</a>
+               </li>
                    <li>
                       <a href="changePassword.html"><i class="fa fa-lock "></i>Change Password</a>
                   </li>
@@ -161,9 +164,11 @@
 </script>
 
     <script>
+    var currentUserID = "";
     firebase.auth().onAuthStateChanged(function(user) {
       if (user) {
         // User is signed in.
+        currentUserID = user.uid
         document.getElementById("formAdminLogin").action = "admin.html";
         document.getElementById("formAdminLogin").submit();
       } else {
@@ -210,7 +215,8 @@
           AdminOnay: true,
           Question: yourQuestion,
           Type: "Admin Election",
-          VoteCount: 0
+          VoteCount: 0,
+          userID: currentUserID
         });
         alert("Adding is Success");
       //  timedRefresh(1);
