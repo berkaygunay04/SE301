@@ -1,5 +1,8 @@
 package com.company.talha.vote;
 
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.AsyncTask;
@@ -17,13 +20,18 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import java.util.Timer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import br.com.simplepass.loading_button_lib.customViews.CircularProgressButton;
 
 public class MainActivity extends AppCompatActivity {
     private FirebaseAuth mAuth ;
+    private DatabaseReference dbUser=FirebaseDatabase.getInstance().getReference("Kullanıcılar");
  EditText a,b;
  EditText name,surname,confirmpassword;
     CircularProgressButton circularProgressButton;
@@ -64,9 +72,13 @@ public class MainActivity extends AppCompatActivity {
                         }
                     }
                 };
-                if(a.length()>10 && name.length()>5 && surname.length()>5){
+                if(a.length()>10 && name.length()>=2 && surname.length()>=2 && isEmailValid(a.getText().toString())){
+
                     String d =a.getText().toString();
                     String e=b.getText().toString();
+                    if(e.length()>8 && isValidPassword(b.getText().toString())){
+
+
                     String f=confirmpassword.getText().toString();
                     if(e.equals(f)){
                       mAuth.createUserWithEmailAndPassword(d,e).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
@@ -76,22 +88,53 @@ public class MainActivity extends AppCompatActivity {
                               if(currentUser!=null){
                                   currentUser.sendEmailVerification();
                               }
+                              FirebaseUser user = task.getResult().getUser();
+                              User user1=new User(a.getText().toString(),name.getText().toString(),surname.getText().toString());
+                              dbUser.child(user.getUid()).setValue(user1);
                               demDownload1.execute();
                               circularProgressButton.setEnabled(false);
+                              AlertDialog.Builder builder1=new AlertDialog.Builder(MainActivity.this);
+                              builder1.setTitle("Onay Linki");
+                              builder1.setMessage("Lütfen email adresinize gelen linki onaylayınız!");
+                              builder1.setCancelable(false);
+                              builder1.setPositiveButton("Tamam", new DialogInterface.OnClickListener() {
+                                  @Override
+                                  public void onClick(DialogInterface dialogInterface, int i) {
+                                      Intent authIntent=new Intent(MainActivity.this,Main3Activity.class);
+                                      startActivity(authIntent);
+                                  }
+                              });
+                              builder1.show();
                           }
                       });
                     }else{
                         Toast.makeText(MainActivity.this,"Passwords are not matching!",Toast.LENGTH_SHORT).show();
                     }
+                    }else{
+                        Toast.makeText(MainActivity.this,"Your password is not valid",Toast.LENGTH_SHORT).show();
+                    }
                 }else{
                     Toast.makeText(MainActivity.this,"Please fill all the required blanks!",Toast.LENGTH_SHORT).show();
                 }
-
-
             }
         });
+    }
 
+    public static boolean isEmailValid(String email) {
+        String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
+        Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(email);
+        return matcher.matches();
+    }
+    public static boolean isValidPassword(final String password) {
+
+        Pattern pattern;
+        Matcher matcher;
+        final String PASSWORD_PATTERN = "^(?=.*[0-9])(?=.*[A-Z])(?=.*[*@#$%^&+=!])(?=\\S+$).{4,}$";
+        pattern = Pattern.compile(PASSWORD_PATTERN);
+        matcher = pattern.matcher(password);
+
+        return matcher.matches();
 
     }
 }
-
