@@ -59,16 +59,16 @@
 
 
                   <li>
-                      <a href="index.html" ><i class="fa fa-desktop "></i>Dashboard <span class="badge">Main</span></a>
+                      <a href="index.html" ><i class="fa fa-desktop "></i>Dashboard <span id="spanID3" class="badge" style="background-color:red"></span></a>
                   </li>
                   <li>
                      <a href="allUsers.html"><i class="fa fa-users "></i>Users</a>
                  </li>
                  <li>
-                    <a href="allElections.html"><i class="fa fa-edit "></i>All Elections</a>
+                    <a href="allElections.html"><i class="fa fa-edit "></i>User Elections</a>
                 </li>
                 <li>
-                   <a href="myElections.html"><i class="fa fa-my "></i>My Elections</a>
+                   <a href="myElections.html"><i class="fa fa-folder-open "></i>My Elections</a>
                </li>
                    <li>
                       <a href="changePassword.html"><i class="fa fa-lock "></i>Change Password</a>
@@ -119,7 +119,7 @@
                     <input id="answer1" placeholder="Enter Answer"></input><br>
                     <input id="answer2" placeholder="Enter Answer"></input><br>
                     <input id="answer3" placeholder="Enter Answer"></input><br>
-                    <button type="button" class="addButton" onclick="addElection()">Add Election</button>
+                    <button type="reset" class="addButton" onclick="addElection()">Add Election</button>
                   </div>
 
            <!-- /. PAGE INNER  -->
@@ -185,6 +185,19 @@
       });
     }
 
+    var countPending = 0;
+    var badgePending = function(){
+      firebase.database().ref("Elections").on("child_added",function(elecSnap1){
+        firebase.database().ref("Elections").child(elecSnap1.key).on("child_added",function(elecSnap2){
+          if(elecSnap2.val().AdminOnay == false){
+            countPending += 1;
+            document.getElementById("spanID3").innerHTML = countPending
+          }
+        });
+      });
+    }
+    badgePending();
+
     function addElection(){
       var yourQuestion = document.getElementById("textarea1").value
       var answer1 = document.getElementById("answer1").value
@@ -203,7 +216,8 @@
       }else if(category == "Category"){
         alert("Please Select the Category");
       }else{
-        firebase.database().ref("Elections").child(category).push().set({
+        var newPostKey = firebase.database().ref().push().key;
+        firebase.database().ref("Elections").child(category).child(newPostKey).set({
           DateType: tarihSon,
           ElectionName: electionName,
           Option1: answer1,
@@ -216,10 +230,16 @@
           Question: yourQuestion,
           Type: "Admin Election",
           VoteCount: 0,
-          userID: currentUserID
+        }).then(function(error){
+          if(error){
+            alert("Upss! Please try again!");
+          }else {
+            firebase.database().ref("Admin").child(currentUserID).child("Elections").update({[newPostKey] : newPostKey});
+            alert("Adding is Success");
+          }
         });
-        alert("Adding is Success");
-      //  timedRefresh(1);
+
+        //timedRefresh(1);
         // Database dizaynının tam olarak netleşmesini bekliyorum.
       }
 

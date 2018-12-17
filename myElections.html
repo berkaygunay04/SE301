@@ -12,10 +12,95 @@
     <link href="assets/css/custom.css" rel="stylesheet" />
      <!-- GOOGLE FONTS-->
    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+   <style>
+   #loader {
+   position: absolute;
+   left: 50%;
+   top: 50%;
+   z-index: 1;
+   width: 150px;
+   height: 150px;
+   margin: -75px 0 0 -75px;
+   border: 16px solid #f3f3f3;
+   border-radius: 50%;
+   border-top: 16px solid #3498db;
+   width: 120px;
+   height: 120px;
+   -webkit-animation: spin 2s linear infinite;
+   animation: spin 2s linear infinite;
+   }
+
+   @-webkit-keyframes spin {
+   0% { -webkit-transform: rotate(0deg); }
+   100% { -webkit-transform: rotate(360deg); }
+   }
+
+   @keyframes spin {
+   0% { transform: rotate(0deg); }
+   100% { transform: rotate(360deg); }
+   }
+
+   /* Add animation to "page content" */
+   .animate-bottom {
+   position: relative;
+   -webkit-animation-name: animatebottom;
+   -webkit-animation-duration: 1s;
+   animation-name: animatebottom;
+   animation-duration: 1s
+   }
+
+   @-webkit-keyframes animatebottom {
+   from { bottom:-100px; opacity:0 }
+   to { bottom:0px; opacity:1 }
+   }
+
+   @keyframes animatebottom {
+   from{ bottom:-100px; opacity:0 }
+   to{ bottom:0; opacity:1 }
+   }
+
+   #myDiv {
+   display: none;
+
+   }
+
+   .optionsMenu {
+     list-style-type: none;
+     margin: 0;
+     padding: 0;
+     overflow: hidden;
+     border: 1px solid #e7e7e7;
+     background-color: #f3f3f3;
+   }
+
+   .lili {
+     float: left;
+   }
+
+   .lili a {
+     display: block;
+     color: black;
+     text-align: center;
+     padding: 14px 16px;
+     text-decoration: none;
+   }
+
+   .lili a:hover:not(.active) {
+     background-color: #ddd;
+   }
+
+   .lili a.active {
+     color: white;
+     background-color: #15adcb;
+
+   }
+   </style>
 </head>
-<body>
 
+<body style="margin:0;">
 
+<div id="loader"></div>
+<div style="display:none;" class="animate-bottom" id="myDiv">
 <form id="formAdminMain">
   <div id="wrapper">
        <div class="navbar navbar-inverse navbar-fixed-top">
@@ -39,16 +124,14 @@
           <div class="sidebar-collapse">
               <ul class="nav" id="main-menu">
 
-
-
                   <li>
-                      <a href="index.html" ><i class="fa fa-desktop "></i>Dashboard <span class="badge">Main</span></a>
+                      <a href="index.html" ><i class="fa fa-desktop "></i>Dashboard <span id="spanID4" class="badge" style="background-color:red"></span></a>
                   </li>
                   <li>
                      <a href="allUsers.html"><i class="fa fa-users "></i>Users</a>
                  </li>
                  <li>
-                    <a href="allElections.html"><i class="fa fa-edit "></i>All Elections</a>
+                    <a href="allElections.html"><i class="fa fa-edit "></i>User Elections</a>
                 </li>
                 <li class="active-link">
                    <a href="#"><i class="fa fa-folder-open "></i>My Elections</a>
@@ -68,29 +151,39 @@
 
       </nav>
       <!-- /. NAV SIDE  -->
+
+
+
       <div id="page-wrapper" >
           <div id="page-inner">
               <div class="row">
                   <div class="col-lg-12">
                    <h2>MY ELECTIONS</h2>
+
+
                   </div>
               </div>
                <!-- /. ROW  -->
                 <hr />
-              <div class="row">
-                  <div class="col-lg-12 ">
-                      <div class="alert alert-info">
-                        <!-- WARNING: BURADA DA NOTİFİCATİON DURUMUNU SCRİPT YAZIP,
-                      BEKLEYEN ELECTİONLARI SAY VE NOTİFİCATİON OLARAK BELİRT! -->
-                           <strong> You can see your all election below. </strong>
-                      </div>
 
-                  </div>
-                  </div>
+                <div class="row">
+                    <div class="col-lg-12 ">
+                        <div>
+                          <ul class="optionsMenu">
+                            <li id="ongoingElections" class="lili"><a onclick="ongoingElections()" href="#">My Ongoing Elections</a></li>
+                            <li id="finishELections" class="lili"><a onclick="finishELections()" href="#">My Finish Elections</a></li>
+                            <li id="deleteElections" class="lili"><a onclick="deleteElections()" href="#">My Delete Election</a></li>
+                            <li id="allAdminElections" class="lili"><a onclick="allAdminElections()" href="#">All Admin Ongoing Elections</a></li>
+                          </ul>
+                        </div>
+
+                    </div>
+                    </div>
+
 
               <div class="main-list" id="list_div3">
                 <div class="list-item">
-                  <h3>My Elections</h3>
+
 
                 </div>
               </div>
@@ -111,6 +204,7 @@
       </div>
 
 </from>
+</div>
 
 
      <!-- /. WRAPPER  -->
@@ -158,24 +252,159 @@
         console.error('Sign Out Error', error);
       });
     }
+
+    var countPending = 0;
+    var badgePending = function(){
+      firebase.database().ref("Elections").on("child_added",function(elecSnap1){
+        firebase.database().ref("Elections").child(elecSnap1.key).on("child_added",function(elecSnap2){
+          if(elecSnap2.val().AdminOnay == false){
+            countPending += 1;
+            document.getElementById("spanID4").innerHTML = countPending
+          }
+        });
+      });
+    }
+    badgePending();
+
     count7 = 0;
     var getMyElections = function(){
       const list_div3 = document.querySelector("#list_div3");
       firebase.database().ref("Elections").on("child_added",function(snapshot){
         firebase.database().ref("Elections").child(snapshot.key).on("child_added",function(snapshot2){
-          if(snapshot2.val().userID == currentUserID){
-            count7 += 1;
-            if(count7 % 2 == 0){
-                list_div3.innerHTML += "<div style='background-color:#eeeaea'><table style='width:100%' border='1px solid black'><tr>" + count7 + "</tr><tr><th>Category</th><th>Election Name</th><th>Ouestion</th><th>Option1</th><th>Option2</th><th>Option3</th><th>Durum</th></tr><tr><td><b>" + snapshot.key + "</b></td><td>" + snapshot2.val().ElectionName + "</td><td><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td style='text-decoration:underline'>" + snapshot2.val().Option1 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option2 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option3 + "</td><td><b style='color:green'>Devam ediyor..</b></td><td><th><button onclick='Delete(\"" +  currentUserID + "\",\"" +  snapshot2.key + "\")' style='background-color:#e7280d;color:white' class='buttons'>Delete</button></th></td></tr></table></div>"
-            }else{
-                list_div3.innerHTML += "<div style='background-color:#f9f9f9'><table style='width:100%' border='1px solid black'><tr>" + count7 + "</tr><tr><th>Category</th><th>Election Name</th><th>Ouestion</th><th>Option1</th><th>Option2</th><th>Option3</th><th>Durum</th></tr><tr><td><b>" + snapshot.key + "</b></td><td>" + snapshot2.val().ElectionName + "</td><td><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td style='text-decoration:underline'>" + snapshot2.val().Option1 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option2 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option3 + "</td><td><b style='color:green'>Devam ediyor..</b></td><td><th><button onclick='Delete(\"" +  currentUserID + "\",\"" +  snapshot2.key + "\")' style='background-color:#e7280d;color:white' class='buttons'>Delete</button></th></td></tr></table></div>"
-            }
+          firebase.database().ref("Admin").child(currentUserID).child("Elections").on("child_added",function(snapshot3){
+            if(snapshot2.key == snapshot3.key){
+              count7 += 1;
+              if(count7 % 2 == 0){
+                  list_div3.innerHTML += "<div style='background-color:#eeeaea'><table style='width:100%' border='1px solid black'><tr>" + count7 + "</tr><tr><th>Category</th><th>Election Name</th><th>Ouestion</th><th>Option1</th><th>Option2</th><th>Option3</th><th>Durum</th></tr><tr><td><b>" + snapshot.key + "</b></td><td>" + snapshot2.val().ElectionName + "</td><td><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td style='text-decoration:underline'>" + snapshot2.val().Option1 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option2 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option3 + "</td><td><b style='color:green'>Devam ediyor..</b></td><td><th><button onclick='Delete(\"" +  currentUserID + "\",\"" +  snapshot2.key + "\")' style='background-color:#e7280d;color:white' class='buttons'>Delete</button></th></td></tr></table></div>"
+              }else{
+                  list_div3.innerHTML += "<div style='background-color:#f9f9f9'><table style='width:100%' border='1px solid black'><tr>" + count7 + "</tr><tr><th>Category</th><th>Election Name</th><th>Ouestion</th><th>Option1</th><th>Option2</th><th>Option3</th><th>Durum</th></tr><tr><td><b>" + snapshot.key + "</b></td><td>" + snapshot2.val().ElectionName + "</td><td><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td style='text-decoration:underline'>" + snapshot2.val().Option1 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option2 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option3 + "</td><td><b style='color:green'>Devam ediyor..</b></td><td><th><button onclick='Delete(\"" +  currentUserID + "\",\"" +  snapshot2.key + "\")' style='background-color:#e7280d;color:white' class='buttons'>Delete</button></th></td></tr></table></div>"
+              }
 
-          }
+            }
+          });
+
         });
+        showPage();
       });
     }
     getMyElections();
+
+    function showPage() {
+      document.getElementById("loader").style.display = "none";
+      document.getElementById("myDiv").style.display = "block";
+    }
+
+    function showLoading() {
+      document.getElementById("loader").style.display = "block";
+      document.getElementById("myDiv").style.display = "none";
+    }
+
+    document.getElementById("ongoingElections").style.backgroundColor = "#15adcb";
+
+    var count2 = 0;
+    var names = "";
+    function dbDekiDeleteElectionlar(){
+      showLoading();
+      const list_div = document.querySelector("#list_div3");
+      var dbRef = firebase.database().ref("DeleteElections");
+      dbRef.on("child_added",function(snapshot2){
+        var dbRef2 = firebase.database().ref("DeleteElections").child(snapshot2.key);
+        dbRef2.on("child_added",function(snapshot){
+          firebase.database().ref("Admin").on("child_added",function(snapshot6){
+            firebase.database().ref("Admin").child(snapshot6.key).child("Elections").on("child_added",function(snapshot7){
+              if(snapshot7.key == snapshot.key){
+                names = snapshot6.val().name
+                count2 += 1;
+                if(count2 % 2 == 0){
+                  list_div.innerHTML += "<div style='background-color:#eeeaea'><table style='width:100%' border='1px solid black'><tr>" + count2 + "</tr><tr><th>Sender</th><th>Category</th><th>Election Name</th><th>Ouestion</th><th>Option1</th><th>Option2</th><th>Option3</th></tr><tr><td> " + names + " </td><td><b>" + snapshot2.key + "</b></td><td>" + snapshot.val().ElectionName + "</td><td><b style='color:blue'>" + snapshot.val().Question + "</b></td><td style='text-decoration:underline'>" + snapshot.val().Option1 + "</td><td style='text-decoration:underline'>" + snapshot.val().Option2 + "</td><td style='text-decoration:underline'>" + snapshot.val().Option3 + "</td></tr></table></div>"
+                }else{
+                  list_div.innerHTML += "<div style='background-color:#f9f9f9'><table style='width:100%' border='1px solid black'><tr>" + count2 + "</tr><tr><th>Sender</th><th>Category</th><th>Election Name</th><th>Ouestion</th><th>Option1</th><th>Option2</th><th>Option3</th></tr><tr><td> " + names+ " </td><td><b>" + snapshot2.key + "</b></td><td>" + snapshot.val().ElectionName + "</td><td><b style='color:blue'>" + snapshot.val().Question + "</b></td><td style='text-decoration:underline'>" + snapshot.val().Option1 + "</td><td style='text-decoration:underline'>" + snapshot.val().Option2 + "</td><td style='text-decoration:underline'>" + snapshot.val().Option3 + "</td></tr></table></div>"
+                }
+              }
+
+            });
+          });
+
+        });
+        showPage();
+      });
+
+    }
+
+    var count = 0;
+    function allAdminDevamEdenElectionlar(){
+      showLoading();
+      const list_div = document.querySelector("#list_div3");
+      var userRef = firebase.database().ref("Elections");
+      userRef.on("child_added",function(snapshot){
+        firebase.database().ref("Elections").child(snapshot.key).on("child_added",function(snapshot2){
+          firebase.database().ref("Admin").on("child_added",function(userSnap1){
+            firebase.database().ref("Admin").child(userSnap1.key).child("Elections").on("child_added",function(userSnap2){
+              if(snapshot2.val().AdminOnay == true){
+                // ve buraya tarih durumunu ekleyeceğiz. yani eğer bitme tarihi gelmemiş ve onaylanmış ise göster yapacağız.
+                if(snapshot2.key == userSnap2.key){
+                  count += 1;
+                  if(count % 2 == 0){
+                    list_div.innerHTML += "<div style='background-color:#eeeaea'><table style='width:100%' border='1px solid black'><tr>" + count + "</tr><tr><th>Sender</th><th>Category</th><th>Election Name</th><th>Ouestion</th><th>Option1</th><th>Option2</th><th>Option3</th></tr><tr><td> " + userSnap1.val().name + " </td><td><b>" + snapshot.key + "</b></td><td>" + snapshot2.val().ElectionName + "</td><td><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td style='text-decoration:underline'>" + snapshot2.val().Option1 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option2 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option3 + "</td><td><th><button onclick='stop()' style='background-color:red;color:white' class='buttons'>Stop</button></th><th><button onclick='Delete(\"" +  snapshot2.key + "\")' style='background-color:red;color:white' class='buttons'>Delete</button></th></td></tr></table></div>"
+                  }else{
+                    list_div.innerHTML += "<div style='background-color:#f9f9f9'><table style='width:100%' border='1px solid black'><tr>" + count + "</tr><tr><th>Sender</th><th>Category</th><th>Election Name</th><th>Ouestion</th><th>Option1</th><th>Option2</th><th>Option3</th></tr><tr><td> " + userSnap1.val().name + " </td><td><b>" + snapshot.key + "</b></td><td>" + snapshot2.val().ElectionName + "</td><td><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td style='text-decoration:underline'>" + snapshot2.val().Option1 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option2 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option3 + "</td><td><th><button onclick='stop()' style='background-color:red;color:white' class='buttons'>Stop</button></th><th><button onclick='Delete(\"" +  snapshot2.key + "\")' style='background-color:red;color:white' class='buttons'>Delete</button></th></td></tr></table></div>"
+                  }
+                }
+
+              }
+
+            });
+          });
+
+        });
+        showPage();
+      });
+    }
+
+    function deleteElections(){
+      count2 = 0;
+      const list_div = document.querySelector("#list_div3");
+      list_div.innerHTML = ""
+      dbDekiDeleteElectionlar();
+      document.getElementById("finishELections").style.backgroundColor = "#f3f3f3";
+      document.getElementById("ongoingElections").style.backgroundColor = "#f3f3f3";
+      document.getElementById("deleteElections").style.backgroundColor = "#15adcb";
+      document.getElementById("allAdminElections").style.backgroundColor = "#f3f3f3";
+    }
+
+    function ongoingElections(){
+      count7 = 0;
+      const list_div = document.querySelector("#list_div3");
+      list_div.innerHTML = ""
+      getMyElections();
+      document.getElementById("finishELections").style.backgroundColor = "#f3f3f3";
+      document.getElementById("ongoingElections").style.backgroundColor = "#15adcb";
+      document.getElementById("deleteElections").style.backgroundColor = "#f3f3f3";
+      document.getElementById("allAdminElections").style.backgroundColor = "#f3f3f3";
+
+    }
+
+    function finishELections(){
+      const list_div = document.querySelector("#list_div3");
+      list_div.innerHTML = ""
+      document.getElementById("finishELections").style.backgroundColor = "#15adcb";
+      document.getElementById("ongoingElections").style.backgroundColor = "#f3f3f3";
+      document.getElementById("deleteElections").style.backgroundColor = "#f3f3f3";
+      document.getElementById("allAdminElections").style.backgroundColor = "#f3f3f3";
+      alert("Eklenecek!");
+    }
+
+    function allAdminElections(){
+      count = 0;
+      const list_div = document.querySelector("#list_div3");
+      list_div.innerHTML = ""
+      allAdminDevamEdenElectionlar();
+      document.getElementById("finishELections").style.backgroundColor = "#f3f3f3";
+      document.getElementById("ongoingElections").style.backgroundColor = "#f3f3f3";
+      document.getElementById("deleteElections").style.backgroundColor = "#f3f3f3";
+      document.getElementById("allAdminElections").style.backgroundColor = "#15adcb";
+    }
+
 
     </script>
 

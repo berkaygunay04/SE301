@@ -42,13 +42,13 @@
 
 
                   <li>
-                      <a href="index.html" ><i class="fa fa-desktop "></i>Dashboard <span class="badge">Main</span></a>
+                      <a href="index.html" ><i class="fa fa-desktop "></i>Dashboard <span id="spanID7"class="badge" style="background-color:red"></span></a>
                   </li>
                   <li class="active-link">
                      <a href="#"><i class="fa fa-users "></i>Users</a>
                  </li>
                  <li>
-                    <a href="allElections.html"><i class="fa fa-edit "></i>All Elections</a>
+                    <a href="allElections.html"><i class="fa fa-edit "></i>User Elections</a>
                 </li>
                 <li>
                    <a href="myElections.html"><i class="fa fa-folder-open "></i>My Elections</a>
@@ -158,6 +158,19 @@
         console.error('Sign Out Error', error);
       });
     }
+
+    var countPending = 0;
+    var badgePending = function(){
+      firebase.database().ref("Elections").on("child_added",function(elecSnap1){
+        firebase.database().ref("Elections").child(elecSnap1.key).on("child_added",function(elecSnap2){
+          if(elecSnap2.val().AdminOnay == false){
+            countPending += 1;
+            document.getElementById("spanID7").innerHTML = countPending
+          }
+        });
+      });
+    }
+    badgePending();
 
     </script>
 

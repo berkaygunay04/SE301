@@ -14,6 +14,57 @@
    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
 </head>
 <style>
+#loader {
+position: absolute;
+left: 50%;
+top: 50%;
+z-index: 1;
+width: 150px;
+height: 150px;
+margin: -75px 0 0 -75px;
+border: 16px solid #f3f3f3;
+border-radius: 50%;
+border-top: 16px solid #3498db;
+width: 120px;
+height: 120px;
+-webkit-animation: spin 2s linear infinite;
+animation: spin 2s linear infinite;
+}
+
+@-webkit-keyframes spin {
+0% { -webkit-transform: rotate(0deg); }
+100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+0% { transform: rotate(0deg); }
+100% { transform: rotate(360deg); }
+}
+
+/* Add animation to "page content" */
+.animate-bottom {
+position: relative;
+-webkit-animation-name: animatebottom;
+-webkit-animation-duration: 1s;
+animation-name: animatebottom;
+animation-duration: 1s
+}
+
+@-webkit-keyframes animatebottom {
+from { bottom:-100px; opacity:0 }
+to { bottom:0px; opacity:1 }
+}
+
+@keyframes animatebottom {
+from{ bottom:-100px; opacity:0 }
+to{ bottom:0; opacity:1 }
+}
+
+#myDiv {
+display: none;
+
+}
+
 .textareaStyle{
   width: 50%;
   height: 80px;
@@ -35,9 +86,10 @@
   box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
 }
 </style>
-<body>
+<body style="margin:0;">
 
-
+<div id="loader"></div>
+<div style="display:none;" class="animate-bottom" id="myDiv">
 <form id="formAdminMain">
   <div id="wrapper">
        <div class="navbar navbar-inverse navbar-fixed-top">
@@ -64,13 +116,13 @@
 
 
                   <li>
-                      <a href="index.html" ><i class="fa fa-desktop "></i>Dashboard <span class="badge">Main</span></a>
+                      <a href="index.html" ><i class="fa fa-desktop "></i>Dashboard <span id="spanID5" class="badge">Main</span></a>
                   </li>
                   <li>
                      <a href="allUsers.html"><i class="fa fa-users "></i>Users</a>
                  </li>
                  <li>
-                    <a href="allElections.html"><i class="fa fa-edit "></i>All Elections</a>
+                    <a type="reset" href="allElections.html"><i class="fa fa-edit "></i>User Elections</a>
                 </li>
                 <li>
                    <a href="myElections.html"><i class="fa fa-folder-open "></i>My Elections</a>
@@ -138,6 +190,7 @@
       </div>
 
 </from>
+</div>
 
 
      <!-- /. WRAPPER  -->
@@ -203,9 +256,9 @@
                   count += 1;
                   document.getElementById("strongID").innerHTML = "Waiting " + count + " election for Approve or Reject "
                   if(count % 2 == 0){
-                    list_div.innerHTML += "<div style='background-color:#eeeaea'><table style='width:100%' border='1px solid black'><tr>" + count + "</tr><tr><th>Sender</th><th>Category</th><th>Election Name</th><th>Ouestion</th><th>Option1</th><th>Option2</th><th>Option3</th></tr><tr><td> " + snapshot3.val().name + " </td><td><b>" + snapshot.key + "</b></td><td>" + snapshot2.val().ElectionName + "</td><td><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td style='text-decoration:underline'>" + snapshot2.val().Option1 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option2 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option3 + "</td><td><th><button onclick='approve()' style='background-color:#75e10e;color:white' class='buttons'>Approve</button></th><th><button onclick='reject()' style='background-color:#e7280d;color:white' class='buttons'>Reject</button></th></td></tr></table></div>"
+                    list_div.innerHTML += "<div style='background-color:#eeeaea'><table style='width:100%' border='1px solid black'><tr>" + count + "</tr><tr><th>Sender</th><th>Category</th><th>Election Name</th><th>Ouestion</th><th>Option1</th><th>Option2</th><th>Option3</th></tr><tr><td> " + snapshot3.val().name + " </td><td><b>" + snapshot.key + "</b></td><td>" + snapshot2.val().ElectionName + "</td><td><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td style='text-decoration:underline'>" + snapshot2.val().Option1 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option2 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option3 + "</td><td><th><button onclick='approve(\"" +  snapshot4.key + "\")' style='background-color:#75e10e;color:white' class='buttons'>Approve</button></th><th><button onclick='reject(\"" +  snapshot4.key + "\")' style='background-color:#e7280d;color:white' class='buttons'>Reject</button></th></td></tr></table></div>"
                   }else{
-                    list_div.innerHTML += "<div style='background-color:#f9f9f9'><table style='width:100%' border='1px solid black'><tr>" + count + "</tr><tr><th>Sender</th><th>Category</th><th>Election Name</th><th>Ouestion</th><th>Option1</th><th>Option2</th><th>Option3</th></tr><tr><td> " + snapshot3.val().name + " </td><td><b>" + snapshot.key + "</b></td><td>" + snapshot2.val().ElectionName + "</td><td><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td style='text-decoration:underline'>" + snapshot2.val().Option1 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option2 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option3 + "</td><td><th><button onclick='approve()' style='background-color:#75e10e;color:white' class='buttons'>Approve</button></th><th><button onclick='reject()' style='background-color:#e7280d;color:white' class='buttons'>Reject</button></th></td></tr></table></div>"
+                    list_div.innerHTML += "<div style='background-color:#f9f9f9'><table style='width:100%' border='1px solid black'><tr>" + count + "</tr><tr><th>Sender</th><th>Category</th><th>Election Name</th><th>Ouestion</th><th>Option1</th><th>Option2</th><th>Option3</th></tr><tr><td> " + snapshot3.val().name + " </td><td><b>" + snapshot.key + "</b></td><td>" + snapshot2.val().ElectionName + "</td><td><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td style='text-decoration:underline'>" + snapshot2.val().Option1 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option2 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option3 + "</td><td><th><button onclick='approve(\"" +  snapshot4.key + "\")' style='background-color:#75e10e;color:white' class='buttons'>Approve</button></th><th><button onclick='reject(\"" +  snapshot4.key + "\")' style='background-color:#e7280d;color:white' class='buttons'>Reject</button></th></td></tr></table></div>"
 
                   }
                 }
@@ -215,16 +268,49 @@
           console.log(snapshot2.val().AdminOnay);
 
         });
+        showPage();
       });
     }
     electionlariCek();
 
-    function approve(){
-      alert("Approved!");
+    function approve(electionKey){
+      if(confirm("Are you sure approve election ?")){
+        firebase.database().ref("Elections").on("child_added",function(approveSnap1){
+          firebase.database().ref("Elections").child(approveSnap1.key).child(electionKey).update({
+            AdminOnay: true
+          });
+        });
+      }
     }
 
-    function reject(){
-      alert("Rejected!");
+    function reject(electionKey){
+        var electionRef = firebase.database().ref("Elections");
+        electionRef.on("child_added",function(snapshot){
+          var electionRef2 = firebase.database().ref("Elections").child(snapshot.key);
+          electionRef2.on("child_added",function(snapshot2){
+            if(snapshot2.key == electionKey){ // burda tarihe göre sıralandığı için db de gelen key de tarih key olduğundan karşılaştırma yapıp hangisi geldiyse onu siliyorum.
+              var person = prompt("What is your reason for rejection ? ");
+              if (person == "") {
+                alert("Please enter your reason for rejection!");
+              } else {
+                if(confirm("Are you sure reject election ?")){
+                  snapshot2.ref.remove(function(error){
+                      //window.onload = timedRefresh(1);
+                  });
+                  firebase.database().ref("RejectedElections").child(snapshot.key).child(electionKey).set({
+                    DateType: snapshot2.val().DateType,
+                    Option1: snapshot2.val().Option1,
+                    Option2: snapshot2.val().Option2,
+                    Option3: snapshot2.val().Option3,
+                    Question: snapshot2.val().Question,
+                    RejectReason: person
+                  });
+                  //alert("Rejected success!");
+                }
+              }
+            }
+          });
+        });
     }
 
     function currentTime(){
@@ -246,6 +332,16 @@
 
     function timedRefresh(timeoutPeriod) {
     setTimeout("location.reload(true);",timeoutPeriod); // otomatik refresh.
+    }
+
+    function showPage() {
+      document.getElementById("loader").style.display = "none";
+      document.getElementById("myDiv").style.display = "block";
+    }
+
+    function showLoading() {
+      document.getElementById("loader").style.display = "block";
+      document.getElementById("myDiv").style.display = "none";
     }
 
     </script>

@@ -14,6 +14,57 @@
    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
 
    <style>
+   #loader {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 1;
+  width: 150px;
+  height: 150px;
+  margin: -75px 0 0 -75px;
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #3498db;
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+}
+
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Add animation to "page content" */
+.animate-bottom {
+  position: relative;
+  -webkit-animation-name: animatebottom;
+  -webkit-animation-duration: 1s;
+  animation-name: animatebottom;
+  animation-duration: 1s
+}
+
+@-webkit-keyframes animatebottom {
+  from { bottom:-100px; opacity:0 }
+  to { bottom:0px; opacity:1 }
+}
+
+@keyframes animatebottom {
+  from{ bottom:-100px; opacity:0 }
+  to{ bottom:0; opacity:1 }
+}
+
+#myDiv {
+  display: none;
+
+}
+
 .optionsMenu {
   list-style-type: none;
   margin: 0;
@@ -46,10 +97,11 @@
 }
    </style>
 </head>
-<body>
+<body style="margin:0;">
 
-
-<form id="formAdminMain">
+  <div id="loader"></div>
+<div style="display:none;" class="animate-bottom" id="myDiv">
+<form id="formAdminMain" >
   <div id="wrapper">
        <div class="navbar navbar-inverse navbar-fixed-top">
           <div class="adjust-nav">
@@ -75,13 +127,13 @@
 
 
                   <li>
-                      <a href="index.html" ><i class="fa fa-desktop "></i>Dashboard <span class="badge">Main</span></a>
+                      <a href="index.html" ><i class="fa fa-desktop "></i>Dashboard <span id="spanID2" class="badge" style="background-color:red"></span></a>
                   </li>
                   <li>
                      <a href="allUsers.html"><i class="fa fa-users "></i>Users</a>
                  </li>
                  <li class="active-link">
-                    <a href="#"><i class="fa fa-edit "></i>All Elections</a>
+                    <a href="#"><i class="fa fa-edit "></i>User Elections</a>
                 </li>
                 <li>
                    <a href="myElections.html"><i class="fa fa-folder-open "></i>My Elections</a>
@@ -114,10 +166,10 @@
                   <div class="col-lg-12 ">
                       <div>
                         <ul class="optionsMenu">
-                          <li id="allElections" class="lili"><a onclick="allElections()" href="#">All Election</a></li>
-                          <li id="deleteElections" class="lili"><a onclick="deleteElections()" href="#">Delete Election</a></li>
                           <li id="ongoingElections" class="lili"><a onclick="ongoingElections()" href="#">Ongoing Elections</a></li>
                           <li id="finishELections" class="lili"><a onclick="finishELections()" href="#">Finish Elections</a></li>
+                          <li id="rejectElections" class="lili"><a onclick="rejectElections()" href="#">Rejected Elections</a></li>
+                          <li id="deleteElections" class="lili"><a onclick="deleteElections()" href="#">Delete Election</a></li>
                         </ul>
                       </div>
 
@@ -158,6 +210,7 @@
       </div>
 
 </from>
+</div>
 
 
      <!-- /. WRAPPER  -->
@@ -199,50 +252,56 @@
       }
     });
 
+
+    var countPending = 0;
+    var badgePending = function(){
+      firebase.database().ref("Elections").on("child_added",function(elecSnap1){
+        firebase.database().ref("Elections").child(elecSnap1.key).on("child_added",function(elecSnap2){
+          if(elecSnap2.val().AdminOnay == false){
+            countPending += 1;
+            document.getElementById("spanID2").innerHTML = countPending
+          }
+        });
+      });
+    }
+    badgePending();
+
+
+
     var count = 0;
-    var electionlariCek = function(){
-
+    var OngoingElectionlariCek = function(){
+      showLoading();
       const list_div = document.querySelector("#list_div2");
-      var userRef = firebase.database().ref().child("Elections");
+      var userRef = firebase.database().ref("Elections");
       userRef.on("child_added",function(snapshot){
-        var userRef2 = firebase.database().ref().child("Elections").child(snapshot.key);
+        firebase.database().ref("Elections").child(snapshot.key).on("child_added",function(snapshot2){
+          firebase.database().ref("Kullanıcılar").on("child_added",function(userSnap1){
+            firebase.database().ref("Kullanıcılar").child(userSnap1.key).child("Elections").on("child_added",function(userSnap2){
+              if(snapshot2.val().AdminOnay == true){
 
-        userRef2.on("child_added",function(snapshot2){
-            var userRef3 = firebase.database().ref().child("Kullanıcılar");
-            userRef3.on("child_added",function(snapshot3){
-              var userRef4 = firebase.database().ref().child("Kullanıcılar").child(snapshot3.key).child("Elections");
-              userRef4.on("child_added",function(snapshot4){
-                if(snapshot2.key == snapshot4.key){
+                // ve buraya tarih durumunu ekleyeceğiz. yani eğer bitme tarihi gelmemiş ve onaylanmış ise göster yapacağız.
+
+                if(snapshot2.key == userSnap2.key){
                   count += 1;
-                  //document.getElementById("strongID").innerHTML = "Waiting " + count + " election for Approve or Reject "
                   if(count % 2 == 0){
-                    list_div.innerHTML += "<div style='background-color:#eeeaea'><table style='width:100%' border='1px solid black'><tr>" + count + "</tr><tr><th>Sender</th><th>Category</th><th>Election Name</th><th>Ouestion</th><th>Option1</th><th>Option2</th><th>Option3</th><th>Durum</th></tr><tr><td> " + snapshot3.val().name + " </td><td><b>" + snapshot.key + "</b></td><td>" + snapshot2.val().ElectionName + "</td><td><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td style='text-decoration:underline'>" + snapshot2.val().Option1 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option2 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option3 + "</td><td><b style='color:green'>Devam ediyor..</b></td><td><th><button onclick='Delete(\"" +  snapshot3.key + "\",\"" +  snapshot2.key + "\")' style='background-color:#e7280d;color:white' class='buttons'>Delete</button></th></td></tr></table></div>"
+                    list_div.innerHTML += "<div style='background-color:#eeeaea'><table style='width:100%' border='1px solid black'><tr>" + count + "</tr><tr><th>Sender</th><th>Category</th><th>Election Name</th><th>Ouestion</th><th>Option1</th><th>Option2</th><th>Option3</th></tr><tr><td> " + userSnap1.val().name + " </td><td><b>" + snapshot.key + "</b></td><td>" + snapshot2.val().ElectionName + "</td><td><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td style='text-decoration:underline'>" + snapshot2.val().Option1 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option2 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option3 + "</td><td><th><button onclick='stop()' style='background-color:red;color:white' class='buttons'>Stop</button></th><th><button onclick='Delete(\"" +  snapshot2.key + "\")' style='background-color:red;color:white' class='buttons'>Delete</button></th></td></tr></table></div>"
                   }else{
-                    list_div.innerHTML += "<div style='background-color:#f9f9f9'><table style='width:100%' border='1px solid black'><tr>" + count + "</tr><tr><th>Sender</th><th>Category</th><th>Election Name</th><th>Ouestion</th><th>Option1</th><th>Option2</th><th>Option3</th><th>Durum</th></tr><tr><td> " + snapshot3.val().name + " </td><td><b>" + snapshot.key + "</b></td><td>" + snapshot2.val().ElectionName + "</td><td><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td style='text-decoration:underline'>" + snapshot2.val().Option1 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option2 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option3 + "</td><td><b style='color:green'>Devam Ediyor...</b></td><td><th><button onclick='Delete(\"" +  snapshot3.key + "\",\"" +  snapshot2.key + "\")' style='background-color:#e7280d;color:white' class='buttons'>Delete</button></th></td></tr></table></div>"
-
+                    list_div.innerHTML += "<div style='background-color:#f9f9f9'><table style='width:100%' border='1px solid black'><tr>" + count + "</tr><tr><th>Sender</th><th>Category</th><th>Election Name</th><th>Ouestion</th><th>Option1</th><th>Option2</th><th>Option3</th></tr><tr><td> " + userSnap1.val().name + " </td><td><b>" + snapshot.key + "</b></td><td>" + snapshot2.val().ElectionName + "</td><td><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td style='text-decoration:underline'>" + snapshot2.val().Option1 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option2 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option3 + "</td><td><th><button onclick='stop()' style='background-color:red;color:white' class='buttons'>Stop</button></th><th><button onclick='Delete(\"" +  snapshot2.key + "\")' style='background-color:red;color:white' class='buttons'>Delete</button></th></td></tr></table></div>"
                   }
                 }
-              });
+
+              }
+
             });
-
-          console.log(snapshot2.val().AdminOnay);
-
-        });
-      });
-      firebase.database().ref("Elections").on("child_added",function(snapshot5){
-        firebase.database().ref("Elections").child(snapshot5.key).on("child_added",function(snapshot6){
-          if(snapshot6.val().Type == "Admin Election"){
-            count += 1;
-            if(count % 2 == 0){
-              list_div.innerHTML += "<div style='background-color:#eeeaea'><table style='width:100%' border='1px solid black'><tr>" + count + "</tr><tr><th>Sender</th><th>Category</th><th>Election Name</th><th>Ouestion</th><th>Option1</th><th>Option2</th><th>Option3</th><th>Durum</th></tr><tr><td>Admin</td><td><b>" + snapshot5.key + "</b></td><td>" + snapshot6.val().ElectionName + "</td><td><b style='color:blue'>" + snapshot6.val().Question + "</b></td><td style='text-decoration:underline'>" + snapshot6.val().Option1 + "</td><td style='text-decoration:underline'>" + snapshot6.val().Option2 + "</td><td style='text-decoration:underline'>" + snapshot6.val().Option3 + "</td><td><b style='color:green'>Devam ediyor..</b></td><td><th><button onclick='Delete(\"" +  currentUserID + "\",\"" +  snapshot6.key + "\")' style='background-color:#e7280d;color:white' class='buttons'>Delete</button></th></td></tr></table></div>"
-            }else{
-              list_div.innerHTML += "<div style='background-color:#f9f9f9'><table style='width:100%' border='1px solid black'><tr>" + count + "</tr><tr><th>Sender</th><th>Category</th><th>Election Name</th><th>Ouestion</th><th>Option1</th><th>Option2</th><th>Option3</th><th>Durum</th></tr><tr><td>Admin</td><td><b>" + snapshot5.key + "</b></td><td>" + snapshot6.val().ElectionName + "</td><td><b style='color:blue'>" + snapshot6.val().Question + "</b></td><td style='text-decoration:underline'>" + snapshot6.val().Option1 + "</td><td style='text-decoration:underline'>" + snapshot6.val().Option2 + "</td><td style='text-decoration:underline'>" + snapshot6.val().Option3 + "</td><td><b style='color:green'>Devam ediyor..</b></td><td><th><button onclick='Delete(\"" +  currentUserID + "\",\"" +  snapshot6.key + "\")' style='background-color:#e7280d;color:white' class='buttons'>Delete</button></th></td></tr></table></div>"
-
-            }
-          }
+          });
 
         });
+        showPage();
       });
+    }
+
+    function stop(){
+      alert("Anket devam ederken durduralabilecek mi ? (Hocaya soracağız)")
     }
 
 
@@ -258,7 +317,7 @@
       alert("Bitirme işlemi eklenecek");
     }
 
-    function Delete(userKey,electionKey){
+    function Delete(electionKey){
       var electionRef = firebase.database().ref("Elections");
       electionRef.on("child_added",function(snapshot){
         var electionRef2 = firebase.database().ref("Elections").child(snapshot.key);
@@ -267,7 +326,6 @@
             if(confirm("Silmek istediğinize eminmisiniz ?")){
 
               firebase.database().ref("DeleteElections").child(snapshot.key).child(snapshot2.key).set({
-                DateType: snapshot2.val().DateType,
                 ElectionName: snapshot2.val().ElectionName,
                 Option1: snapshot2.val().Option1,
                 Option2: snapshot2.val().Option2,
@@ -277,9 +335,7 @@
                 Option3C: snapshot2.val().Option3C,
                 AdminOnay: false,
                 Question: snapshot2.val().Question,
-                Type: snapshot2.val().Type,
                 VoteCount: snapshot2.val().VoteCount,
-                userID: userKey
               });
 
               snapshot2.ref.remove(function(error){
@@ -292,44 +348,73 @@
       });
 
     }
+    console.log("Kontrol : ",localStorage.getItem("deleteDurumu"));
+    var text = localStorage.getItem("deleteDurumu");
+    console.log("text : ",text);
 
-    document.getElementById("allElections").style.backgroundColor = "#15adcb";
-    electionlariCek();
+    if(text == "true"){
+      document.getElementById("deleteElections").style.backgroundColor = "#15adcb";
+      dbDekiDeleteElectionlar();
+      localStorage.setItem("deleteDurumu", "false");
+      console.log("Kontrol : ",localStorage.getItem("deleteDurumu"));
+    }else{
+      console.log("Kontrol : ",text);
+      document.getElementById("ongoingElections").style.backgroundColor = "#15adcb";
+      OngoingElectionlariCek();
+    }
 
     var count2 = 0;
     var names = "";
     function dbDekiDeleteElectionlar(){
+      showLoading();
       const list_div = document.querySelector("#list_div2");
       var dbRef = firebase.database().ref("DeleteElections");
       dbRef.on("child_added",function(snapshot2){
         var dbRef2 = firebase.database().ref("DeleteElections").child(snapshot2.key);
         dbRef2.on("child_added",function(snapshot){
-          firebase.database().ref("Kullanıcılar").child(snapshot.val().userID).on("value",function(snapshot6){
-            names = snapshot6.val().name
+          firebase.database().ref("Kullanıcılar").on("child_added",function(snapshot6){
+            firebase.database().ref("Kullanıcılar").child(snapshot6.key).child("Elections").on("child_added",function(snapshot7){
+              if(snapshot7.key == snapshot.key){
+                names = snapshot6.val().name
+                count2 += 1;
+                if(count2 % 2 == 0){
+                  list_div.innerHTML += "<div style='background-color:#eeeaea'><table style='width:100%' border='1px solid black'><tr>" + count2 + "</tr><tr><th>Sender</th><th>Category</th><th>Election Name</th><th>Ouestion</th><th>Option1</th><th>Option2</th><th>Option3</th></tr><tr><td> " + names + " </td><td><b>" + snapshot2.key + "</b></td><td>" + snapshot.val().ElectionName + "</td><td><b style='color:blue'>" + snapshot.val().Question + "</b></td><td style='text-decoration:underline'>" + snapshot.val().Option1 + "</td><td style='text-decoration:underline'>" + snapshot.val().Option2 + "</td><td style='text-decoration:underline'>" + snapshot.val().Option3 + "</td></tr></table></div>"
+                }else{
+                  list_div.innerHTML += "<div style='background-color:#f9f9f9'><table style='width:100%' border='1px solid black'><tr>" + count2 + "</tr><tr><th>Sender</th><th>Category</th><th>Election Name</th><th>Ouestion</th><th>Option1</th><th>Option2</th><th>Option3</th></tr><tr><td> " + names+ " </td><td><b>" + snapshot2.key + "</b></td><td>" + snapshot.val().ElectionName + "</td><td><b style='color:blue'>" + snapshot.val().Question + "</b></td><td style='text-decoration:underline'>" + snapshot.val().Option1 + "</td><td style='text-decoration:underline'>" + snapshot.val().Option2 + "</td><td style='text-decoration:underline'>" + snapshot.val().Option3 + "</td></tr></table></div>"
+                }
+              }
+
+            });
           });
-          count2 += 1;
-          if(count2 % 2 == 0){
-            list_div.innerHTML += "<div style='background-color:#eeeaea'><table style='width:100%' border='1px solid black'><tr>" + count2 + "</tr><tr><th>Sender</th><th>Category</th><th>Election Name</th><th>Ouestion</th><th>Option1</th><th>Option2</th><th>Option3</th></tr><tr><td> " + names + " </td><td><b>" + snapshot2.key + "</b></td><td>" + snapshot.val().ElectionName + "</td><td><b style='color:blue'>" + snapshot.val().Question + "</b></td><td style='text-decoration:underline'>" + snapshot.val().Option1 + "</td><td style='text-decoration:underline'>" + snapshot.val().Option2 + "</td><td style='text-decoration:underline'>" + snapshot.val().Option3 + "</td></tr></table></div>"
-          }else{
-            list_div.innerHTML += "<div style='background-color:#f9f9f9'><table style='width:100%' border='1px solid black'><tr>" + count2 + "</tr><tr><th>Sender</th><th>Category</th><th>Election Name</th><th>Ouestion</th><th>Option1</th><th>Option2</th><th>Option3</th></tr><tr><td> " + names+ " </td><td><b>" + snapshot2.key + "</b></td><td>" + snapshot.val().ElectionName + "</td><td><b style='color:blue'>" + snapshot.val().Question + "</b></td><td style='text-decoration:underline'>" + snapshot.val().Option1 + "</td><td style='text-decoration:underline'>" + snapshot.val().Option2 + "</td><td style='text-decoration:underline'>" + snapshot.val().Option3 + "</td></tr></table></div>"
-
-          }
-
 
         });
-
+        showPage();
       });
+
     }
 
-    function allElections(){
-      count = 0;
+    var countReject = 0;
+    var rejectElectionslariCek = function(){
+      showLoading();
       const list_div = document.querySelector("#list_div2");
-      list_div.innerHTML = ""
-      electionlariCek();
-      document.getElementById("finishELections").style.backgroundColor = "#f3f3f3";
-      document.getElementById("ongoingElections").style.backgroundColor = "#f3f3f3";
-      document.getElementById("deleteElections").style.backgroundColor = "#f3f3f3";
-      document.getElementById("allElections").style.backgroundColor = "#15adcb";
+      firebase.database().ref("RejectedElections").on("child_added",function(rejectSnap){
+        firebase.database().ref("RejectedElections").child(rejectSnap.key).on("child_added",function(rejectSnap2){
+          firebase.database().ref("Kullanıcılar").on("child_added",function(userSnap1){
+            firebase.database().ref("Kullanıcılar").child(userSnap1.key).child("Elections").on("child_added",function(userSnap2){
+              if(userSnap2.key == rejectSnap2.key){
+                countReject += 1;
+                if(countReject % 2 == 0){
+                  list_div.innerHTML += "<div style='background-color:#eeeaea'><table style='width:100%' border='1px solid black'><tr>" + countReject + "</tr><tr><th>Sender</th><th>Category</th><th>Ouestion</th><th>Option1</th><th>Option2</th><th>Option3</th></tr><tr><td> " + userSnap1.val().name + " </td><td><b>" + rejectSnap.key + "</b></td><td><b style='color:blue'>" + rejectSnap2.val().Question + "</b></td><td style='text-decoration:underline'>" + rejectSnap2.val().Option1 + "</td><td style='text-decoration:underline'>" + rejectSnap2.val().Option2 + "</td><td style='text-decoration:underline'>" + rejectSnap2.val().Option3 + "</td></tr></table></div>"
+                }else{
+                  list_div.innerHTML += "<div style='background-color:#f9f9f9'><table style='width:100%' border='1px solid black'><tr>" + countReject + "</tr><tr><th>Sender</th><th>Category</th><th>Ouestion</th><th>Option1</th><th>Option2</th><th>Option3</th></tr><tr><td> " + userSnap1.val().name + " </td><td><b>" + rejectSnap.key + "</b></td><td><b style='color:blue'>" + rejectSnap2.val().Question + "</b></td><td style='text-decoration:underline'>" + rejectSnap2.val().Option1 + "</td><td style='text-decoration:underline'>" + rejectSnap2.val().Option2 + "</td><td style='text-decoration:underline'>" + rejectSnap2.val().Option3 + "</td></tr></table></div>"
+
+                }
+              }
+            });
+          });
+        });
+        showPage();
+      });
     }
 
     function deleteElections(){
@@ -340,27 +425,56 @@
       document.getElementById("finishELections").style.backgroundColor = "#f3f3f3";
       document.getElementById("ongoingElections").style.backgroundColor = "#f3f3f3";
       document.getElementById("deleteElections").style.backgroundColor = "#15adcb";
-      document.getElementById("allElections").style.backgroundColor = "#f3f3f3";
+      document.getElementById("rejectElections").style.backgroundColor = "#f3f3f3";
     }
 
     function ongoingElections(){
+      count = 0;
+      const list_div = document.querySelector("#list_div2");
+      list_div.innerHTML = ""
+      OngoingElectionlariCek();
       document.getElementById("finishELections").style.backgroundColor = "#f3f3f3";
       document.getElementById("ongoingElections").style.backgroundColor = "#15adcb";
       document.getElementById("deleteElections").style.backgroundColor = "#f3f3f3";
-      document.getElementById("allElections").style.backgroundColor = "#f3f3f3";
-      alert("Eklenecek");
+      document.getElementById("rejectElections").style.backgroundColor = "#f3f3f3";
+
+    }
+
+    function rejectElections(){
+
+      countReject = 0;
+      const list_div = document.querySelector("#list_div2");
+      list_div.innerHTML = ""
+      rejectElectionslariCek();
+      document.getElementById("finishELections").style.backgroundColor = "#f3f3f3";
+      document.getElementById("ongoingElections").style.backgroundColor = "#f3f3f3";
+      document.getElementById("deleteElections").style.backgroundColor = "#f3f3f3";
+      document.getElementById("rejectElections").style.backgroundColor = "#15adcb";
     }
 
     function finishELections(){
+
+      const list_div = document.querySelector("#list_div2");
+      list_div.innerHTML = ""
       document.getElementById("finishELections").style.backgroundColor = "#15adcb";
       document.getElementById("ongoingElections").style.backgroundColor = "#f3f3f3";
       document.getElementById("deleteElections").style.backgroundColor = "#f3f3f3";
-      document.getElementById("allElections").style.backgroundColor = "#f3f3f3";
+      document.getElementById("rejectElections").style.backgroundColor = "#f3f3f3";
       alert("Eklenecek");
     }
 
     function timedRefresh(timeoutPeriod) {
     setTimeout("location.reload(true);",timeoutPeriod); // otomatik refresh.
+    }
+
+    function showPage() {
+      document.getElementById("loader").style.display = "none";
+      document.getElementById("myDiv").style.display = "block";
+    }
+
+    function showLoading() {
+      document.getElementById("loader").style.display = "block";
+      document.getElementById("myDiv").style.display = "none";
     }
 
     </script>
