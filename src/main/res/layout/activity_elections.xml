@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".Elections"
+    >
+
+        <RelativeLayout
+            android:id="@+id/relativelection"
+            android:layout_width="match_parent"
+            android:layout_height="51dp"
+            android:background="@drawable/back4">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbaelections"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="?attr/actionBarSize">
+
+            </android.support.v7.widget.Toolbar>
+        </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/popularRelative"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tab">
+        <ListView
+            android:id="@+id/popularE"
+            android:visibility="invisible"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </ListView>
+
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/resultsElection"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tab">
+        <ListView
+            android:id="@+id/resutsE"
+            android:visibility="invisible"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </ListView>
+
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/tab"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/relativelection">
+
+        <Button
+            android:id="@+id/categories"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Categories" />
+
+        <Button
+            android:id="@+id/popularelections"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Popular Elections" />
+
+        <Button
+            android:id="@+id/results"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Results" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/butonlar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tab"
+        android:orientation="vertical">
+
+
+        <Button
+            android:id="@+id/sport"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="5dp"
+            android:text="Sport" />
+
+        <Button
+            android:id="@+id/history"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="5dp"
+            android:text="History" />
+
+        <Button
+            android:id="@+id/culture"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="5dp"
+            android:text="Culture" />
+
+        <Button
+            android:id="@+id/science"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="5dp"
+            android:text="Science" />
+
+        <Button
+            android:id="@+id/cinema"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="5dp"
+            android:text="Cinema" />
+
+        <Button
+            android:id="@+id/art"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="5dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="5dp"
+            android:text="Art" />
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/ürünara2"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tab"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/ürünara"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Search Elections"
+            android:visibility="invisible"/>
+
+        <ListView
+            android:id="@+id/listView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:divider="@null"
+            android:dividerHeight="0dp"
+            android:isScrollContainer="true"
+            android:visibility="invisible"/>
+    </LinearLayout>
+    <TextView
+        android:id="@+id/noelection"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:text="There is no election at this time."
+        android:textColor="@color/black"
+        android:visibility="invisible" />
+</RelativeLayout>

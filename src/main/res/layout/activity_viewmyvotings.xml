@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".viewmyvotings"
+    android:background="#ffff"
+    android:orientation="vertical"
+    android:weightSum="100"
+    >
+    <LinearLayout
+        android:id="@+id/relativelection"
+        android:layout_width="match_parent"
+        android:layout_height="51dp"
+        android:orientation="horizontal"
+        android:background="@drawable/back4"
+
+        >
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbaelections"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="?attr/actionBarSize">
+
+        </android.support.v7.widget.Toolbar>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_weight="100"
+        >
+        <EditText
+            android:id="@+id/search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/relativelection"
+            android:hint="Search My vote ..."/>
+        <ExpandableListView
+            android:id="@+id/viewvote"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            >
+        </ExpandableListView>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="bottom"
+        android:layout_weight="0"
+        android:weightSum="2"
+
+        >
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/continuedelections"
+            android:layout_weight="1"
+            android:hint="Continued"
+            android:background="@drawable/vieweditbuttonleft"
+            android:textColorHint="#ffff"
+            />
+
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/completeelections"
+            android:layout_weight="1"
+            android:hint="Completed"
+            android:background="@drawable/vieweditbuttonright"
+            android:textColorHint="#ffff"
+            />
+
+    </LinearLayout>
+
+
+
+</LinearLayout>
+

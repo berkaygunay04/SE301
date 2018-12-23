@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ViewMyPublishedElections"
+    android:orientation="vertical"
+    android:weightSum="8"
+    android:layout_gravity="bottom"
+
+    >
+
+    <TextView
+        android:id="@+id/selectiontext1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_weight="4"
+        android:textColorHint="#000"
+        android:hint="Ceyda vs Şeyda"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:textSize="20sp"
+        android:background="@drawable/editvote"
+        android:layout_marginRight="1dp"
+        android:layout_marginTop="1dp"
+        android:layout_marginLeft="1dp"
+        />
+
+    <RadioGroup
+        android:id="@+id/selection1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_weight="4"
+        android:weightSum="3"
+        android:layout_gravity="left"
+        >
+        <RadioButton
+            android:id="@+id/radiobutton11"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Selection1"
+            android:textColor="#121111"
+            android:textSize="20sp"
+            />
+        <RadioButton
+            android:id="@+id/radiobutton22"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Selection2"
+            android:textColor="#121111"
+            android:textSize="20sp"
+            />
+        <RadioButton
+            android:id="@+id/radiobutton33"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Selection3"
+            android:textColor="#121111"
+            android:textSize="20sp"
+            />
+    </RadioGroup>
+
+</LinearLayout>
