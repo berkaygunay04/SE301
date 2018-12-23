@@ -1,0 +1,22 @@
+{
+  "name": "adminpanel-301",
+  "version": "1.0.0",
+  "description": "ogedaysunar",
+  "main": "email.js",
+  "scripts": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ogedaysunar/SE301Admin.git"
+  },
+  "keywords": [
+    "ogeday"
+  ],
+  "author": "ogedaysunar",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ogedaysunar/SE301Admin/issues"
+  },
+  "homepage": "https://github.com/ogedaysunar/SE301Admin#readme"
+}

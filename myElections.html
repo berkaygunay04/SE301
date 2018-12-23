@@ -173,7 +173,7 @@
                             <li id="ongoingElections" class="lili"><a onclick="ongoingElections()" href="#">My Ongoing Elections</a></li>
                             <li id="finishELections" class="lili"><a onclick="finishELections()" href="#">My Finish Elections</a></li>
                             <li id="deleteElections" class="lili"><a onclick="deleteElections()" href="#">My Delete Election</a></li>
-                            <li id="allAdminElections" class="lili"><a onclick="allAdminElections()" href="#">All Admin Ongoing Elections</a></li>
+
                           </ul>
                         </div>
 
@@ -181,6 +181,8 @@
                     </div>
 
 
+
+                    <h3 id="thereIsNo"></h3>
               <div class="main-list" id="list_div3">
                 <div class="list-item">
 
@@ -255,12 +257,12 @@
 
     var countPending = 0;
     var badgePending = function(){
-      firebase.database().ref("Elections").on("child_added",function(elecSnap1){
-        firebase.database().ref("Elections").child(elecSnap1.key).on("child_added",function(elecSnap2){
-          if(elecSnap2.val().AdminOnay == false){
+      firebase.database().ref("WaitingElections").on("child_added",function(elecSnap1){
+        firebase.database().ref("WaitingElections").child(elecSnap1.key).on("child_added",function(elecSnap2){
+
             countPending += 1;
             document.getElementById("spanID4").innerHTML = countPending
-          }
+
         });
       });
     }
@@ -269,23 +271,50 @@
     count7 = 0;
     var getMyElections = function(){
       const list_div3 = document.querySelector("#list_div3");
-      firebase.database().ref("Elections").on("child_added",function(snapshot){
-        firebase.database().ref("Elections").child(snapshot.key).on("child_added",function(snapshot2){
-          firebase.database().ref("Admin").child(currentUserID).child("Elections").on("child_added",function(snapshot3){
-            if(snapshot2.key == snapshot3.key){
-              count7 += 1;
-              if(count7 % 2 == 0){
-                  list_div3.innerHTML += "<div style='background-color:#eeeaea'><table style='width:100%' border='1px solid black'><tr>" + count7 + "</tr><tr><th>Category</th><th>Election Name</th><th>Ouestion</th><th>Option1</th><th>Option2</th><th>Option3</th><th>Durum</th></tr><tr><td><b>" + snapshot.key + "</b></td><td>" + snapshot2.val().ElectionName + "</td><td><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td style='text-decoration:underline'>" + snapshot2.val().Option1 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option2 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option3 + "</td><td><b style='color:green'>Devam ediyor..</b></td><td><th><button onclick='Delete(\"" +  currentUserID + "\",\"" +  snapshot2.key + "\")' style='background-color:#e7280d;color:white' class='buttons'>Delete</button></th></td></tr></table></div>"
-              }else{
-                  list_div3.innerHTML += "<div style='background-color:#f9f9f9'><table style='width:100%' border='1px solid black'><tr>" + count7 + "</tr><tr><th>Category</th><th>Election Name</th><th>Ouestion</th><th>Option1</th><th>Option2</th><th>Option3</th><th>Durum</th></tr><tr><td><b>" + snapshot.key + "</b></td><td>" + snapshot2.val().ElectionName + "</td><td><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td style='text-decoration:underline'>" + snapshot2.val().Option1 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option2 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option3 + "</td><td><b style='color:green'>Devam ediyor..</b></td><td><th><button onclick='Delete(\"" +  currentUserID + "\",\"" +  snapshot2.key + "\")' style='background-color:#e7280d;color:white' class='buttons'>Delete</button></th></td></tr></table></div>"
-              }
+      firebase.database().ref("Elections").on("value",function(snapshotValue){
 
-            }
+        var exists = (snapshotValue.val() !== null);
+        if(exists){
+          firebase.database().ref("Elections").on("child_added",function(snapshot){
+            firebase.database().ref("Elections").child(snapshot.key).on("child_added",function(snapshot2){
+              firebase.database().ref("Admin").child(currentUserID).child("Elections").on("value",function(kontrol){
+                var exists2 = (kontrol.val() !== null);
+                if(exists2){
+                  firebase.database().ref("Admin").child(currentUserID).child("Elections").on("child_added",function(snapshot3){
+                    if(snapshot2.key == snapshot3.key){
+
+                      count7 += 1;
+                      if(count7 % 2 == 0){
+                          list_div3.innerHTML += "<div style='background-color:#eeeaea'><table style='width:100%' border='1px solid black'><tr>" + count7 + "</tr><tr><th>Category</th><th>Election Name</th><th>Ouestion</th><th>Option1</th><th>Option2</th><th>Option3</th></tr><tr><td><b>" + snapshot.key + "</b></td><td>" + snapshot2.val().ElectionName + "</td><td><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td style='text-decoration:underline'>" + snapshot2.val().Option1 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option2 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option3 + "</td><td><th><button onclick='Delete(\"" +  currentUserID + "\",\"" +  snapshot2.key + "\")' style='background-color:#e7280d;color:white' class='buttons'>Delete</button></th></td></tr></table></div>"
+                      }else{
+                          list_div3.innerHTML += "<div style='background-color:#f9f9f9'><table style='width:100%' border='1px solid black'><tr>" + count7 + "</tr><tr><th>Category</th><th>Election Name</th><th>Ouestion</th><th>Option1</th><th>Option2</th><th>Option3</th></tr><tr><td><b>" + snapshot.key + "</b></td><td>" + snapshot2.val().ElectionName + "</td><td><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td style='text-decoration:underline'>" + snapshot2.val().Option1 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option2 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option3 + "</td><td><th><button onclick='Delete(\"" +  currentUserID + "\",\"" +  snapshot2.key + "\")' style='background-color:#e7280d;color:white' class='buttons'>Delete</button></th></td></tr></table></div>"
+                      }
+
+                    }
+
+                    if(count7 == 0){
+                      document.getElementById("thereIsNo").innerHTML = "There is no election."
+                    }else{
+                      document.getElementById("thereIsNo").innerHTML = "Elections"
+                    }
+
+                  });
+                }else{
+
+                }
+
+              });
+
+
+            });
+
           });
+        }else{
 
-        });
+        }
         showPage();
       });
+
     }
     getMyElections();
 
@@ -307,58 +336,137 @@
       showLoading();
       const list_div = document.querySelector("#list_div3");
       var dbRef = firebase.database().ref("DeleteElections");
-      dbRef.on("child_added",function(snapshot2){
-        var dbRef2 = firebase.database().ref("DeleteElections").child(snapshot2.key);
-        dbRef2.on("child_added",function(snapshot){
-          firebase.database().ref("Admin").on("child_added",function(snapshot6){
-            firebase.database().ref("Admin").child(snapshot6.key).child("Elections").on("child_added",function(snapshot7){
-              if(snapshot7.key == snapshot.key){
-                names = snapshot6.val().name
-                count2 += 1;
-                if(count2 % 2 == 0){
-                  list_div.innerHTML += "<div style='background-color:#eeeaea'><table style='width:100%' border='1px solid black'><tr>" + count2 + "</tr><tr><th>Sender</th><th>Category</th><th>Election Name</th><th>Ouestion</th><th>Option1</th><th>Option2</th><th>Option3</th></tr><tr><td> " + names + " </td><td><b>" + snapshot2.key + "</b></td><td>" + snapshot.val().ElectionName + "</td><td><b style='color:blue'>" + snapshot.val().Question + "</b></td><td style='text-decoration:underline'>" + snapshot.val().Option1 + "</td><td style='text-decoration:underline'>" + snapshot.val().Option2 + "</td><td style='text-decoration:underline'>" + snapshot.val().Option3 + "</td></tr></table></div>"
+      dbRef.on("value",function(snapshotValue){
+        var exists = (snapshotValue.val() !== null);
+        if(exists){
+          dbRef.on("child_added",function(snapshot2){
+            var dbRef2 = firebase.database().ref("DeleteElections").child(snapshot2.key);
+            dbRef2.on("child_added",function(snapshot){
+              firebase.database().ref("Admin").on("child_added",function(snapshot6){
+                firebase.database().ref("Admin").child(snapshot6.key).child("Elections").on("child_added",function(snapshot7){
+                  if(snapshot7.key == snapshot.key){
+                    names = snapshot6.val().name
+                    count2 += 1;
+                    if(count2 % 2 == 0){
+                      list_div.innerHTML += "<div style='background-color:#eeeaea'><table style='width:100%' border='1px solid black'><tr>" + count2 + "</tr><tr><th>Sender</th><th>Category</th><th>Election Name</th><th>Ouestion</th><th>Option1</th><th>Option2</th><th>Option3</th></tr><tr><td> " + names + " </td><td><b>" + snapshot2.key + "</b></td><td>" + snapshot.val().ElectionName + "</td><td><b style='color:blue'>" + snapshot.val().Question + "</b></td><td style='text-decoration:underline'>" + snapshot.val().Option1 + "</td><td style='text-decoration:underline'>" + snapshot.val().Option2 + "</td><td style='text-decoration:underline'>" + snapshot.val().Option3 + "</td></tr></table></div>"
+                    }else{
+                      list_div.innerHTML += "<div style='background-color:#f9f9f9'><table style='width:100%' border='1px solid black'><tr>" + count2 + "</tr><tr><th>Sender</th><th>Category</th><th>Election Name</th><th>Ouestion</th><th>Option1</th><th>Option2</th><th>Option3</th></tr><tr><td> " + names+ " </td><td><b>" + snapshot2.key + "</b></td><td>" + snapshot.val().ElectionName + "</td><td><b style='color:blue'>" + snapshot.val().Question + "</b></td><td style='text-decoration:underline'>" + snapshot.val().Option1 + "</td><td style='text-decoration:underline'>" + snapshot.val().Option2 + "</td><td style='text-decoration:underline'>" + snapshot.val().Option3 + "</td></tr></table></div>"
+                    }
+                  }
+                });
+                if(count2 == 0){
+                  document.getElementById("thereIsNo").innerHTML = "There is no election."
                 }else{
-                  list_div.innerHTML += "<div style='background-color:#f9f9f9'><table style='width:100%' border='1px solid black'><tr>" + count2 + "</tr><tr><th>Sender</th><th>Category</th><th>Election Name</th><th>Ouestion</th><th>Option1</th><th>Option2</th><th>Option3</th></tr><tr><td> " + names+ " </td><td><b>" + snapshot2.key + "</b></td><td>" + snapshot.val().ElectionName + "</td><td><b style='color:blue'>" + snapshot.val().Question + "</b></td><td style='text-decoration:underline'>" + snapshot.val().Option1 + "</td><td style='text-decoration:underline'>" + snapshot.val().Option2 + "</td><td style='text-decoration:underline'>" + snapshot.val().Option3 + "</td></tr></table></div>"
+                  document.getElementById("thereIsNo").innerHTML = "Elections"
                 }
-              }
+              });
 
             });
-          });
 
-        });
+          });
+        }else{
+
+        }
         showPage();
       });
 
+
     }
 
-    var count = 0;
+    /*var count = 0;
     function allAdminDevamEdenElectionlar(){
       showLoading();
       const list_div = document.querySelector("#list_div3");
       var userRef = firebase.database().ref("Elections");
-      userRef.on("child_added",function(snapshot){
-        firebase.database().ref("Elections").child(snapshot.key).on("child_added",function(snapshot2){
-          firebase.database().ref("Admin").on("child_added",function(userSnap1){
-            firebase.database().ref("Admin").child(userSnap1.key).child("Elections").on("child_added",function(userSnap2){
-              if(snapshot2.val().AdminOnay == true){
-                // ve buraya tarih durumunu ekleyeceğiz. yani eğer bitme tarihi gelmemiş ve onaylanmış ise göster yapacağız.
-                if(snapshot2.key == userSnap2.key){
-                  count += 1;
-                  if(count % 2 == 0){
-                    list_div.innerHTML += "<div style='background-color:#eeeaea'><table style='width:100%' border='1px solid black'><tr>" + count + "</tr><tr><th>Sender</th><th>Category</th><th>Election Name</th><th>Ouestion</th><th>Option1</th><th>Option2</th><th>Option3</th></tr><tr><td> " + userSnap1.val().name + " </td><td><b>" + snapshot.key + "</b></td><td>" + snapshot2.val().ElectionName + "</td><td><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td style='text-decoration:underline'>" + snapshot2.val().Option1 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option2 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option3 + "</td><td><th><button onclick='stop()' style='background-color:red;color:white' class='buttons'>Stop</button></th><th><button onclick='Delete(\"" +  snapshot2.key + "\")' style='background-color:red;color:white' class='buttons'>Delete</button></th></td></tr></table></div>"
-                  }else{
-                    list_div.innerHTML += "<div style='background-color:#f9f9f9'><table style='width:100%' border='1px solid black'><tr>" + count + "</tr><tr><th>Sender</th><th>Category</th><th>Election Name</th><th>Ouestion</th><th>Option1</th><th>Option2</th><th>Option3</th></tr><tr><td> " + userSnap1.val().name + " </td><td><b>" + snapshot.key + "</b></td><td>" + snapshot2.val().ElectionName + "</td><td><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td style='text-decoration:underline'>" + snapshot2.val().Option1 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option2 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option3 + "</td><td><th><button onclick='stop()' style='background-color:red;color:white' class='buttons'>Stop</button></th><th><button onclick='Delete(\"" +  snapshot2.key + "\")' style='background-color:red;color:white' class='buttons'>Delete</button></th></td></tr></table></div>"
-                  }
-                }
+      userRef.on("value",function(snapshotValue){
+        var exists = (snapshotValue.val() !== null);
+        if(exists){
+          userRef.on("child_added",function(snapshot){
+            firebase.database().ref("Elections").child(snapshot.key).on("child_added",function(snapshot2){
+              firebase.database().ref("Admin").on("child_added",function(userSnap1){
+                firebase.database().ref("Admin").child(userSnap1.key).child("Elections").on("value",function(kontrol){
+                    var exists2 = (kontrol.val() !== null);
+                    if(exists2){
+                      firebase.database().ref("Admin").child(userSnap1.key).child("Elections").on("child_added",function(userSnap2){
+                          // ve buraya tarih durumunu ekleyeceğiz. yani eğer bitme tarihi gelmemiş ve onaylanmış ise göster yapacağız.
+                          if(snapshot2.key == userSnap2.key){
+                            count += 1;
+                            if(count % 2 == 0){
+                              list_div.innerHTML += "<div style='background-color:#eeeaea'><table style='width:100%' border='1px solid black'><tr>" + count + "</tr><tr><th>Sender</th><th>Category</th><th>Election Name</th><th>Ouestion</th><th>Option1</th><th>Option2</th><th>Option3</th></tr><tr><td> " + userSnap1.val().name + " </td><td><b>" + snapshot.key + "</b></td><td>" + snapshot2.val().ElectionName + "</td><td><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td style='text-decoration:underline'>" + snapshot2.val().Option1 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option2 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option3 + "</td><td><th><button onclick='Delete(\"" +  snapshot2.key + "\")' style='background-color:red;color:white' class='buttons'>Delete</button></th></td></tr></table></div>"
+                            }else{
+                              list_div.innerHTML += "<div style='background-color:#f9f9f9'><table style='width:100%' border='1px solid black'><tr>" + count + "</tr><tr><th>Sender</th><th>Category</th><th>Election Name</th><th>Ouestion</th><th>Option1</th><th>Option2</th><th>Option3</th></tr><tr><td> " + userSnap1.val().name + " </td><td><b>" + snapshot.key + "</b></td><td>" + snapshot2.val().ElectionName + "</td><td><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td style='text-decoration:underline'>" + snapshot2.val().Option1 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option2 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option3 + "</td><td><th><button onclick='Delete(\"" +  snapshot2.key + "\")' style='background-color:red;color:white' class='buttons'>Delete</button></th></td></tr></table></div>"
+                            }
+                          }
 
-              }
+                      });
+                      if(count == 0){
+                        thereIsNoElection();
+                      }else{
+                        thereIsNoElection2();
+                      }
+                    }else{
+                      thereIsNoElection();
+                    }
+
+                });
+
+              });
 
             });
-          });
+            thereIsNoElection2();
 
-        });
+          });
+        }else{
+          thereIsNoElection();
+        }
         showPage();
       });
+
+    }*/
+
+    var countFinish = 0;
+    var finishELectionsCek = function(){
+      showLoading();
+      const list_div = document.querySelector("#list_div3");
+      var userRef = firebase.database().ref("Results");
+      userRef.on("value",function(snapshotValue){
+        var exists = (snapshotValue.val() !== null);
+        if(exists){
+          userRef.on("child_added",function(snapshot){
+              firebase.database().ref("Results").child(snapshot.key).on("child_added",function(snapshot2){
+
+                  firebase.database().ref("Admin").on("child_added",function(userSnap1){
+                    firebase.database().ref("Admin").child(userSnap1.key).child("Elections").on("child_added",function(userSnap2){
+
+
+                        // ve buraya tarih durumunu ekleyeceğiz. yani eğer bitme tarihi gelmemiş ve onaylanmış ise göster yapacağız.
+                        if(snapshot2.key == userSnap2.key){
+                          countFinish += 1;
+                          if(countFinish % 2 == 0){
+                            list_div.innerHTML += "<div style='background-color:#eeeaea'><table style='width:100%' border='1px solid black'><tr>" + countFinish + "</tr><tr><th>Sender</th><th>Category</th><th>Election Name</th><th>Ouestion</th><th>Option1</th><th>Option2</th><th>Option3</th></tr><tr><td> " + userSnap1.val().name + " </td><td><b>" + snapshot.key + "</b></td><td>" + snapshot2.val().ElectionName + "</td><td><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td style='text-decoration:underline'>" + snapshot2.val().Option1 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option2 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option3 + "</td><td><th><button onclick='Delete(\"" +  snapshot2.key + "\")' style='background-color:red;color:white' class='buttons'>Delete</button></th></td></tr></table></div>"
+                          }else{
+                            list_div.innerHTML += "<div style='background-color:#f9f9f9'><table style='width:100%' border='1px solid black'><tr>" + countFinish + "</tr><tr><th>Sender</th><th>Category</th><th>Election Name</th><th>Ouestion</th><th>Option1</th><th>Option2</th><th>Option3</th></tr><tr><td> " + userSnap1.val().name + " </td><td><b>" + snapshot.key + "</b></td><td>" + snapshot2.val().ElectionName + "</td><td><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td style='text-decoration:underline'>" + snapshot2.val().Option1 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option2 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option3 + "</td><td><th><button onclick='Delete(\"" +  snapshot2.key + "\")' style='background-color:red;color:white' class='buttons'>Delete</button></th></td></tr></table></div>"
+                          }
+                        }
+                        if(countFinish == 0){
+                          document.getElementById("thereIsNo").innerHTML = "There is no election."
+                        }else{
+                          document.getElementById("thereIsNo").innerHTML = "Elections"
+                        }
+                        console.log(countFinish);
+                    });
+
+                  });
+
+              });
+
+          });
+        }else{
+
+        }
+        showPage();
+      });
+
     }
 
     function deleteElections(){
@@ -385,16 +493,17 @@
     }
 
     function finishELections(){
+      countFinish = 0;
       const list_div = document.querySelector("#list_div3");
       list_div.innerHTML = ""
+      finishELectionsCek();
       document.getElementById("finishELections").style.backgroundColor = "#15adcb";
       document.getElementById("ongoingElections").style.backgroundColor = "#f3f3f3";
       document.getElementById("deleteElections").style.backgroundColor = "#f3f3f3";
       document.getElementById("allAdminElections").style.backgroundColor = "#f3f3f3";
-      alert("Eklenecek!");
     }
 
-    function allAdminElections(){
+    /*function allAdminElections(){
       count = 0;
       const list_div = document.querySelector("#list_div3");
       list_div.innerHTML = ""
@@ -403,7 +512,7 @@
       document.getElementById("ongoingElections").style.backgroundColor = "#f3f3f3";
       document.getElementById("deleteElections").style.backgroundColor = "#f3f3f3";
       document.getElementById("allAdminElections").style.backgroundColor = "#15adcb";
-    }
+    }*/
 
 
     </script>

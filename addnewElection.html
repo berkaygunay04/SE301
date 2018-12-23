@@ -112,7 +112,9 @@
                       <option value="Culture">Culture</option>
                       <option value="History">History</option>
                       <option value="Sport">Sport</option>
-                    </select>
+                    </select><br>
+                    <label for="start">Finish date:</label>
+                    <input type="date" id="finishID" name="trip-start"><br>
                     <input id="electionName" placeholder="Enter Election Name"></input><br>
                     <textarea class="textareaStyle" id="textarea1" placeholder="Your Ouestion"></textarea>
                     <br>
@@ -209,12 +211,14 @@
       var tarih2 = currentTime();
       var tarihSon = tarih + " / " + tarih2;
 
-      console.log(category);
+      var finishDate1 = document.getElementById("finishID").value
 
-      if(yourQuestion == "" || answer1 == "" || answer2 == "" || answer3 == "" || electionName == ""){
-        alert("Please fill the blank");
+     if(yourQuestion == "" || answer1 == "" || answer2 == "" || answer3 == "" || electionName == ""){
+        alert("Please fill the blank.");
       }else if(category == "Category"){
-        alert("Please Select the Category");
+        alert("Please Select the Category.");
+      }else if(finishDate1 == ""){
+        alert("Please select finish date.");
       }else{
         var newPostKey = firebase.database().ref().push().key;
         firebase.database().ref("Elections").child(category).child(newPostKey).set({
@@ -230,6 +234,7 @@
           Question: yourQuestion,
           Type: "Admin Election",
           VoteCount: 0,
+          finishDate: finishDate1
         }).then(function(error){
           if(error){
             alert("Upss! Please try again!");

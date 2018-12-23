@@ -12,10 +12,82 @@
     <link href="assets/css/custom.css" rel="stylesheet" />
      <!-- GOOGLE FONTS-->
    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
 </head>
-<body>
+<style>
+.btn {
+  background-color: red;
+  border: none;
+  color: white;
+  padding: 0px 5px;
+  font-size: 20px;
+  cursor: pointer;
+  margin-right: 5px;
+}
 
+/* Darker background on mouse-over */
+.btn:hover {
+  background-color: green;
+}
 
+#loader {
+position: absolute;
+left: 50%;
+top: 50%;
+z-index: 1;
+width: 150px;
+height: 150px;
+margin: -75px 0 0 -75px;
+border: 16px solid #f3f3f3;
+border-radius: 50%;
+border-top: 16px solid #3498db;
+width: 120px;
+height: 120px;
+-webkit-animation: spin 2s linear infinite;
+animation: spin 2s linear infinite;
+}
+
+@-webkit-keyframes spin {
+0% { -webkit-transform: rotate(0deg); }
+100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+0% { transform: rotate(0deg); }
+100% { transform: rotate(360deg); }
+}
+
+/* Add animation to "page content" */
+.animate-bottom {
+position: relative;
+-webkit-animation-name: animatebottom;
+-webkit-animation-duration: 1s;
+animation-name: animatebottom;
+animation-duration: 1s
+}
+
+@-webkit-keyframes animatebottom {
+from { bottom:-100px; opacity:0 }
+to { bottom:0px; opacity:1 }
+}
+
+@keyframes animatebottom {
+from{ bottom:-100px; opacity:0 }
+to{ bottom:0; opacity:1 }
+}
+
+#myDiv {
+display: none;
+
+}
+
+</style>
+
+<body style="margin:0;">
+
+  <div id="loader"></div>
+<div style="display:none;" class="animate-bottom" id="myDiv">
 <form id="formAdminMain">
   <div id="wrapper">
        <div class="navbar navbar-inverse navbar-fixed-top">
@@ -82,20 +154,22 @@
                       <div class="alert alert-info">
                         <!-- WARNING: BURADA DA NOTİFİCATİON DURUMUNU SCRİPT YAZIP,
                       BEKLEYEN ELECTİONLARI SAY VE NOTİFİCATİON OLARAK BELİRT! -->
-                           <strong> You can see all the users below. </strong>
+                           <strong id="strongName"> You can see all the users below. </strong>
                       </div>
 
                   </div>
                   </div>
                 <!-- /. ROW  -->
-            <div class="row text-center pad-top">
-
-
-          //main
-
-
-
+                <h3 id="thereIsNo" style="display:none;">There is no election.</h3>
+              <div class="row text-center pad-top" style="margin-left:15px;margin-right:15px">
+                <div class="panel panel-default">
+                  <div class="panel-heading">
+                    <h3 id="nameID" style="text-align:left"class="panel-title">Name</h3>
+                  </div>
+                  <ul style="text-align:left"class="list-group" id="userLists">
+              </ul>
             </div>
+          </div>
                <!-- /. ROW  -->
 
            <!-- /. PAGE INNER  -->
@@ -161,18 +235,109 @@
 
     var countPending = 0;
     var badgePending = function(){
-      firebase.database().ref("Elections").on("child_added",function(elecSnap1){
-        firebase.database().ref("Elections").child(elecSnap1.key).on("child_added",function(elecSnap2){
-          if(elecSnap2.val().AdminOnay == false){
+      firebase.database().ref("WaitingElections").on("child_added",function(elecSnap1){
+        firebase.database().ref("WaitingElections").child(elecSnap1.key).on("child_added",function(elecSnap2){
             countPending += 1;
             document.getElementById("spanID7").innerHTML = countPending
-          }
+
         });
       });
     }
     badgePending();
 
+    var userCount = 0;
+    var toogleID = "";
+    var getUsers = function(){
+      showLoading();
+      const list_div = document.querySelector("#userLists");
+      firebase.database().ref("Kullanıcılar").on("child_added",function(userSnap1){
+        firebase.database().ref("Kullanıcılar").child(userSnap1.key).on("value",function(userSnap2){
+          userCount += 1;
+          toogleID = userCount.toString();
+          var userName = userSnap2.val().name + " " + userSnap2.val().surname
+
+          list_div.innerHTML += "<li class='list-group-item'><div class='row toggle' id='dropdown-detail' data-toggle='detail'><div onclick='ready(\"" +  toogleID + "\")' style='text-align:left' class='col-xs-10'><b>" + toogleID + "- </b>" + userName.toUpperCase() + "</div><div class='col-xs-2'><button onclick='deleteUser(\"" +  userSnap1.key + "\")' class='btn'><i class='fa fa-trash'></i></button><i onclick='ready(\"" +  toogleID + "\")' style='margin-top:7px;margin-right:20px' class='fa fa-chevron-down pull-right'></i></div></div><div style='display: none;' id=\"" +  toogleID + "\"><hr></hr><div class='container'><div style='text-align:left' class='fluid-row'><b>E-mail : </b>" + userSnap2.val().email + "<br><b>Vote Count : </b>" + userSnap2.val().UserVoteCount + "<br><button onclick='allOneUserElections(\"" +  userSnap1.key + "\")'>Approved Elections</button></div></div></div></li>"
+        });
+        showPage();
+
+    });
+  }
+    getUsers();
+
+    function deleteUser(userID){
+      if(confirm("Are you sure delete user ?")){
+        firebase.database().ref("Kullanıcılar").on("child_added",function(snapshot){
+          if(snapshot.key == userID){
+            snapshot.ref.remove(function(error){
+              alert("User is deleted.");
+            });
+          }
+        });
+      }
+    }
+
+    function allOneUserElections(userID){
+      userCount = 0;
+      const list_div = document.querySelector("#userLists");
+      list_div.innerHTML = ""
+      getUserOneElections(userID);
+    }
+
+    var userCount1 = 0;
+    function getUserOneElections(userID){
+      const list_div = document.querySelector("#userLists");
+      document.getElementById("strongName").innerHTML = "Personal elections are below."
+      firebase.database().ref("Kullanıcılar").child(userID).child("Elections").on("value",function(snapshotValue){
+        var exists = (snapshotValue.val() !== null);
+        if(exists){
+          firebase.database().ref("Kullanıcılar").child(userID).child("Elections").on("child_added",function(userElec1){
+            firebase.database().ref("Elections").on("child_added",function(elecSnap1){
+              firebase.database().ref("Elections").child(elecSnap1.key).on("child_added",function(snapshot){
+                if(snapshot.key == userElec1.key){
+                  userCount1 += 1;
+                  firebase.database().ref("Kullanıcılar").child(userID).on("value",function(nameSnap){
+                    var names = nameSnap.val().name + " " + nameSnap.val().surname
+                    document.getElementById("nameID").innerHTML = "<div><button class='fa fa-arrow-left'></button>" + names.toUpperCase() + "</div>"
+                  });
+                  if(userCount1 % 2 == 0){
+                    list_div.innerHTML += "<div style='background-color:#eeeaea'><table style='width:100%;' border='1px solid black'><tr>" + userCount1 + "</tr><tr><th>Category</th><th>Election Name</th><th>Ouestion</th><th>Option1</th><th>Option2</th><th>Option3</th></tr><tr><td><b>" + elecSnap1.key + "</b></td><td>" + snapshot.val().ElectionName + "</td><td><b style='color:blue'>" + snapshot.val().Question + "</b></td><td style='text-decoration:underline'>" + snapshot.val().Option1 + "</td><td style='text-decoration:underline'>" + snapshot.val().Option2 + "</td><td style='text-decoration:underline'>" + snapshot.val().Option3 + "</td></tr></table></div>"
+                  }else{
+                    list_div.innerHTML += "<div style='background-color:#f9f9f9'><table style='width:100%' border='1px solid black'><tr>" + userCount1 + "</tr><tr><th>Category</th><th>Election Name</th><th>Ouestion</th><th>Option1</th><th>Option2</th><th>Option3</th></tr></td><td><b>" + elecSnap1.key + "</b></td><td>" + snapshot.val().ElectionName + "</td><td><b style='color:blue'>" + snapshot.val().Question + "</b></td><td style='text-decoration:underline'>" + snapshot.val().Option1 + "</td><td style='text-decoration:underline'>" + snapshot.val().Option2 + "</td><td style='text-decoration:underline'>" + snapshot.val().Option3 + "</td></tr></table></div>"
+                  }
+                }
+              });
+            });
+          });
+        }else{
+          document.getElementById("nameID").innerHTML = "<div><button class='fa fa-arrow-left'></button>There is no election.</div>"
+        }
+      });
+
+
+    }
+
+    function showPage() {
+      document.getElementById("loader").style.display = "none";
+      document.getElementById("myDiv").style.display = "block";
+    }
+
+    function showLoading() {
+      document.getElementById("loader").style.display = "block";
+      document.getElementById("myDiv").style.display = "none";
+    }
+
+    function thereIsNoElection2() {
+    //  document.getElementById("elecTitle").style.display = "block";
+      document.getElementById("thereIsNo").style.display = "none";
+    }
+
+    function thereIsNoElection() {
+    //  document.getElementById("elecTitle").style.display = "none";
+      document.getElementById("thereIsNo").style.display = "block";
+    }
+
     </script>
+    <script src="acil.js"></script>
 
 </body>
 </html>

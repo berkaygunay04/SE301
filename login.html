@@ -38,7 +38,7 @@
 					</span>
 
 					<div class="wrap-input100 validate-input m-b-10" data-validate = "Username is required">
-						<input id="email" class="input100" type="text" name="email" placeholder="Username">
+						<input id="email" class="input100" type="text" name="email" placeholder="E-mail">
 						<span class="focus-input100"></span>
 						<span class="symbol-input100">
 							<i class="fa fa-user"></i>
@@ -114,26 +114,40 @@
 	});
 
 	function login1(){
-	  var email = document.getElementById("email").value;
-	  var password = document.getElementById("pass").value;
+		var adminMailler = [];
+		var adminMi = false;
 	  // dbden admin mailleri çek
-	  if(email == "ogeday.sunar@gmail.com"){ // buraya elle girersin.
-	    firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
-	      // Handle Errors here.
-	    var errorCode = error.code;
-	    var errorMessage = error.message;
-	    if (errorCode == 'auth/wrong-password') {
-	        alert('Wrong password.');
-	      } else if(errorCode == 'auth/network-request-failed'){
-	        alert('Please check your internet connection.');
-	      }else if (errorCode == '') {
-	      //   window.location.href = "http://nefisss.net/adminMain.html";
-	      }
-	      console.log(error);
-	  });
-	}else{
-	  alert("Wrong e-mail or password.");
-	}
+		firebase.database().ref("Admin").on("child_added",function(adminSnap1){
+			firebase.database().ref("Admin").child(adminSnap1.key).on("value",function(adminSnap2){
+				var email = document.getElementById("email").value;
+				var password = document.getElementById("pass").value;
+				if(adminSnap2.val().email == email){
+						if(email == "" || password == ""){
+								alert("Please enter e-mail or password");
+						}else{
+		  					firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+								// Handle Errors here.
+								var errorCode = error.code;
+								var errorMessage = error.message
+						    	if (errorCode == 'auth/wrong-password') {
+											alert('Wrong password.');
+									} else if(errorCode == 'auth/network-request-failed'){
+											alert('Please check your internet connection.');
+									}else if (errorCode == '') {
+										//   window.location.href = "http://nefisss.net/adminMain.html";
+							   	}
+									console.log(error);
+							});
+						}
+				}else{
+					adminMi = true;
+				}
+			});
+		});
+		if(adminMi){
+			alert("This is not a admin e-mail.");
+		}
+
 	}
 	</script>
 

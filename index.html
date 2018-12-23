@@ -179,7 +179,7 @@
                     <div class="div-square">
                          <a href="allUsers.html" >
   <i class="fa fa-users fa-5x"></i>
-                    <h4>Delete Users</h4>
+                    <h4>View All Users</h4>
                     </a>
                     </div>
                 </div>
@@ -255,31 +255,35 @@
     var electionlariCek = function(){
 
       const list_div = document.querySelector("#list_div");
-      var userRef = firebase.database().ref().child("Elections");
-      userRef.on("child_added",function(snapshot){
-        var userRef2 = firebase.database().ref().child("Elections").child(snapshot.key);
+      var userRef = firebase.database().ref().child("WaitingElections");
+      userRef.on("value",function(snapshotValue){
+        var exists = (snapshotValue.val() !== null);
+        if(exists){
+          userRef.on("child_added",function(snapshot){
+            var userRef2 = firebase.database().ref().child("WaitingElections").child(snapshot.key);
 
-        userRef2.on("child_added",function(snapshot2){
-          if(snapshot2.val().AdminOnay == false){
+            userRef2.on("child_added",function(snapshot2){
 
-            var userRef3 = firebase.database().ref().child("Kullanıcılar");
-            userRef3.on("child_added",function(snapshot3){
-              var userRef4 = firebase.database().ref().child("Kullanıcılar").child(snapshot3.key).child("Elections");
-              userRef4.on("child_added",function(snapshot4){
-                if(snapshot2.key == snapshot4.key){
-                  count += 1;
+                var userRef3 = firebase.database().ref().child("Kullanıcılar");
+                userRef3.on("child_added",function(snapshot3){
+                  var userRef4 = firebase.database().ref().child("Kullanıcılar").child(snapshot3.key).child("Elections");
+                  userRef4.on("child_added",function(snapshot4){
+                    if(snapshot2.key == snapshot4.key){
+                      count += 1;
 
-                  document.getElementById("welcomeID").innerHTML = "You have " + count + " elections waiting today."
-                  document.getElementById("spanID").innerHTML = count
-                }
-              });
+                      document.getElementById("welcomeID").innerHTML = "You have " + count + " elections waiting today."
+                      document.getElementById("spanID").innerHTML = count
+                    }
+                  });
+                });
+
             });
-          }
-          console.log(snapshot2.val().AdminOnay);
 
-        });
+          });
+        }
         showPage();
       });
+
     }
     electionlariCek();
 

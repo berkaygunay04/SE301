@@ -12,6 +12,7 @@
     <link href="assets/css/custom.css" rel="stylesheet" />
      <!-- GOOGLE FONTS-->
    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 </head>
 <style>
 #loader {
@@ -156,17 +157,18 @@ display: none;
                   <div class="col-lg-12 ">
                       <div class="alert alert-info">
 
-                           <strong id="strongID"></strong>
+                           <strong id="strongID">There is no notificaiton.</strong>
                       </div>
 
                   </div>
                   </div>
 
                   <div>
-
+                    <h3 id="elecTitle">Waiting Elections For Approve or Rejected</h3>
+                    <h3 id="thereIsNo" style="display:none;">There is no election.</h3>
                     <div class="main-list" id="list_div">
                       <div class="list-item">
-                        <h3>Waiting Elections For Approve or Rejected</h3>
+
 
                         <div class="butonClass">
                         </div>
@@ -217,6 +219,7 @@ display: none;
   firebase.initializeApp(config);
 </script>
 
+
     <script>
     firebase.auth().onAuthStateChanged(function(user) {
       if (user) {
@@ -239,78 +242,117 @@ display: none;
 
     var count = 0;
     var electionlariCek = function(){
-
       const list_div = document.querySelector("#list_div");
-      var userRef = firebase.database().ref().child("Elections");
-      userRef.on("child_added",function(snapshot){
-        var userRef2 = firebase.database().ref().child("Elections").child(snapshot.key);
+      var userRef = firebase.database().ref().child("WaitingElections");
+        userRef.on("value",function(snapshotValue){
+          var exists = (snapshotValue.val() !== null);
+          if(exists){
+            userRef.on("child_added",function(snapshot){
+              var userRef2 = firebase.database().ref().child("WaitingElections").child(snapshot.key);
 
-        userRef2.on("child_added",function(snapshot2){
-          if(snapshot2.val().AdminOnay == false){
+              userRef2.on("child_added",function(snapshot2){
+                  var userRef3 = firebase.database().ref().child("Kullanıcılar");
+                  userRef3.on("child_added",function(snapshot3){
+                    var userRef4 = firebase.database().ref().child("Kullanıcılar").child(snapshot3.key).child("Elections");
+                    userRef4.on("child_added",function(snapshot4){
+                      if(snapshot2.key == snapshot4.key){
+                        count += 1;
+                        document.getElementById("strongID").innerHTML = "Waiting " + count + " election for Approve or Reject "
+                        if(count % 2 == 0){
+                          list_div.innerHTML += "<div style='background-color:#eeeaea'><table style='width:100%' border='1px solid black'><tr>" + count + "</tr><tr><th>Sender</th><th>Category</th><th>Election Name</th><th>Ouestion</th><th>Option1</th><th>Option2</th><th>Option3</th></tr><tr><td> " + snapshot3.val().name + " </td><td><b>" + snapshot.key + "</b></td><td>" + snapshot2.val().ElectionName + "</td><td><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td style='text-decoration:underline'>" + snapshot2.val().Option1 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option2 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option3 + "</td><td><th><button onclick='approve(\"" +  snapshot.key + "\",\"" +  snapshot4.key + "\",\"" +  snapshot3.val().email + "\",\"" +  snapshot2.val().ElectionName + "\")'  style='background-color:#75e10e;color:white' class='buttons'>Approve</button></th><th><button onclick='reject(\"" +  snapshot4.key + "\",\"" +  snapshot3.val().email + "\",\"" +  snapshot2.val().ElectionName + "\")' style='background-color:#e7280d;color:white' class='buttons'>Reject</button></th></td></tr></table></div>"
+                        }else{
+                          list_div.innerHTML += "<div style='background-color:#f9f9f9'><table style='width:100%' border='1px solid black'><tr>" + count + "</tr><tr><th>Sender</th><th>Category</th><th>Election Name</th><th>Ouestion</th><th>Option1</th><th>Option2</th><th>Option3</th></tr><tr><td> " + snapshot3.val().name + " </td><td><b>" + snapshot.key + "</b></td><td>" + snapshot2.val().ElectionName + "</td><td><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td style='text-decoration:underline'>" + snapshot2.val().Option1 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option2 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option3 + "</td><td><th><button onclick='approve(\"" +  snapshot.key + "\",\"" +  snapshot4.key + "\",\"" +  snapshot3.val().email + "\",\"" +  snapshot2.val().ElectionName + "\")' style='background-color:#75e10e;color:white' class='buttons'>Approve</button></th><th><button onclick='reject(\"" +  snapshot4.key + "\",\"" +  snapshot3.val().email + "\",\"" +  snapshot2.val().ElectionName + "\")' style='background-color:#e7280d;color:white' class='buttons'>Reject</button></th></td></tr></table></div>"
 
-            var userRef3 = firebase.database().ref().child("Kullanıcılar");
-            userRef3.on("child_added",function(snapshot3){
-              var userRef4 = firebase.database().ref().child("Kullanıcılar").child(snapshot3.key).child("Elections");
-              userRef4.on("child_added",function(snapshot4){
-                if(snapshot2.key == snapshot4.key){
-                  count += 1;
-                  document.getElementById("strongID").innerHTML = "Waiting " + count + " election for Approve or Reject "
-                  if(count % 2 == 0){
-                    list_div.innerHTML += "<div style='background-color:#eeeaea'><table style='width:100%' border='1px solid black'><tr>" + count + "</tr><tr><th>Sender</th><th>Category</th><th>Election Name</th><th>Ouestion</th><th>Option1</th><th>Option2</th><th>Option3</th></tr><tr><td> " + snapshot3.val().name + " </td><td><b>" + snapshot.key + "</b></td><td>" + snapshot2.val().ElectionName + "</td><td><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td style='text-decoration:underline'>" + snapshot2.val().Option1 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option2 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option3 + "</td><td><th><button onclick='approve(\"" +  snapshot4.key + "\")' style='background-color:#75e10e;color:white' class='buttons'>Approve</button></th><th><button onclick='reject(\"" +  snapshot4.key + "\")' style='background-color:#e7280d;color:white' class='buttons'>Reject</button></th></td></tr></table></div>"
-                  }else{
-                    list_div.innerHTML += "<div style='background-color:#f9f9f9'><table style='width:100%' border='1px solid black'><tr>" + count + "</tr><tr><th>Sender</th><th>Category</th><th>Election Name</th><th>Ouestion</th><th>Option1</th><th>Option2</th><th>Option3</th></tr><tr><td> " + snapshot3.val().name + " </td><td><b>" + snapshot.key + "</b></td><td>" + snapshot2.val().ElectionName + "</td><td><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td style='text-decoration:underline'>" + snapshot2.val().Option1 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option2 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option3 + "</td><td><th><button onclick='approve(\"" +  snapshot4.key + "\")' style='background-color:#75e10e;color:white' class='buttons'>Approve</button></th><th><button onclick='reject(\"" +  snapshot4.key + "\")' style='background-color:#e7280d;color:white' class='buttons'>Reject</button></th></td></tr></table></div>"
+                        }
 
-                  }
-                }
+                      }
+
+                    });
+
+                  });
+                  thereIsNoElection2();
+                console.log(snapshot2.val().AdminOnay);
               });
-            });
-          }
-          console.log(snapshot2.val().AdminOnay);
+            })
 
+          }else{
+            thereIsNoElection();
+          }
+          showPage();
         });
-        showPage();
-      });
+
     }
     electionlariCek();
 
-    function approve(electionKey){
-      if(confirm("Are you sure approve election ?")){
-        firebase.database().ref("Elections").on("child_added",function(approveSnap1){
-          firebase.database().ref("Elections").child(approveSnap1.key).child(electionKey).update({
-            AdminOnay: true
-          });
-        });
-      }
-    }
+    function approve(categoriKey,electionKey,email,electionName){
+        if(confirm("Are you sure approve election ?")){
+        firebase.database().ref("WaitingElections").on("child_added",function(approveSnap1){
+            firebase.database().ref("WaitingElections").child(approveSnap1.key).child(electionKey).on("value",function(snapshot2){
+              firebase.database().ref("Elections").child(approveSnap1.key).child(electionKey).update({
+                ElectionName: snapshot2.val().ElectionName,
+                Option1: snapshot2.val().Option1,
+                Option2: snapshot2.val().Option2,
+                Option3: snapshot2.val().Option3,
+                Option1C: snapshot2.val().Option1C,
+                Option2C: snapshot2.val().Option2C,
+                Option3C: snapshot2.val().Option3C,
+                AdminOnay: true,
+                DateType: snapshot2.val().DateType,
+                Type: snapshot2.val().Type,
+                finishDate: snapshot2.val().finishDate,
 
-    function reject(electionKey){
-        var electionRef = firebase.database().ref("Elections");
-        electionRef.on("child_added",function(snapshot){
-          var electionRef2 = firebase.database().ref("Elections").child(snapshot.key);
-          electionRef2.on("child_added",function(snapshot2){
-            if(snapshot2.key == electionKey){ // burda tarihe göre sıralandığı için db de gelen key de tarih key olduğundan karşılaştırma yapıp hangisi geldiyse onu siliyorum.
-              var person = prompt("What is your reason for rejection ? ");
-              if (person == "") {
-                alert("Please enter your reason for rejection!");
-              } else {
-                if(confirm("Are you sure reject election ?")){
-                  snapshot2.ref.remove(function(error){
-                      //window.onload = timedRefresh(1);
-                  });
-                  firebase.database().ref("RejectedElections").child(snapshot.key).child(electionKey).set({
-                    DateType: snapshot2.val().DateType,
-                    Option1: snapshot2.val().Option1,
-                    Option2: snapshot2.val().Option2,
-                    Option3: snapshot2.val().Option3,
-                    Question: snapshot2.val().Question,
-                    RejectReason: person
-                  });
-                  //alert("Rejected success!");
-                }
-              }
+                Question: snapshot2.val().Question,
+                VoteCount: snapshot2.val().VoteCount,
+              });
+              snapshot2.ref.remove(function(error){
+                  //window.onload = timedRefresh(1);
+              });
+            });
+          });
+
+          var from,to,subject,text;
+            to= email
+            subject= electionName
+            text="Your election is approved by admin.\n\n\nHave a good day :) \n\nContact us : info@ivoted.com"
+            $.get("http://localhost:3000/send",{to:to,subject:subject,text:text},function(data){
+            if(data=="sent")
+            {
+              console.log("success");
             }
           });
+        }
+      }
+
+
+    function reject(electionKey,email,electionName){
+      if(confirm("Are you sure reject election ?")){
+        var electionRef = firebase.database().ref("WaitingElections");
+        electionRef.on("child_added",function(snapshot){
+          var electionRef2 = firebase.database().ref("WaitingElections").child(snapshot.key).child(electionKey).on("value",function(snapshot2){
+            firebase.database().ref("RejectedElections").child(snapshot.key).child(electionKey).update({
+              DateType: snapshot2.val().DateType,
+              Option1: snapshot2.val().Option1,
+              Option2: snapshot2.val().Option2,
+              Option3: snapshot2.val().Option3,
+              Question: snapshot2.val().Question,
+            });// burda tarihe göre sıralandığı için db de gelen key de tarih key olduğundan karşılaştırma yapıp hangisi geldiyse onu siliyorum.
+                snapshot2.ref.remove(function(error){
+                    //window.onload = timedRefresh(1);
+                });
+          });;
         });
+        var from,to,subject,text;
+          to= email
+          subject= electionName
+          text="Your election is rejected by admin. Incorrect questions, incorrect answers, irregularities or incomplete information. Please review these conditions and try again.\n\n\nHave a good day :) \n\nContact us : info@ivoted.com"
+          $.get("http://localhost:3000/send",{to:to,subject:subject,text:text},function(data){
+          if(data=="sent")
+          {
+            console.log("success");
+          }
+        });
+      }
+
     }
 
     function currentTime(){
@@ -344,7 +386,20 @@ display: none;
       document.getElementById("myDiv").style.display = "none";
     }
 
+    function thereIsNoElection() {
+      document.getElementById("elecTitle").style.display = "none";
+      document.getElementById("thereIsNo").style.display = "block";
+    }
+
+    function thereIsNoElection2() {
+      document.getElementById("elecTitle").style.display = "block";
+      document.getElementById("thereIsNo").style.display = "none";
+    }
+
     </script>
+
+
+
 
 </body>
 </html>
