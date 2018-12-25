@@ -1,0 +1,320 @@
+﻿<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+      <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" type="image/x-icon" href="assets/img/vote.png" />
+    <title>I-Voted Admin</title>
+	<!-- BOOTSTRAP STYLES-->
+    <link href="assets/css/bootstrap.css" rel="stylesheet" />
+     <!-- FONTAWESOME STYLES-->
+    <link href="assets/css/font-awesome.css" rel="stylesheet" />
+        <!-- CUSTOM STYLES-->
+    <link href="assets/css/custom.css" rel="stylesheet" />
+     <!-- GOOGLE FONTS-->
+   <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+   <style>
+   #loader {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 1;
+  width: 150px;
+  height: 150px;
+  margin: -75px 0 0 -75px;
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #3498db;
+  width: 120px;
+  height: 120px;
+  -webkit-animation: spin 2s linear infinite;
+  animation: spin 2s linear infinite;
+}
+
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Add animation to "page content" */
+.animate-bottom {
+  position: relative;
+  -webkit-animation-name: animatebottom;
+  -webkit-animation-duration: 1s;
+  animation-name: animatebottom;
+  animation-duration: 1s
+}
+
+@-webkit-keyframes animatebottom {
+  from { bottom:-100px; opacity:0 }
+  to { bottom:0px; opacity:1 }
+}
+
+@keyframes animatebottom {
+  from{ bottom:-100px; opacity:0 }
+  to{ bottom:0; opacity:1 }
+}
+
+#myDiv {
+  display: none;
+
+}
+   </style>
+</head>
+<body style="margin:0;">
+
+<div id="loader"></div>
+<div style="display:none;" class="animate-bottom" id="myDiv">
+<form id="formAdminMain">
+  <div id="wrapper">
+       <div class="navbar navbar-inverse navbar-fixed-top">
+          <div class="adjust-nav">
+              <div class="navbar-header">
+                  <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".sidebar-collapse">
+                      <span class="icon-bar"></span>
+                      <span class="icon-bar"></span>
+                      <span class="icon-bar"></span>
+                  </button>
+                  <a class="navbar-brand" href="#">
+                      <img src="assets/img/vote.png" />
+
+                  </a>
+
+              </div>
+          </div>
+      </div>
+      <!-- /. NAV TOP  -->
+      <nav class="navbar-default navbar-side" role="navigation">
+          <div class="sidebar-collapse">
+              <ul class="nav" id="main-menu">
+
+
+
+                  <li class="active-link">
+                      <a href="mainElections.html" ><i class="fa fa-desktop "></i>Dashboard <span class="badge">Main</span></a>
+                  </li>
+                  <li>
+                     <a href="allUsers.html"><i class="fa fa-users "></i>Users</a>
+                 </li>
+                 <li>
+                    <a href="allElections.html"><i class="fa fa-edit "></i>User Elections</a>
+                </li>
+                <li>
+                   <a href="myElections.html"><i class="fa fa-folder-open "></i>My Elections</a>
+               </li>
+                   <li>
+                      <a href="changePassword.html"><i class="fa fa-lock "></i>Change Password</a>
+                  </li>
+
+                  <li>
+                     <a onclick="logout1()" href="#"><i class="fa fa-power-off "></i>Logout</a>
+                 </li>
+
+
+
+              </ul>
+            </div>
+
+      </nav>
+      <!-- /. NAV SIDE  -->
+      <div id="page-wrapper" >
+          <div id="page-inner">
+              <div class="row">
+                  <div class="col-lg-12">
+                   <h2>ADMİN DASHBOARD</h2>
+                  </div>
+              </div>
+               <!-- /. ROW  -->
+                <hr />
+              <div class="row">
+                  <div class="col-lg-12 ">
+                      <div class="alert alert-info">
+                        <!-- WARNING: BURADA DA NOTİFİCATİON DURUMUNU SCRİPT YAZIP,
+                      BEKLEYEN ELECTİONLARI SAY VE NOTİFİCATİON OLARAK BELİRT! -->
+                           <strong>Welcome ! </strong> <p id="welcomeID">There is not notification today.</p>
+                      </div>
+
+                  </div>
+                  </div>
+                <!-- /. ROW  -->
+                          <div class="row text-center pad-top">
+                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6">
+                    <div class="div-square">
+                         <a href="approveElection.html" >
+                           <!-- WARNING: KAC TANE BEKLEYEN VAR İSE BADGE YE ONU BASTIR.
+                         BURADA BİR TANE SCRİPT YAPIP, ELECTİONLARDAN BEKLEYENLERİ SAY! -->
+  <i class="fa fa-check fa-5x"><span id="spanID" style="background-color:red" class="badge"></span></i>
+                    <h4>Approve Election</h4>
+                    </a>
+                    </div>
+
+
+                </div>
+
+                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6">
+                    <div class="div-square">
+                         <a href="addnewElection.html" >
+  <i class="fa fa-plus fa-5x"></i>
+                    <h4>Add New Election</h4>
+                    </a>
+                    </div>
+
+
+                </div>
+
+                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6">
+                    <div class="div-square">
+                         <a href="allElections.html" >
+  <i class="fa fa-trash-o fa-5x"></i>
+                    <h4>Delete User Election</h4>
+                    </a>
+                    </div>
+                </div>
+
+                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6">
+                    <div class="div-square">
+                         <a href="myElections.html" >
+  <i class="fa fa-trash-o fa-5x"></i>
+                    <h4>Delete My Election</h4>
+                    </a>
+                    </div>
+                </div>
+
+                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-6">
+                    <div class="div-square">
+                         <a href="allUsers.html" >
+  <i class="fa fa-users fa-5x"></i>
+                    <h4>View All Users</h4>
+                    </a>
+                    </div>
+                </div>
+
+            </div>
+               <!-- /. ROW  -->
+
+           <!-- /. PAGE INNER  -->
+          </div>
+       <!-- /. PAGE WRAPPER  -->
+      </div>
+  <div class="footer">
+
+
+          <div class="row">
+              <div class="col-lg-12" >
+                  &copy;  2018 | Design by: <a style="color:#fff;" target="_blank">SE301-Voted Group</a>
+              </div>
+          </div>
+      </div>
+
+</from>
+</div>
+
+
+     <!-- /. WRAPPER  -->
+    <!-- SCRIPTS -AT THE BOTOM TO REDUCE THE LOAD TIME-->
+    <!-- JQUERY SCRIPTS -->
+    <script src="assets/js/jquery-1.10.2.js"></script>
+      <!-- BOOTSTRAP SCRIPTS -->
+    <script src="assets/js/bootstrap.min.js"></script>
+      <!-- CUSTOM SCRIPTS -->
+    <script src="assets/js/custom.js"></script>
+
+
+<script src="https://www.gstatic.com/firebasejs/5.7.0/firebase.js"></script>
+<script>
+  // Initialize Firebase
+  var config = {
+    apiKey: "AIzaSyDpEfxHmFK0q0lpVFWK7DmpE7vgLLgPhr0",
+    authDomain: "vote-a0e5a.firebaseapp.com",
+    databaseURL: "https://vote-a0e5a.firebaseio.com",
+    projectId: "vote-a0e5a",
+    storageBucket: "vote-a0e5a.appspot.com",
+    messagingSenderId: "384488603364"
+  };
+  firebase.initializeApp(config);
+</script>
+
+    <script>
+    var clickDelete = false;
+
+    firebase.auth().onAuthStateChanged(function(user) {
+      if (user) {
+        // User is signed in.
+        document.getElementById("formAdminLogin").action = "admin.html";
+        document.getElementById("formAdminLogin").submit();
+      } else {
+        // No user is signed in.
+        document.getElementById("formAdminMain").action = "login.html";
+        document.getElementById("formAdminMain").submit();
+      }
+    });
+    function logout1(){
+      firebase.auth().signOut().then(function() {
+        console.log('Signed Out');
+      }, function(error) {
+        console.error('Sign Out Error', error);
+      });
+    }
+
+    var count = 0;
+    var electionlariCek = function(){
+
+      const list_div = document.querySelector("#list_div");
+      var userRef = firebase.database().ref().child("WaitingElections");
+      userRef.on("value",function(snapshotValue){
+        var exists = (snapshotValue.val() !== null);
+        if(exists){
+          userRef.on("child_added",function(snapshot){
+            var userRef2 = firebase.database().ref().child("WaitingElections").child(snapshot.key);
+
+            userRef2.on("child_added",function(snapshot2){
+
+                var userRef3 = firebase.database().ref().child("Kullanıcılar");
+                userRef3.on("child_added",function(snapshot3){
+                  var userRef4 = firebase.database().ref().child("Kullanıcılar").child(snapshot3.key).child("Elections");
+                  userRef4.on("child_added",function(snapshot4){
+                    if(snapshot2.key == snapshot4.key){
+                      count += 1;
+
+                      document.getElementById("welcomeID").innerHTML = "You have " + count + " elections waiting today."
+                      document.getElementById("spanID").innerHTML = count
+                    }
+                  });
+                });
+
+            });
+
+          });
+        }
+        showPage();
+      });
+
+    }
+    electionlariCek();
+
+    function deleteElectionaBasildi(){
+      clickDelete = "true";
+      localStorage.setItem("deleteDurumu", clickDelete);
+    }
+
+    function showPage() {
+      document.getElementById("loader").style.display = "none";
+      document.getElementById("myDiv").style.display = "block";
+    }
+
+    function showLoading() {
+      document.getElementById("loader").style.display = "block";
+      document.getElementById("myDiv").style.display = "none";
+    }
+    </script>
+
+
+
+
+</body>
+</html>

@@ -1,18 +1,38 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-      <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <link rel="shortcut icon" type="image/x-icon" href="assets/img/vote.png"/>
     <title>I-Voted Admin</title>
 	<!-- BOOTSTRAP STYLES-->
-    <link href="assets/css/bootstrap.css" rel="stylesheet" />
+    <link href="assets/css/bootstrap.css" rel="stylesheet"/>
      <!-- FONTAWESOME STYLES-->
-    <link href="assets/css/font-awesome.css" rel="stylesheet" />
+    <link href="assets/css/font-awesome.css" rel="stylesheet"/>
         <!-- CUSTOM STYLES-->
-    <link href="assets/css/custom.css" rel="stylesheet" />
+    <link href="assets/css/custom.css" rel="stylesheet"/>
      <!-- GOOGLE FONTS-->
-   <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+   <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css'/>
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
    <style>
+
+   .btn {
+     background-color: red;
+     border: none;
+     color: white;
+     padding: 8px 15px;
+     font-size: 20px;
+     cursor: pointer;
+     display: block;
+     margin: auto;
+     box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+   }
+
+   /* Darker background on mouse-over */
+   .btn:hover {
+     background-color: green;
+   }
    #loader {
    position: absolute;
    left: 50%;
@@ -94,6 +114,36 @@
      background-color: #15adcb;
 
    }
+   table
+    {
+        word-break: break-all;
+        border-collapse: collapse;
+        width:100%;
+    }
+    td
+    {
+      width: 80px;
+        border: 1px solid;
+      }
+      th
+    {
+      width: 80px;
+        border: 1px solid;
+    }
+    .f{
+      width: 320px;
+      border: 1px solid;
+    }
+
+    .dsec{
+      width: 120px;
+      border: 1px solid;
+    }
+
+    .answers{
+      width: 200px;
+      border: 1px solid;
+    }
    </style>
 </head>
 
@@ -125,7 +175,7 @@
               <ul class="nav" id="main-menu">
 
                   <li>
-                      <a href="index.html" ><i class="fa fa-desktop "></i>Dashboard <span id="spanID4" class="badge" style="background-color:red"></span></a>
+                      <a href="mainElections.html" ><i class="fa fa-desktop "></i>Dashboard <span id="spanID4" class="badge" style="background-color:red"></span></a>
                   </li>
                   <li>
                      <a href="allUsers.html"><i class="fa fa-users "></i>Users</a>
@@ -153,7 +203,6 @@
       <!-- /. NAV SIDE  -->
 
 
-
       <div id="page-wrapper" >
           <div id="page-inner">
               <div class="row">
@@ -172,7 +221,7 @@
                           <ul class="optionsMenu">
                             <li id="ongoingElections" class="lili"><a onclick="ongoingElections()" href="#">My Ongoing Elections</a></li>
                             <li id="finishELections" class="lili"><a onclick="finishELections()" href="#">My Finish Elections</a></li>
-                            <li id="deleteElections" class="lili"><a onclick="deleteElections()" href="#">My Delete Election</a></li>
+                            <li id="deleteElections" class="lili"><a onclick="deleteElections()" href="#">My Deleted Election</a></li>
 
                           </ul>
                         </div>
@@ -239,7 +288,7 @@
       if (user) {
         // User is signed in.
         currentUserID = user.uid
-        document.getElementById("formAdminLogin").action = "admin.html";
+        document.getElementById("formAdminLogin").action = "mainElections.html";
         document.getElementById("formAdminLogin").submit();
       } else {
         // No user is signed in.
@@ -285,9 +334,9 @@
 
                       count7 += 1;
                       if(count7 % 2 == 0){
-                          list_div3.innerHTML += "<div style='background-color:#eeeaea'><table style='width:100%' border='1px solid black'><tr>" + count7 + "</tr><tr><th>Category</th><th>Election Name</th><th>Ouestion</th><th>Option1</th><th>Option2</th><th>Option3</th></tr><tr><td><b>" + snapshot.key + "</b></td><td>" + snapshot2.val().ElectionName + "</td><td><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td style='text-decoration:underline'>" + snapshot2.val().Option1 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option2 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option3 + "</td><td><th><button onclick='Delete(\"" +  currentUserID + "\",\"" +  snapshot2.key + "\")' style='background-color:#e7280d;color:white' class='buttons'>Delete</button></th></td></tr></table></div>"
+                          list_div3.innerHTML += "<div style='background-color:#eeeaea'><table style='width:100%' border='1px solid black'><tr>" + count7 + "</tr><tr><th class='dsec'>Category</th><th class='dsec'>Name</th><th class='f'>Ouestion</th><th class='answers'>Option1</th><th class='answers'>Option2</th><th class='answers'>Option3</th><th class='dsec'>Due Date</th></tr><tr><td class='dsec'><b>" + snapshot.key + "</b></td><td class='dsec'>" + snapshot2.val().ElectionName + "</td><td class='f'><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td class='answers' style='text-decoration:underline'>" + snapshot2.val().Option1 + "</td><td class='answers' style='text-decoration:underline'>" + snapshot2.val().Option2 + "</td><td class='answers' style='text-decoration:underline'>" + snapshot2.val().Option3 + "</td><td class='dsec' style='text-color:green'>" + snapshot2.val().finishDate + "</td><td><button onclick='Delete(\"" +  snapshot2.key + "\")' class='btn'><i class='fa fa-trash'></i></button></td></tr></table></div>"
                       }else{
-                          list_div3.innerHTML += "<div style='background-color:#f9f9f9'><table style='width:100%' border='1px solid black'><tr>" + count7 + "</tr><tr><th>Category</th><th>Election Name</th><th>Ouestion</th><th>Option1</th><th>Option2</th><th>Option3</th></tr><tr><td><b>" + snapshot.key + "</b></td><td>" + snapshot2.val().ElectionName + "</td><td><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td style='text-decoration:underline'>" + snapshot2.val().Option1 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option2 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option3 + "</td><td><th><button onclick='Delete(\"" +  currentUserID + "\",\"" +  snapshot2.key + "\")' style='background-color:#e7280d;color:white' class='buttons'>Delete</button></th></td></tr></table></div>"
+                          list_div3.innerHTML += "<div style='background-color:#f9f9f9'><table style='width:100%' border='1px solid black'><tr>" + count7 + "</tr><tr><th class='dsec'>Category</th><th class='dsec'>Name</th><th class='f'>Ouestion</th><th class='answers'>Option1</th><th class='answers'>Option2</th><th class='answers'>Option3</th><th class='dsec'>Due Date</th></tr><tr><td class='dsec'><b>" + snapshot.key + "</b></td><td class='dsec'>" + snapshot2.val().ElectionName + "</td><td class='f'><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td class='answers' style='text-decoration:underline'>" + snapshot2.val().Option1 + "</td><td class='answers' style='text-decoration:underline'>" + snapshot2.val().Option2 + "</td><td class='answers' style='text-decoration:underline'>" + snapshot2.val().Option3 + "</td><td class='dsec' style='text-color:green'>" + snapshot2.val().finishDate + "</td><td><button onclick='Delete(\"" +  snapshot2.key + "\")'  class='btn'><i class='fa fa-trash'></i></button></td></tr></table></div>"
                       }
 
                     }
@@ -310,7 +359,7 @@
 
           });
         }else{
-
+          document.getElementById("thereIsNo").innerHTML = "There is no election."
         }
         showPage();
       });
@@ -348,9 +397,9 @@
                     names = snapshot6.val().name
                     count2 += 1;
                     if(count2 % 2 == 0){
-                      list_div.innerHTML += "<div style='background-color:#eeeaea'><table style='width:100%' border='1px solid black'><tr>" + count2 + "</tr><tr><th>Sender</th><th>Category</th><th>Election Name</th><th>Ouestion</th><th>Option1</th><th>Option2</th><th>Option3</th></tr><tr><td> " + names + " </td><td><b>" + snapshot2.key + "</b></td><td>" + snapshot.val().ElectionName + "</td><td><b style='color:blue'>" + snapshot.val().Question + "</b></td><td style='text-decoration:underline'>" + snapshot.val().Option1 + "</td><td style='text-decoration:underline'>" + snapshot.val().Option2 + "</td><td style='text-decoration:underline'>" + snapshot.val().Option3 + "</td></tr></table></div>"
+                      list_div.innerHTML += "<div style='background-color:#eeeaea'><table style='width:100%' border='1px solid black'><tr>" + count2 + "</tr><tr><th class='dsec'>Sender</th><th class='dsec'>Category</th><th class='dsec'>Name</th><th class='f'>Ouestion</th><th class='answers'>Option1</th><th class='answers'>Option2</th><th class='answers'>Option3</th><th class='dsec'>Due Date</th></tr><tr><td class='dsec'> " + names + " </td><td class='dsec'><b>" + snapshot2.key + "</b></td><td class='dsec'>" + snapshot.val().ElectionName + "</td><td class='f'><b style='color:blue'>" + snapshot.val().Question + "</b></td><td class='answers' style='text-decoration:underline'>" + snapshot.val().Option1 + "</td><td class='answers' style='text-decoration:underline'>" + snapshot.val().Option2 + "</td><td class='answers' style='text-decoration:underline'>" + snapshot.val().Option3 + "</td><td class='dsec' style='text-color:red'>" + snapshot.val().finishDate + "</td></tr></table></div>"
                     }else{
-                      list_div.innerHTML += "<div style='background-color:#f9f9f9'><table style='width:100%' border='1px solid black'><tr>" + count2 + "</tr><tr><th>Sender</th><th>Category</th><th>Election Name</th><th>Ouestion</th><th>Option1</th><th>Option2</th><th>Option3</th></tr><tr><td> " + names+ " </td><td><b>" + snapshot2.key + "</b></td><td>" + snapshot.val().ElectionName + "</td><td><b style='color:blue'>" + snapshot.val().Question + "</b></td><td style='text-decoration:underline'>" + snapshot.val().Option1 + "</td><td style='text-decoration:underline'>" + snapshot.val().Option2 + "</td><td style='text-decoration:underline'>" + snapshot.val().Option3 + "</td></tr></table></div>"
+                      list_div.innerHTML += "<div style='background-color:#f9f9f9'><table style='width:100%' border='1px solid black'><tr>" + count2 + "</tr><tr><th class='dsec'>Sender</th><th class='dsec'>Category</th><th class='dsec'>Name</th><th class='f'>Ouestion</th><th class='answers'>Option1</th><th class='answers'>Option2</th><th class='answers'>Option3</th><th class='dsec'>Due Date</th></tr><tr><td class='dsec'> " + names+ " </td><td class='dsec'><b>" + snapshot2.key + "</b></td><td class='dsec'>" + snapshot.val().ElectionName + "</td><td class='f'><b style='color:blue'>" + snapshot.val().Question + "</b></td><td class='answers' style='text-decoration:underline'>" + snapshot.val().Option1 + "</td><td class='answers' style='text-decoration:underline'>" + snapshot.val().Option2 + "</td><td class='answers' style='text-decoration:underline'>" + snapshot.val().Option3 + "</td><td class='dsec' style='text-color:red'>" + snapshot.val().finishDate + "</td></tr></table></div>"
                     }
                   }
                 });
@@ -365,7 +414,7 @@
 
           });
         }else{
-
+          document.getElementById("thereIsNo").innerHTML = "There is no election."
         }
         showPage();
       });
@@ -392,9 +441,9 @@
                           if(snapshot2.key == userSnap2.key){
                             count += 1;
                             if(count % 2 == 0){
-                              list_div.innerHTML += "<div style='background-color:#eeeaea'><table style='width:100%' border='1px solid black'><tr>" + count + "</tr><tr><th>Sender</th><th>Category</th><th>Election Name</th><th>Ouestion</th><th>Option1</th><th>Option2</th><th>Option3</th></tr><tr><td> " + userSnap1.val().name + " </td><td><b>" + snapshot.key + "</b></td><td>" + snapshot2.val().ElectionName + "</td><td><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td style='text-decoration:underline'>" + snapshot2.val().Option1 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option2 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option3 + "</td><td><th><button onclick='Delete(\"" +  snapshot2.key + "\")' style='background-color:red;color:white' class='buttons'>Delete</button></th></td></tr></table></div>"
+                              list_div.innerHTML += "<div style='background-color:#eeeaea'><table style='width:100%' border='1px solid black'><tr>" + count + "</tr><tr><th>Sender</th><th>Category</th><th>Name</th><th>Ouestion</th><th>Option1</th><th>Option2</th><th>Option3</th></tr><tr><td> " + userSnap1.val().name + " </td><td><b>" + snapshot.key + "</b></td><td>" + snapshot2.val().ElectionName + "</td><td><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td style='text-decoration:underline'>" + snapshot2.val().Option1 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option2 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option3 + "</td><td><th><button onclick='Delete(\"" +  snapshot2.key + "\")' style='background-color:red;color:white' class='buttons'>Delete</button></th></td></tr></table></div>"
                             }else{
-                              list_div.innerHTML += "<div style='background-color:#f9f9f9'><table style='width:100%' border='1px solid black'><tr>" + count + "</tr><tr><th>Sender</th><th>Category</th><th>Election Name</th><th>Ouestion</th><th>Option1</th><th>Option2</th><th>Option3</th></tr><tr><td> " + userSnap1.val().name + " </td><td><b>" + snapshot.key + "</b></td><td>" + snapshot2.val().ElectionName + "</td><td><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td style='text-decoration:underline'>" + snapshot2.val().Option1 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option2 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option3 + "</td><td><th><button onclick='Delete(\"" +  snapshot2.key + "\")' style='background-color:red;color:white' class='buttons'>Delete</button></th></td></tr></table></div>"
+                              list_div.innerHTML += "<div style='background-color:#f9f9f9'><table style='width:100%' border='1px solid black'><tr>" + count + "</tr><tr><th>Sender</th><th>Category</th><th>Name</th><th>Ouestion</th><th>Option1</th><th>Option2</th><th>Option3</th></tr><tr><td> " + userSnap1.val().name + " </td><td><b>" + snapshot.key + "</b></td><td>" + snapshot2.val().ElectionName + "</td><td><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td style='text-decoration:underline'>" + snapshot2.val().Option1 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option2 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option3 + "</td><td><th><button onclick='Delete(\"" +  snapshot2.key + "\")' style='background-color:red;color:white' class='buttons'>Delete</button></th></td></tr></table></div>"
                             }
                           }
 
@@ -443,9 +492,9 @@
                         if(snapshot2.key == userSnap2.key){
                           countFinish += 1;
                           if(countFinish % 2 == 0){
-                            list_div.innerHTML += "<div style='background-color:#eeeaea'><table style='width:100%' border='1px solid black'><tr>" + countFinish + "</tr><tr><th>Sender</th><th>Category</th><th>Election Name</th><th>Ouestion</th><th>Option1</th><th>Option2</th><th>Option3</th></tr><tr><td> " + userSnap1.val().name + " </td><td><b>" + snapshot.key + "</b></td><td>" + snapshot2.val().ElectionName + "</td><td><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td style='text-decoration:underline'>" + snapshot2.val().Option1 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option2 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option3 + "</td><td><th><button onclick='Delete(\"" +  snapshot2.key + "\")' style='background-color:red;color:white' class='buttons'>Delete</button></th></td></tr></table></div>"
+                            list_div.innerHTML += "<div style='background-color:#eeeaea'><table style='width:100%' border='1px solid black'><tr>" + countFinish + "</tr><tr><th class='dsec'>Sender</th><th class='dsec'>Category</th><th class='dsec'>Name</th><th class='f'>Ouestion</th><th class='answers'>Option1</th><th class='answers'>Option2</th><th class='answers'>Option3</th><th class='dsec'>Due Date</th></tr><tr><td class='dsec'> " + userSnap1.val().name + " </td><td class='dsec'><b>" + snapshot.key + "</b></td><td class='dsec'>" + snapshot2.val().ElectionName + "</td><td class='f'><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td class='answers' style='text-decoration:underline'>" + snapshot2.val().Option1 + "</td><td class='answers' style='text-decoration:underline'>" + snapshot2.val().Option2 + "</td><td class='answers' style='text-decoration:underline'>" + snapshot2.val().Option3 + "</td><td class='dsec' style='text-color:red'>" + snapshot2.val().finishDate + "</td><td><button onclick='Delete(\"" +  snapshot2.key + "\")' class='btn'><i class='fa fa-trash'></i></button></td></tr></table></div>"
                           }else{
-                            list_div.innerHTML += "<div style='background-color:#f9f9f9'><table style='width:100%' border='1px solid black'><tr>" + countFinish + "</tr><tr><th>Sender</th><th>Category</th><th>Election Name</th><th>Ouestion</th><th>Option1</th><th>Option2</th><th>Option3</th></tr><tr><td> " + userSnap1.val().name + " </td><td><b>" + snapshot.key + "</b></td><td>" + snapshot2.val().ElectionName + "</td><td><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td style='text-decoration:underline'>" + snapshot2.val().Option1 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option2 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option3 + "</td><td><th><button onclick='Delete(\"" +  snapshot2.key + "\")' style='background-color:red;color:white' class='buttons'>Delete</button></th></td></tr></table></div>"
+                            list_div.innerHTML += "<div style='background-color:#f9f9f9'><table style='width:100%' border='1px solid black'><tr>" + countFinish + "</tr><tr><th class='dsec'>Sender</th><th class='dsec'>Category</th><th class='dsec'>Name</th><th class='f'>Ouestion</th><th class='answers'>Option1</th><th class='answers'>Option2</th><th class='answers'>Option3</th><th class='dsec'>Due Date</th></tr><tr><td class='dsec'> " + userSnap1.val().name + " </td><td class='dsec'><b>" + snapshot.key + "</b></td><td class='dsec'>" + snapshot2.val().ElectionName + "</td><td class='f'><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td class='answers' style='text-decoration:underline'>" + snapshot2.val().Option1 + "</td><td class='answers' style='text-decoration:underline'>" + snapshot2.val().Option2 + "</td><td class='answers' style='text-decoration:underline'>" + snapshot2.val().Option3 + "</td><td class='dsec' style='text-color:red'>" + snapshot2.val().finishDate + "</td><td><button onclick='Delete(\"" +  snapshot2.key + "\")'  class='btn'><i class='fa fa-trash'></i></button></td></tr></table></div>"
                           }
                         }
                         if(countFinish == 0){
@@ -462,11 +511,43 @@
 
           });
         }else{
-
+          document.getElementById("thereIsNo").innerHTML = "There is no election."
         }
         showPage();
       });
 
+    }
+
+    function Delete(electionKey){
+      var electionRef = firebase.database().ref("Elections");
+      electionRef.on("child_added",function(snapshot){
+        var electionRef2 = firebase.database().ref("Elections").child(snapshot.key);
+        electionRef2.on("child_added",function(snapshot2){
+          if(snapshot2.key == electionKey){ // burda tarihe göre sıralandığı için db de gelen key de tarih key olduğundan karşılaştırma yapıp hangisi geldiyse onu siliyorum.
+            if(confirm("Silmek istediğinize eminmisiniz ?")){
+
+              firebase.database().ref("DeleteElections").child(snapshot.key).child(snapshot2.key).set({
+                ElectionName: snapshot2.val().ElectionName,
+                Option1: snapshot2.val().Option1,
+                Option2: snapshot2.val().Option2,
+                Option3: snapshot2.val().Option3,
+                Option1C: snapshot2.val().Option1C,
+                Option2C: snapshot2.val().Option2C,
+                Option3C: snapshot2.val().Option3C,
+                AdminOnay: false,
+                Question: snapshot2.val().Question,
+                VoteCount: snapshot2.val().VoteCount,
+                finishDate: snapshot2.val().finishDate
+              });
+
+              snapshot2.ref.remove(function(error){
+                  window.onload = timedRefresh(1);
+              });
+            }
+
+          }
+        });
+      });
     }
 
     function deleteElections(){

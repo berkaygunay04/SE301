@@ -3,6 +3,7 @@
 <head>
       <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" type="image/x-icon" href="assets/img/vote.png" />
     <title>I-Voted Admin</title>
 	<!-- BOOTSTRAP STYLES-->
     <link href="assets/css/bootstrap.css" rel="stylesheet" />
@@ -24,11 +25,33 @@
   font-size: 20px;
   cursor: pointer;
   margin-right: 5px;
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
 }
 
 /* Darker background on mouse-over */
 .btn:hover {
   background-color: green;
+}
+
+.btn2 {
+  background-color: #5ba631;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  padding: 4px 12px;
+  font-size: 13px;
+  cursor: pointer;
+  display: block;
+  margin: auto;
+  margin-top: 2px;
+  margin-bottom: 1px;
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+  float: left;
+}
+
+/* Darker background on mouse-over */
+.btn2:hover {
+  background-color: blue;
 }
 
 #loader {
@@ -114,7 +137,7 @@ display: none;
 
 
                   <li>
-                      <a href="index.html" ><i class="fa fa-desktop "></i>Dashboard <span id="spanID7"class="badge" style="background-color:red"></span></a>
+                      <a href="mainElections.html" ><i class="fa fa-desktop "></i>Dashboard <span id="spanID7"class="badge" style="background-color:red"></span></a>
                   </li>
                   <li class="active-link">
                      <a href="#"><i class="fa fa-users "></i>Users</a>
@@ -256,7 +279,7 @@ display: none;
           toogleID = userCount.toString();
           var userName = userSnap2.val().name + " " + userSnap2.val().surname
 
-          list_div.innerHTML += "<li class='list-group-item'><div class='row toggle' id='dropdown-detail' data-toggle='detail'><div onclick='ready(\"" +  toogleID + "\")' style='text-align:left' class='col-xs-10'><b>" + toogleID + "- </b>" + userName.toUpperCase() + "</div><div class='col-xs-2'><button onclick='deleteUser(\"" +  userSnap1.key + "\")' class='btn'><i class='fa fa-trash'></i></button><i onclick='ready(\"" +  toogleID + "\")' style='margin-top:7px;margin-right:20px' class='fa fa-chevron-down pull-right'></i></div></div><div style='display: none;' id=\"" +  toogleID + "\"><hr></hr><div class='container'><div style='text-align:left' class='fluid-row'><b>E-mail : </b>" + userSnap2.val().email + "<br><b>Vote Count : </b>" + userSnap2.val().UserVoteCount + "<br><button onclick='allOneUserElections(\"" +  userSnap1.key + "\")'>Approved Elections</button></div></div></div></li>"
+          list_div.innerHTML += "<li class='list-group-item'><div class='row toggle' id='dropdown-detail' data-toggle='detail'><div onclick='ready(\"" +  toogleID + "\")' style='text-align:left' class='col-xs-10'><b>" + toogleID + "- </b>" + userName.toUpperCase() + "</div><div class='col-xs-2'><button onclick='deleteUser(\"" +  userSnap1.key + "\")' class='btn'><i class='fa fa-trash'></i></button><i onclick='ready(\"" +  toogleID + "\")' style='margin-top:7px;margin-right:20px' class='fa fa-chevron-down pull-right'></i></div></div><div style='display: none;' id=\"" +  toogleID + "\"><hr></hr><div class='container'><div style='text-align:left' class='fluid-row'><b>E-mail : </b>" + userSnap2.val().email + "<br><b>Vote Count : </b>" + userSnap2.val().UserVoteCount + "<br><button class='btn2' onclick='allOneUserElections(\"" +  userSnap1.key + "\")'><i class='fa fa-check'> Ongoing Elections</i></button></div></div></div></li>"
         });
         showPage();
 
@@ -284,6 +307,7 @@ display: none;
     }
 
     var userCount1 = 0;
+    var names = "";
     function getUserOneElections(userID){
       const list_div = document.querySelector("#userLists");
       document.getElementById("strongName").innerHTML = "Personal elections are below."
@@ -294,9 +318,10 @@ display: none;
             firebase.database().ref("Elections").on("child_added",function(elecSnap1){
               firebase.database().ref("Elections").child(elecSnap1.key).on("child_added",function(snapshot){
                 if(snapshot.key == userElec1.key){
+                  console.log("afkjkdja");
                   userCount1 += 1;
                   firebase.database().ref("Kullanıcılar").child(userID).on("value",function(nameSnap){
-                    var names = nameSnap.val().name + " " + nameSnap.val().surname
+                    names = nameSnap.val().name + " " + nameSnap.val().surname
                     document.getElementById("nameID").innerHTML = "<div><button class='fa fa-arrow-left'></button>" + names.toUpperCase() + "</div>"
                   });
                   if(userCount1 % 2 == 0){
@@ -304,6 +329,13 @@ display: none;
                   }else{
                     list_div.innerHTML += "<div style='background-color:#f9f9f9'><table style='width:100%' border='1px solid black'><tr>" + userCount1 + "</tr><tr><th>Category</th><th>Election Name</th><th>Ouestion</th><th>Option1</th><th>Option2</th><th>Option3</th></tr></td><td><b>" + elecSnap1.key + "</b></td><td>" + snapshot.val().ElectionName + "</td><td><b style='color:blue'>" + snapshot.val().Question + "</b></td><td style='text-decoration:underline'>" + snapshot.val().Option1 + "</td><td style='text-decoration:underline'>" + snapshot.val().Option2 + "</td><td style='text-decoration:underline'>" + snapshot.val().Option3 + "</td></tr></table></div>"
                   }
+                }
+                if(userCount1 == 0){
+                    document.getElementById("nameID").innerHTML = "<div><button class='fa fa-arrow-left'></button>There is no election.</div>"
+                  //thereIsNoElection();
+                }else{
+                  document.getElementById("nameID").innerHTML = "<div><button class='fa fa-arrow-left'></button>" + names.toUpperCase() + "</div>"
+                  //thereIsNoElection2();
                 }
               });
             });

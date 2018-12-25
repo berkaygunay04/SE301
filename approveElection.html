@@ -3,6 +3,7 @@
 <head>
       <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="shortcut icon" type="image/x-icon" href="assets/img/vote.png" />
     <title>I-Voted Admin</title>
 	<!-- BOOTSTRAP STYLES-->
     <link href="assets/css/bootstrap.css" rel="stylesheet" />
@@ -13,8 +14,77 @@
      <!-- GOOGLE FONTS-->
    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+
 </head>
 <style>
+.btn {
+  background-color: #5ba631;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  padding: 8px 14px;
+  font-size: 20px;
+  cursor: pointer;
+  display: block;
+  margin: auto;
+  margin-top: 1px;
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+}
+
+/* Darker background on mouse-over */
+.btn:hover {
+  background-color: blue;
+}
+.btn2 {
+  background-color: red;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  padding: 8px 16px;
+  font-size: 20px;
+  cursor: pointer;
+  display: block;
+  margin: auto;
+  margin-top: 2px;
+  margin-bottom: 1px;
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+}
+
+/* Darker background on mouse-over */
+.btn2:hover {
+  background-color: blue;
+}
+table
+ {
+     word-break: break-all;
+     border-collapse: collapse;
+     width:100%;
+ }
+ td
+ {
+   width: 80px;
+     border: 1px solid;
+   }
+   th
+ {
+   width: 80px;
+     border: 1px solid;
+ }
+ .f{
+   width: 320px;
+   border: 1px solid;
+ }
+
+ .dsec{
+   width: 120px;
+   border: 1px solid;
+ }
+
+ .answers{
+   width: 200px;
+   border: 1px solid;
+ }
 #loader {
 position: absolute;
 left: 50%;
@@ -71,21 +141,7 @@ display: none;
   height: 80px;
   margin-top: 5px;
 }
-.addButton{
-  width: 180px;
-  text-align: center;
-  background-color: #74ced3;
-}
 
-.addButton:hover{
-  background-color: #a2eaee;
-}
-
-
-
-.buttons:hover {
-  box-shadow: 0 12px 16px 0 rgba(0,0,0,0.24), 0 17px 50px 0 rgba(0,0,0,0.19);
-}
 </style>
 <body style="margin:0;">
 
@@ -117,7 +173,7 @@ display: none;
 
 
                   <li>
-                      <a href="index.html" ><i class="fa fa-desktop "></i>Dashboard <span id="spanID5" class="badge">Main</span></a>
+                      <a href="mainElections.html" ><i class="fa fa-desktop "></i>Dashboard <span id="spanID5" class="badge">Main</span></a>
                   </li>
                   <li>
                      <a href="allUsers.html"><i class="fa fa-users "></i>Users</a>
@@ -259,9 +315,9 @@ display: none;
                         count += 1;
                         document.getElementById("strongID").innerHTML = "Waiting " + count + " election for Approve or Reject "
                         if(count % 2 == 0){
-                          list_div.innerHTML += "<div style='background-color:#eeeaea'><table style='width:100%' border='1px solid black'><tr>" + count + "</tr><tr><th>Sender</th><th>Category</th><th>Election Name</th><th>Ouestion</th><th>Option1</th><th>Option2</th><th>Option3</th></tr><tr><td> " + snapshot3.val().name + " </td><td><b>" + snapshot.key + "</b></td><td>" + snapshot2.val().ElectionName + "</td><td><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td style='text-decoration:underline'>" + snapshot2.val().Option1 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option2 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option3 + "</td><td><th><button onclick='approve(\"" +  snapshot.key + "\",\"" +  snapshot4.key + "\",\"" +  snapshot3.val().email + "\",\"" +  snapshot2.val().ElectionName + "\")'  style='background-color:#75e10e;color:white' class='buttons'>Approve</button></th><th><button onclick='reject(\"" +  snapshot4.key + "\",\"" +  snapshot3.val().email + "\",\"" +  snapshot2.val().ElectionName + "\")' style='background-color:#e7280d;color:white' class='buttons'>Reject</button></th></td></tr></table></div>"
+                          list_div.innerHTML += "<div style='background-color:#eeeaea'><table style='width:100%' border='1px solid black'><tr>" + count + "</tr><tr><th class='dsec'>Sender</th><th class='dsec'>Category</th><th class='dsec'>Name</th><th class='f'>Ouestion</th><th class='answers'>Option1</th><th class='answers'>Option2</th><th class='answers'>Option3</th><th class='dsec'>Due Date</th></tr><tr><td class='dsec'> " + snapshot3.val().name + " </td><td class='dsec'><b>" + snapshot.key + "</b></td><td class='dsec'>" + snapshot2.val().ElectionName + "</td><td class='f'><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td class='answers' style='text-decoration:underline'>" + snapshot2.val().Option1 + "</td><td class='answers' style='text-decoration:underline'>" + snapshot2.val().Option2 + "</td><td class='answers' style='text-decoration:underline'>" + snapshot2.val().Option3 + "</td><td class='dsec'>" + snapshot2.val().finishDate + "</td><td><button title='Approve' onclick='approve(\"" +  snapshot.key + "\",\"" +  snapshot4.key + "\",\"" +  snapshot3.val().email + "\",\"" +  snapshot2.val().ElectionName + "\")'  class='btn'><i class='fa fa-check'></i></button><button title='Reject' onclick='reject(\"" +  snapshot4.key + "\",\"" +  snapshot3.val().email + "\",\"" +  snapshot2.val().ElectionName + "\")' class='btn2'><i class='fa fa-remove'></i></button></td></tr></table></div>"
                         }else{
-                          list_div.innerHTML += "<div style='background-color:#f9f9f9'><table style='width:100%' border='1px solid black'><tr>" + count + "</tr><tr><th>Sender</th><th>Category</th><th>Election Name</th><th>Ouestion</th><th>Option1</th><th>Option2</th><th>Option3</th></tr><tr><td> " + snapshot3.val().name + " </td><td><b>" + snapshot.key + "</b></td><td>" + snapshot2.val().ElectionName + "</td><td><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td style='text-decoration:underline'>" + snapshot2.val().Option1 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option2 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option3 + "</td><td><th><button onclick='approve(\"" +  snapshot.key + "\",\"" +  snapshot4.key + "\",\"" +  snapshot3.val().email + "\",\"" +  snapshot2.val().ElectionName + "\")' style='background-color:#75e10e;color:white' class='buttons'>Approve</button></th><th><button onclick='reject(\"" +  snapshot4.key + "\",\"" +  snapshot3.val().email + "\",\"" +  snapshot2.val().ElectionName + "\")' style='background-color:#e7280d;color:white' class='buttons'>Reject</button></th></td></tr></table></div>"
+                          list_div.innerHTML += "<div style='background-color:#f9f9f9'><table style='width:100%' border='1px solid black'><tr>" + count + "</tr><tr><th class='dsec'>Sender</th><th class='dsec'>Category</th><th class='dsec'>Name</th><th class='f'>Ouestion</th><th class='answers'>Option1</th><th class='answers'>Option2</th><th class='answers'>Option3</th><th class='dsec'>Due Date</th></tr><tr><td class='dsec'> " + snapshot3.val().name + " </td><td class='dsec'><b>" + snapshot.key + "</b></td><td class='dsec'>" + snapshot2.val().ElectionName + "</td><td class='f'><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td class='answers' style='text-decoration:underline'>" + snapshot2.val().Option1 + "</td><td class='answers' style='text-decoration:underline'>" + snapshot2.val().Option2 + "</td><td class='answers' style='text-decoration:underline'>" + snapshot2.val().Option3 + "</td><td class='dsec'>" + snapshot2.val().finishDate + "</td><td><button title='Approve' onclick='approve(\"" +  snapshot.key + "\",\"" +  snapshot4.key + "\",\"" +  snapshot3.val().email + "\",\"" +  snapshot2.val().ElectionName + "\")' class='btn'><i class='fa fa-check'></i></button><button title='Reject' onclick='reject(\"" +  snapshot4.key + "\",\"" +  snapshot3.val().email + "\",\"" +  snapshot2.val().ElectionName + "\")' class='btn2'><i class='fa fa-remove'></i></button></td></tr></table></div>"
 
                         }
 
@@ -335,6 +391,7 @@ display: none;
               Option2: snapshot2.val().Option2,
               Option3: snapshot2.val().Option3,
               Question: snapshot2.val().Question,
+              finishDate: snapshot2.val().finishDate
             });// burda tarihe göre sıralandığı için db de gelen key de tarih key olduğundan karşılaştırma yapıp hangisi geldiyse onu siliyorum.
                 snapshot2.ref.remove(function(error){
                     //window.onload = timedRefresh(1);

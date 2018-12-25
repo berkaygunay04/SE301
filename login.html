@@ -4,6 +4,7 @@
 	<title>Admin Login</title>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<link rel="shortcut icon" type="image/x-icon" href="assets/img/vote.png" />
 <!--===============================================================================================-->
 	<link rel="icon" type="image/png" href="assets/img/icons/elec1.png"/>
 <!--===============================================================================================-->
@@ -21,9 +22,14 @@
 <!--===============================================================================================-->
 	<link rel="stylesheet" type="text/css" href="assets/css/util.css">
 	<link rel="stylesheet" type="text/css" href="assets/css/main.css">
+
 <!--===============================================================================================-->
+<style>
+
+</style>
 </head>
 <body>
+
 <form id="formAdminLogin">
 	<div class="limiter">
 		<div class="container-login100" style="background-image: url('assets/img/img-01.jpg');">
@@ -68,6 +74,7 @@
 			</div>
 		</div>
 	</div>
+
 </form>
 
 
@@ -100,11 +107,10 @@
 </script>
 
 	<script>
-
 	firebase.auth().onAuthStateChanged(function(user) {
 	  if (user) {
 	    // User is signed in.
-	     document.getElementById("formAdminLogin").action = "index.html";
+	     document.getElementById("formAdminLogin").action = "mainElections.html";
 	     document.getElementById("formAdminLogin").submit();
 	  } else {
 	    // No user is signed in.
@@ -112,6 +118,7 @@
 	    document.getElementById("formAdminMain").submit();
 	  }
 	});
+	//login1();
 
 	function login1(){
 		var adminMailler = [];
@@ -121,27 +128,35 @@
 			firebase.database().ref("Admin").child(adminSnap1.key).on("value",function(adminSnap2){
 				var email = document.getElementById("email").value;
 				var password = document.getElementById("pass").value;
-				if(adminSnap2.val().email == email){
-						if(email == "" || password == ""){
-								alert("Please enter e-mail or password");
-						}else{
-		  					firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
-								// Handle Errors here.
-								var errorCode = error.code;
-								var errorMessage = error.message
-						    	if (errorCode == 'auth/wrong-password') {
-											alert('Wrong password.');
-									} else if(errorCode == 'auth/network-request-failed'){
-											alert('Please check your internet connection.');
-									}else if (errorCode == '') {
-										//   window.location.href = "http://nefisss.net/adminMain.html";
-							   	}
-									console.log(error);
-							});
-						}
+				if(email == "" || password == "" || email == null){
+					alert("Please enter e-mail or password");
 				}else{
-					adminMi = true;
+					if(validateEmail(email)){
+						if(adminSnap2.val().email == email){
+							firebase.auth().signInWithEmailAndPassword(email, password).catch(function(error) {
+							// Handle Errors here.
+							var errorCode = error.code;
+							var errorMessage = error.message
+							 if (errorCode == 'auth/wrong-password') {
+									alert('Wrong password.');
+							 }else if(errorCode == 'auth/network-request-failed'){
+									alert('Please check your internet connection.');
+							 }else if (errorCode == '') {
+									//   window.location.href = "http://nefisss.net/adminMain.html";
+								}else{
+									//	showPage();
+								}
+										console.log(error);
+								});
+								//showPage();
+							}else{
+								adminMi = true;
+							}
+						}else{
+							alert("E-mail format is incorrect. Please enter the correct e-mail.");
+						}
 				}
+
 			});
 		});
 		if(adminMi){
@@ -149,6 +164,12 @@
 		}
 
 	}
+
+	function validateEmail(email) {
+    var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(String(email).toLowerCase());
+	}
+
 	</script>
 
 </body>
