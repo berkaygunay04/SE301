@@ -33,44 +33,17 @@ import java.util.regex.Pattern;
 
 import br.com.simplepass.loading_button_lib.customViews.CircularProgressButton;
 
-/**
- * The type Register.
- */
 public class Register extends AppCompatActivity {
     private FirebaseAuth mAuth ;
     private DatabaseReference dbUser=FirebaseDatabase.getInstance().getReference("Kullanıcılar");
-    /**
-     * The A.
-     */
-    EditText a, /**
-     * The B.
-     */
+    EditText a,
     b;
-    /**
-     * The Name.
-     */
-    EditText name, /**
-     * The Surname.
-     */
-    surname, /**
-     * The Confirmpassword.
-     */
+    EditText name,
+    surname,
     confirmpassword;
-    /**
-     * The Circular progress button.
-     */
     CircularProgressButton circularProgressButton;
-    /**
-     * The Time.
-     */
     Timer time;
-    /**
-     * The Dem download 1.
-     */
     AsyncTask<String,String,String> demDownload1;
-    /**
-     * The Runnable.
-     */
     Runnable runnable;
     ImageView imagebutton;
     @Override
@@ -138,25 +111,30 @@ public class Register extends AppCompatActivity {
                               FirebaseUser currentUser = mAuth.getCurrentUser();
                               if(currentUser!=null){
                                   currentUser.sendEmailVerification();
+                                  FirebaseUser user = task.getResult().getUser();
+                                  User user1=new User(a.getText().toString(),name.getText().toString(),surname.getText().toString());
+                                  dbUser.child(user.getUid()).setValue(user1);
+                                  dbUser.child(user.getUid()).child("UserVoteCount").setValue(0);
+                                  dbUser.child(currentUser.getUid()).child("Freeze").setValue(false);
+                                  dbUser.child(currentUser.getUid()).child("Free").setValue("Stable");
+                                  demDownload1.execute();
+                                  circularProgressButton.setEnabled(false);
+                                  AlertDialog.Builder builder1=new AlertDialog.Builder(Register.this);
+                                  builder1.setTitle("Onay Linki");
+                                  builder1.setMessage("Lütfen email adresinize gelen linki onaylayınız!");
+                                  builder1.setCancelable(false);
+                                  builder1.setPositiveButton("Tamam", new DialogInterface.OnClickListener() {
+                                      @Override
+                                      public void onClick(DialogInterface dialogInterface, int i) {
+                                          Intent authIntent=new Intent(Register.this,Login.class);
+                                          startActivity(authIntent);
+                                      }
+                                  });
+                                  builder1.show();
+                              }else{
+                                  Toast.makeText(Register.this,"Email is already exist!",Toast.LENGTH_SHORT).show();
                               }
-                              FirebaseUser user = task.getResult().getUser();
-                              User user1=new User(a.getText().toString(),name.getText().toString(),surname.getText().toString());
-                              dbUser.child(user.getUid()).setValue(user1);
-                              dbUser.child(user.getUid()).child("UserVoteCount").setValue(0);
-                              demDownload1.execute();
-                              circularProgressButton.setEnabled(false);
-                              AlertDialog.Builder builder1=new AlertDialog.Builder(Register.this);
-                              builder1.setTitle("Onay Linki");
-                              builder1.setMessage("Lütfen email adresinize gelen linki onaylayınız!");
-                              builder1.setCancelable(false);
-                              builder1.setPositiveButton("Tamam", new DialogInterface.OnClickListener() {
-                                  @Override
-                                  public void onClick(DialogInterface dialogInterface, int i) {
-                                      Intent authIntent=new Intent(Register.this,Login.class);
-                                      startActivity(authIntent);
-                                  }
-                              });
-                              builder1.show();
+
                           }
                       });
                     }else{
@@ -183,12 +161,6 @@ public class Register extends AppCompatActivity {
         });
     }
 
-    /**
-     * Is email valid boolean.
-     *
-     * @param email the email
-     * @return the boolean
-     */
     public static boolean isEmailValid(String email) {
         String expression = "^[\\w\\.-]+@([\\w\\-]+\\.)+[A-Z]{2,4}$";
         Pattern pattern = Pattern.compile(expression, Pattern.CASE_INSENSITIVE);
@@ -196,12 +168,6 @@ public class Register extends AppCompatActivity {
         return matcher.matches();
     }
 
-    /**
-     * Is valid password boolean.
-     *
-     * @param password the password
-     * @return the boolean
-     */
     public static boolean isValidPassword(final String password) {
 
         Pattern pattern;

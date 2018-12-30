@@ -1,11 +1,14 @@
 package com.company.talha.vote;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -30,115 +33,47 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-/**
- * The type Viewmyvotings.
- */
 public class viewmyvotings extends AppCompatActivity {
-    /**
-     * The Database.
-     */
     FirebaseDatabase database = FirebaseDatabase.getInstance();
-    /**
-     * The My ref.
-     */
     DatabaseReference myRef = database.getReference("Elections");
-    /**
-     * The My ref 1.
-     */
+    DatabaseReference myRef3 = database.getReference("Results");
     DatabaseReference myRef1 = database.getReference("Kullanıcılar");
-    /**
-     * The M auth.
-     */
     FirebaseAuth mAuth;
 
-    private ExpandableListView expandableListView;
+    private ExpandableListView expandableListView,viewcontinuedListView;
     private ExpandableListAdapter listAdapter;
-    private List<ViewMyVote> listDataHeader;
-    private HashMap<ViewMyVote, List> listHash;
-    /**
-     * The Publisher.
-     */
+    private ExpandableListAdapter continuedAdapter;
+    private List<ViewMyVote> listDataHeader,listDataHeader1;
+    private HashMap<ViewMyVote, List> listHash,listHash1;
     ImageView publisher;
-    /**
-     * The Status.
-     */
     ImageView status;
-    /**
-     * The Selection.
-     */
     public String Selection;
-    /**
-     * The Id.
-     */
     String id;
-    /**
-     * The Voteid.
-     */
     ArrayList<String> voteid;
-    /**
-     * The Voteidchoice.
-     */
     ArrayList<String> voteidchoice;
-    /**
-     * The Electioname.
-     */
     public String electioname;
-    /**
-     * The Option 1.
-     */
     public String option1;
-    /**
-     * The Option 2.
-     */
     public String option2;
-    /**
-     * The Option 3.
-     */
     public String option3;
-    /**
-     * The Publisherdata.
-     */
     public String publisherdata;
-    /**
-     * The Statusdata.
-     */
     public String statusdata;
-    /**
-     * The Name.
-     */
     String name;
-    /**
-     * The Date.
-     */
     String date;
-    /**
-     * The Type.
-     */
     String type;
-    /**
-     * The Kullanici vote ıd.
-     */
     String kullaniciVoteId;
-
-    /**
-     * The L.
-     */
+    Toolbar toolbar3;
+    boolean create=false;
     boolean l=false;
-
-    /**
-     * The K.
-     */
     int k;
 
-    /**
-     * The Viewvotecount.
-     */
     int viewvotecount=0;
+    int viewvotecount1=0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_viewmyvotings);
+        create=true;
         voteid=new ArrayList<>();
         voteidchoice=new ArrayList<>();
         mAuth =FirebaseAuth.getInstance();
@@ -146,13 +81,27 @@ public class viewmyvotings extends AppCompatActivity {
         expandableListView = (ExpandableListView) findViewById(R.id.viewvote);
         expandableListView.setGroupIndicator(null);
         expandableListView.setDividerHeight(0);
+        viewcontinuedListView = (ExpandableListView) findViewById(R.id.viewcontinuedvote);
+        viewcontinuedListView.setGroupIndicator(null);
+        viewcontinuedListView.setDividerHeight(0);
         Button continuedelection =(Button) findViewById(R.id.continuedelections);
         Button comleteelection =(Button)findViewById(R.id.completeelections);
+        toolbar3=(Toolbar)findViewById(R.id.toolbaelections);
+        setSupportActionBar(toolbar3);
+        if(getSupportActionBar()!=null) {
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setDisplayShowHomeEnabled(true);
+        }
 
         //data headerin alt başlıklarını yüklemek için
         listDataHeader = new ArrayList<>();
         listHash = new HashMap<>();
+        listDataHeader1 = new ArrayList<>();
+        listHash1 = new HashMap<>();
         listAdapter = new ExpandableListAdapter(this, listDataHeader, listHash);
+        continuedAdapter = new ExpandableListAdapter(this, listDataHeader1, listHash1);//biten
+        viewcontinuedListView.setAdapter(continuedAdapter);
         expandableListView.setAdapter(listAdapter);
         myRef1.child(mAuth.getCurrentUser().getUid()).child("Votes").addValueEventListener(new ValueEventListener() {
             @Override
@@ -163,31 +112,6 @@ public class viewmyvotings extends AppCompatActivity {
                     voteid.add(kullaniciVoteId);
                     String choice=ds33.child("SelectedOption").getValue(String.class);
                     voteidchoice.add(choice);
-                  /*  if(id.equals(kullaniciVoteId)){
-                        l=true;
-                    }
-                    if(l){
-                        String choice=ds33.child("SelectedOption").getValue(String.class);
-                        if(type!=null){
-                            if (type.equals("Admin Type")) {
-                                listAdapter.addItem(new ViewMyVote(R.drawable.adnmin,name, option1,option2,option3,choice,R.drawable.proses));
-                                List election = new ArrayList();
-                                election.add(option1);
-                                election.add(option2);
-                                election.add(option3);
-                                listHash.put(listDataHeader.get(viewvotecount),election);
-                                viewvotecount++;
-                            }else{
-                                listAdapter.addItem(new ViewMyVote(R.drawable.user1,name, option1,option2,option3,choice,R.drawable.proses));
-                                List election = new ArrayList();
-                                election.add(option1);
-                                election.add(option2);
-                                election.add(option3);
-                                listHash.put(listDataHeader.get(viewvotecount),election);
-                                viewvotecount++;
-                            }
-                        }
-                    }*/
                 }
             }
 
@@ -210,8 +134,6 @@ public class viewmyvotings extends AppCompatActivity {
                         option2=ds1.child("Option2").getValue(String.class);
                         option3=ds1.child("Option3").getValue(String.class);
                         for(int i=0;i<voteid.size();i++){
-
-
                           if(id.equals(voteid.get(i))){
                         l=true;
                     }
@@ -237,27 +159,11 @@ public class viewmyvotings extends AppCompatActivity {
                                 viewvotecount++;
                                 l=false;
                             }
+                             }
+                          }
                         }
                     }
-                        }
-
-
-                    }
-
-
                 }
-
-                // listOfElections.add(new Elections("Fatma vs Ayşegül","Time remain : 11 days 3 hour",R.drawable.user1));
-                //listOfElections.add(new Elections("Selma vs Selen","Time remain : 10 days 3 hour",R.drawable.user1));
-                // listOfElections.add(new Elections("Derya vs Fatmagül","Time remain : 10 days 3 hour",R.drawable.adnmin));
-                // listOfElections.add(new Elections("Seher vs Ayşenur","Time remain : 9 days 3 hour",R.drawable.user1));
-                //listOfElections.add(new Elections("Elif vs Deniz","Time remain : 5 days 3 hour",R.drawable.adnmin));
-                //listOfElections.add(new Elections("Esra vs Esmanur","Time remain : 4 days 3 hour",R.drawable.user1));
-                //listOfElections.add(new Elections("Ece vs Ceyda","Time remain : 3 days 3 hour",R.drawable.user1));
-                //listOfElections.add(new Elections("Elif vs Naz","Time remain : 2 days 3 hour",R.drawable.adnmin));
-                //listOfElections.add(new Elections("Esra vs Esma","Time remain : 3 days 3 hour",R.drawable.adnmin));
-
-
             }
 
             @Override
@@ -266,19 +172,80 @@ public class viewmyvotings extends AppCompatActivity {
             }
         });
 
+
+
         publisher = findViewById(R.id.publisher);
         status = findViewById(R.id.status);
         continuedelection.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+//continued elections tıklandı
+                expandableListView.setVisibility(View.VISIBLE);
+                viewcontinuedListView.setVisibility(View.INVISIBLE);
             }
         });
 
         comleteelection.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(viewmyvotings.this, "View just completed elections on the expandablelist", Toast.LENGTH_SHORT).show();
+                expandableListView.setVisibility(View.INVISIBLE);
+                viewcontinuedListView.setVisibility(View.VISIBLE);
+               //completed election bitti{
+                if(create){
+                    myRef3.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                                for (DataSnapshot ds1 : ds.getChildren()) {
+                                    id = ds1.getKey();
+                                    name = ds1.child("ElectionName").getValue(String.class);
+                                    date = ds1.child("DateType").getValue(String.class);
+                                    type = ds1.child("Type").getValue(String.class);
+                                    option1=ds1.child("Option1").getValue(String.class);
+                                    option2=ds1.child("Option2").getValue(String.class);
+                                    option3=ds1.child("Option3").getValue(String.class);
+                                    for(int i=0;i<voteid.size();i++){
+                                        if(id.equals(voteid.get(i))){
+                                            l=true;
+                                        }
+                                        if(l){
+
+                                            if(type!=null){
+                                                if (type.equals("Admin Type")) {
+                                                    continuedAdapter.addItem(new ViewMyVote(R.drawable.adnmin,name, option1,option2,option3,voteidchoice.get(i),R.drawable.proses));
+                                                    List election1 = new ArrayList();
+                                                    election1.add(option1);
+                                                    election1.add(option2);
+                                                    election1.add(option3);
+                                                    listHash1.put(listDataHeader1.get(viewvotecount1),election1);
+                                                    viewvotecount1++;
+                                                    l=false;
+                                                }else{
+                                                    continuedAdapter.addItem(new ViewMyVote(R.drawable.user1,name, option1,option2,option3,voteidchoice.get(i),R.drawable.proses));
+                                                    List election1 = new ArrayList();
+                                                    election1.add(option1);
+                                                    election1.add(option2);
+                                                    election1.add(option3);
+                                                    listHash1.put(listDataHeader1.get(viewvotecount1),election1);
+                                                    viewvotecount1++;
+                                                    l=false;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+                    create=false;
+                }
+
+
             }
         });
         expandableListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
@@ -296,6 +263,18 @@ public class viewmyvotings extends AppCompatActivity {
             }
         });
 
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                Intent intent = new Intent(viewmyvotings.this, ProfileMenu.class);
+                startActivity(intent);
+                finish();
+                break;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 
@@ -329,22 +308,12 @@ public class viewmyvotings extends AppCompatActivity {
 */
 }
 
-/**
- * The type Expandable list adapter.
- */
 class ExpandableListAdapter extends BaseExpandableListAdapter {
     private Context context;
     private List<ViewMyVote> listDataHeader;
     private HashMap<ViewMyVote, List> listHashMap;
 
 
-    /**
-     * Instantiates a new Expandable list adapter.
-     *
-     * @param context        the context
-     * @param listDataHeader the list data header
-     * @param listHashMap    the list hash map
-     */
     public ExpandableListAdapter(Context context, List listDataHeader, HashMap<ViewMyVote, List> listHashMap) {
 
         this.context = context;
@@ -352,15 +321,11 @@ class ExpandableListAdapter extends BaseExpandableListAdapter {
         this.listHashMap = listHashMap;
     }
 
-    /**
-     * Add ıtem.
-     *
-     * @param item the item
-     */
     public void addItem(final ViewMyVote item){
         listDataHeader.add(item);
         notifyDataSetChanged();
     }
+
     @Override
     public int getGroupCount() {
 
@@ -437,9 +402,12 @@ class ExpandableListAdapter extends BaseExpandableListAdapter {
 
         TextView txtListChild = convertView.findViewById(R.id.viewvotesub);
         txtListChild.setText(childText);
-        if(listDataHeader.get(groupPosition).getUsersChoice().equals(childText)){
-            //    txtListChild.setTextColor(listDataHeader.get(groupPosition));
+        if(txtListChild.getText().toString().equals(listDataHeader.get(groupPosition).getUsersChoice())){
+            txtListChild.setText(childText+"  (My Vote)");
         }
+      /*  if(listDataHeader.get(groupPosition).getUsersChoice().equals(childText)){
+            //    txtListChild.setTextColor(listDataHeader.get(groupPosition));
+        }*/
 
         return convertView;
 
@@ -450,4 +418,5 @@ class ExpandableListAdapter extends BaseExpandableListAdapter {
 
         return true;
     }
+
 }

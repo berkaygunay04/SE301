@@ -14,13 +14,50 @@
 
         <Spinner
             android:id="@+id/spinner"
-            android:layout_width="257dp"
+            android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_centerHorizontal="true"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
             android:layout_marginRight="10dp"
             android:background="@drawable/rounded3" />
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Spinner
+                android:id="@+id/spinner1"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/rounded3" />
+
+            <Spinner
+                android:id="@+id/spinner2"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/rounded3" />
+
+            <Spinner
+                android:id="@+id/spinner3"
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="10dp"
+                android:background="@drawable/rounded3" />
+
+
+        </LinearLayout>
         <EditText
             android:id="@+id/electionname"
             android:layout_width="match_parent"
@@ -70,6 +107,8 @@
             android:layout_marginRight="10dp"
             android:hint="Enter Option 3"
             android:inputType="text" />
+
+
     </LinearLayout>
 
     <Button
@@ -79,4 +118,6 @@
       android:layout_below="@+id/electionlayout"
         android:layout_centerHorizontal="true"
         android:text="Apply Electıon" />
+
+
 </RelativeLayout>

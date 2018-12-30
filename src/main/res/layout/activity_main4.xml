@@ -49,85 +49,132 @@
         </android.support.v7.widget.Toolbar>
     </RelativeLayout>
 
-    <LinearLayout
-        android:id="@+id/butonlar"
-        android:layout_width="wrap_content"
+    <GridLayout
+        android:id="@+id/bistro"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="25dp">
+        android:layout_marginTop="40dp"
+        android:layout_weight="8"
+        android:alignmentMode="alignMargins"
+        android:columnCount="3"
+        android:columnOrderPreserved="false"
+        android:padding="5dp"
+        android:rowCount="1">
 
+        <android.support.v7.widget.CardView
+            android:layout_width="45dp"
+            android:layout_height="110dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            android:layout_marginBottom="5dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="8dp">
 
-            <ImageButton
-                android:id="@+id/imageButton4"
-                android:layout_width="110dp"
+            <LinearLayout
+                android:layout_width="141dp"
                 android:layout_height="110dp"
-                android:layout_marginLeft="10dp"
-                app:srcCompat="@drawable/ic_iconfinder_achievement_3533414" />
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:layout_margin="16dp"
+                android:orientation="vertical">
 
+                <ImageView
+                    android:id="@+id/burgerr"
+                    android:layout_width="80dp"
+                    android:layout_height="80dp"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/ic_iconfinder_achievement_3533414" />
 
-        <ImageButton
-            android:id="@+id/imageButton5"
-            android:layout_width="110dp"
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Active Users"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="45dp"
             android:layout_height="110dp"
-            android:layout_gravity="center"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="10dp"
-            app:srcCompat="@drawable/ic_iconfinder_vote_1934657" />
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            android:layout_marginBottom="5dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="8dp">
 
-        <ImageButton
-            android:id="@+id/imageButton6"
-            android:layout_width="110dp"
+            <LinearLayout
+                android:layout_width="141dp"
+                android:layout_height="87dp"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:layout_margin="16dp"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:id="@+id/içecekk"
+                    android:layout_width="wrap_content"
+                    android:layout_height="63dp"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/ic_iconfinder_vote_1934657" />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Vote"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
+            android:layout_width="45dp"
             android:layout_height="110dp"
-            android:layout_marginRight="10dp"
-            app:srcCompat="@drawable/ic_iconfinder_41_3319603" />
-    </LinearLayout>
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="4dp"
+            android:layout_marginBottom="5dp"
+            app:cardCornerRadius="8dp"
+            app:cardElevation="8dp">
 
-    <LinearLayout
-        android:id="@+id/yazilar"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/butonlar"
-        android:layout_marginTop="10dp"
-        android:orientation="horizontal">
+            <LinearLayout
+                android:layout_width="141dp"
+                android:layout_height="87dp"
+                android:layout_gravity="center_horizontal|center_vertical"
+                android:layout_margin="16dp"
+                android:orientation="vertical">
 
+                <ImageView
+                    android:id="@+id/bakla"
+                    android:layout_width="wrap_content"
+                    android:layout_height="63dp"
+                    android:layout_gravity="center_horizontal"
+                    android:background="@drawable/ic_iconfinder_41_3319603" />
 
-        <TextView
-            android:layout_width="110dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginLeft="25dp"
-            android:text="Leaders"
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Create Elections"
+                    android:textAlignment="center"
+                    android:textColor="@android:color/black"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
 
-        <TextView
-            android:layout_width="110dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginLeft="10dp"
-            android:text="Vote"
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            android:textSize="18sp"
-            android:textStyle="bold" />
+            </LinearLayout>
+        </android.support.v7.widget.CardView>
 
-        <TextView
-            android:layout_width="125dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:layout_alignParentBottom="true"
-            android:layout_marginLeft="10dp"
-            android:text="Apply Elections"
-            android:textAlignment="center"
-            android:textColor="@color/black"
-            android:textSize="18sp"
-            android:textStyle="bold" />
-    </LinearLayout>
+    </GridLayout>
+
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="219dp"

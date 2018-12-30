@@ -10,6 +10,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.database.DatabaseReference;
@@ -18,60 +19,31 @@ import com.google.firebase.database.FirebaseDatabase;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-/**
- * The type Apply elections.
- */
 public class ApplyElections extends AppCompatActivity {
-    /**
-     * The M auth.
-     */
     FirebaseAuth mAuth=FirebaseAuth.getInstance();
-    /**
-     * The Election name.
-     */
-    EditText ElectionName, /**
-     * The Question.
-     */
-    Question, /**
-     * The Option 1.
-     */
-    Option1, /**
-     * The Option 2.
-     */
-    Option2, /**
-     * The Option 3.
-     */
+    EditText ElectionName,
+    Question,
+    Option1,
+    Option2,
     Option3;
     private DatabaseReference apply = FirebaseDatabase.getInstance().getReference();
     private DatabaseReference menuL5= FirebaseDatabase.getInstance().getReference("Kullanıcılar").child(mAuth.getCurrentUser().getUid());
-    /**
-     * The Spinner.
-     */
-    Spinner spinner;
-    /**
-     * The Tarih.
-     */
+    Spinner spinner,spinner1,spinner2,spinner3,spinner4;
     Date tarih = new Date();
 
-    /**
-     * The Sdf.
-     */
-    SimpleDateFormat sdf, /**
-     * The Sdf 2.
-     */
-    sdf2, /**
-     * The Sdf 3.
-     */
+    SimpleDateFormat sdf,
+    sdf2,
     sdf3;
-    /**
-     * The B.
-     */
     Button b;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_apply_elections);
         spinner = (Spinner)findViewById(R.id.spinner);
+        spinner1 = (Spinner)findViewById(R.id.spinner1);
+        spinner2 = (Spinner)findViewById(R.id.spinner2);
+        spinner3 = (Spinner)findViewById(R.id.spinner3);
+
         b=(Button)findViewById(R.id.applybutton);
         String[] plants = new String[]{
                 "Sport",
@@ -80,12 +52,35 @@ public class ApplyElections extends AppCompatActivity {
                 "History",
                 "Science",
                 "Cinema"
-
-
         };
+        String[] days = new String[]{
+                "01", "02", "03", "04", "05", "06", "08", "09", "10", "11", "12", "13" ,"14", "15", "16", "17", "18", "19","20", "21", "22"
+                ,"23", "24", "25", "26", "27", "28","30", "31"
+        };
+        final String[] month = new String[]{
+                "01", "02", "03", "04", "05", "06"  ,"07", "08", "09", "10", "11", "12"
+        };
+        String[] years = new String[]{
+                "2018", "2019", "2020"
+        };
+
         ArrayAdapter<String> spinnerArrayAdaptor = new ArrayAdapter<String>(this,R.layout.spinner_item,plants);
         spinnerArrayAdaptor.setDropDownViewResource(R.layout.spinner_item);
         spinner.setAdapter(spinnerArrayAdaptor);
+
+        ArrayAdapter<String> spinnerArrayAdaptor1 = new ArrayAdapter<String>(this,R.layout.spinner_item,days);
+        spinnerArrayAdaptor.setDropDownViewResource(R.layout.spinner_item);
+        spinner1.setAdapter(spinnerArrayAdaptor1);
+
+        ArrayAdapter<String> spinnerArrayAdaptor2 = new ArrayAdapter<String>(this,R.layout.spinner_item,month);
+        spinnerArrayAdaptor.setDropDownViewResource(R.layout.spinner_item);
+        spinner2.setAdapter(spinnerArrayAdaptor2);
+
+        ArrayAdapter<String> spinnerArrayAdaptor3 = new ArrayAdapter<String>(this,R.layout.spinner_item,years);
+        spinnerArrayAdaptor.setDropDownViewResource(R.layout.spinner_item);
+        spinner3.setAdapter(spinnerArrayAdaptor3);
+
+
         ElectionName = (EditText)findViewById(R.id.electionname);
         Question = (EditText)findViewById(R.id.question);
         Option1 = (EditText)findViewById(R.id.option1);
@@ -95,38 +90,135 @@ public class ApplyElections extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
+            int day1=Integer.parseInt(spinner1.getSelectedItem().toString());
+            int month1=Integer.parseInt(spinner2.getSelectedItem().toString());
+            int year1=Integer.parseInt(spinner3.getSelectedItem().toString());
                 sdf2 = new SimpleDateFormat("yyyy-MM-dd");
                 sdf2.format(tarih);
-                String id=apply.push().getKey();
-                SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd / HH:mm:ss");
-                apply.child("WaitingElections").child(spinner.getSelectedItem().toString()).child(id).child("DateType").setValue(sdf1.format(tarih));//başlangıç
-                apply.child("WaitingElections").child(spinner.getSelectedItem().toString()).child(id).child("finishDate").setValue(sdf2.format(tarih));//bitiş
-                apply.child("WaitingElections").child(spinner.getSelectedItem().toString()).child(id).child("Type").setValue("User Type");
-                apply.child("WaitingElections").child(spinner.getSelectedItem().toString()).child(id).child("VoteCount").setValue(0);
-                apply.child("WaitingElections").child(spinner.getSelectedItem().toString()).child(id).child("Option1").setValue(Option1.getText().toString());
-                apply.child("WaitingElections").child(spinner.getSelectedItem().toString()).child(id).child("Option2").setValue(Option2.getText().toString());
-                apply.child("WaitingElections").child(spinner.getSelectedItem().toString()).child(id).child("Option3").setValue(Option3.getText().toString());
+                int yearnow= Integer.parseInt(sdf2.format(tarih).substring(0,4));
+                int monthnow= Integer.parseInt(sdf2.format(tarih).substring(5,7));
+                int daynow= Integer.parseInt(sdf2.format(tarih).substring(8,10));
+                if(year1==yearnow){
+                    if(month1==monthnow){
+                       if(day1>daynow){
+                           if(ElectionName.getText().length()<=0 || Question.getText().length()<=0 ||Option1.getText().length()<=0 ||Option2.getText().length()<=0 ||Option3.getText().length()<=0){
+                               Toast.makeText(getApplicationContext(), "Please fill the all blanks!", Toast.LENGTH_SHORT).show();
+                           }else{
+                               String id=apply.push().getKey();
+                               SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd / HH:mm:ss");
+                               apply.child("WaitingElections").child(spinner.getSelectedItem().toString()).child(id).child("DateType").setValue(sdf1.format(tarih));//başlangıç
+                               apply.child("WaitingElections").child(spinner.getSelectedItem().toString()).child(id).child("finishDate").setValue(spinner1.getSelectedItem().toString()+"-"+spinner2.getSelectedItem().toString()+"-"+spinner3.getSelectedItem().toString());//bitiş
+                               apply.child("WaitingElections").child(spinner.getSelectedItem().toString()).child(id).child("Type").setValue("User Type");
+                               apply.child("WaitingElections").child(spinner.getSelectedItem().toString()).child(id).child("VoteCount").setValue(0);
+                               apply.child("WaitingElections").child(spinner.getSelectedItem().toString()).child(id).child("Option1").setValue(Option1.getText().toString());
+                               apply.child("WaitingElections").child(spinner.getSelectedItem().toString()).child(id).child("Option2").setValue(Option2.getText().toString());
+                               apply.child("WaitingElections").child(spinner.getSelectedItem().toString()).child(id).child("Option3").setValue(Option3.getText().toString());
 
-                apply.child("WaitingElections").child(spinner.getSelectedItem().toString()).child(id).child("Option1C").setValue(0);
-                apply.child("WaitingElections").child(spinner.getSelectedItem().toString()).child(id).child("Option2C").setValue(0);
-                apply.child("WaitingElections").child(spinner.getSelectedItem().toString()).child(id).child("Option3C").setValue(0);
+                               apply.child("WaitingElections").child(spinner.getSelectedItem().toString()).child(id).child("Option1C").setValue(0);
+                               apply.child("WaitingElections").child(spinner.getSelectedItem().toString()).child(id).child("Option2C").setValue(0);
+                               apply.child("WaitingElections").child(spinner.getSelectedItem().toString()).child(id).child("Option3C").setValue(0);
 
-                apply.child("WaitingElections").child(spinner.getSelectedItem().toString()).child(id).child("ElectionName").setValue(ElectionName.getText().toString());
-                apply.child("WaitingElections").child(spinner.getSelectedItem().toString()).child(id).child("Question").setValue(Question.getText().toString());
-                apply.child("WaitingElections").child(spinner.getSelectedItem().toString()).child(id).child("AdminOnay").setValue(false);
-                menuL5.child("Elections").child(id).setValue(id);
-                AlertDialog.Builder builder1=new AlertDialog.Builder(ApplyElections.this);
-                builder1.setTitle("Confirmation");
-                builder1.setMessage("Your election apply is received to us!");
-                builder1.setCancelable(false);
-                builder1.setPositiveButton("Okey", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        Intent authIntent=new Intent(ApplyElections.this,MainPage.class);
-                        startActivity(authIntent);
+                               apply.child("WaitingElections").child(spinner.getSelectedItem().toString()).child(id).child("ElectionName").setValue(ElectionName.getText().toString());
+                               apply.child("WaitingElections").child(spinner.getSelectedItem().toString()).child(id).child("Question").setValue(Question.getText().toString());
+                               apply.child("WaitingElections").child(spinner.getSelectedItem().toString()).child(id).child("AdminOnay").setValue(false);
+                               menuL5.child("Elections").child(id).setValue(id);
+                               AlertDialog.Builder builder1=new AlertDialog.Builder(ApplyElections.this);
+                               builder1.setTitle("Confirmation");
+                               builder1.setMessage("Your election apply is received to us!");
+                               builder1.setCancelable(false);
+                               builder1.setPositiveButton("Okey", new DialogInterface.OnClickListener() {
+                                   @Override
+                                   public void onClick(DialogInterface dialogInterface, int i) {
+                                       Intent authIntent=new Intent(ApplyElections.this,MainPage.class);
+                                       startActivity(authIntent);
+                                   }
+                               });
+                               builder1.show();
+                           }
+                        }
+                        if(day1<=daynow){
+                            Toast.makeText(getApplicationContext(), "You entered unvalid date!", Toast.LENGTH_SHORT).show();
+                        }
+                    }if(month1>monthnow){
+                        if(ElectionName.getText().length()<=0 || Question.getText().length()<=0 ||Option1.getText().length()<=0 ||Option2.getText().length()<=0 ||Option3.getText().length()<=0){
+                            Toast.makeText(getApplicationContext(), "Please fill the all blanks!", Toast.LENGTH_SHORT).show();
+                        }else{
+                            String id=apply.push().getKey();
+                            SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd / HH:mm:ss");
+                            apply.child("WaitingElections").child(spinner.getSelectedItem().toString()).child(id).child("DateType").setValue(sdf1.format(tarih));//başlangıç
+                            apply.child("WaitingElections").child(spinner.getSelectedItem().toString()).child(id).child("finishDate").setValue(spinner1.getSelectedItem().toString()+"-"+spinner2.getSelectedItem().toString()+"-"+spinner3.getSelectedItem().toString());//bitiş
+                            apply.child("WaitingElections").child(spinner.getSelectedItem().toString()).child(id).child("Type").setValue("User Type");
+                            apply.child("WaitingElections").child(spinner.getSelectedItem().toString()).child(id).child("VoteCount").setValue(0);
+                            apply.child("WaitingElections").child(spinner.getSelectedItem().toString()).child(id).child("Option1").setValue(Option1.getText().toString());
+                            apply.child("WaitingElections").child(spinner.getSelectedItem().toString()).child(id).child("Option2").setValue(Option2.getText().toString());
+                            apply.child("WaitingElections").child(spinner.getSelectedItem().toString()).child(id).child("Option3").setValue(Option3.getText().toString());
+
+                            apply.child("WaitingElections").child(spinner.getSelectedItem().toString()).child(id).child("Option1C").setValue(0);
+                            apply.child("WaitingElections").child(spinner.getSelectedItem().toString()).child(id).child("Option2C").setValue(0);
+                            apply.child("WaitingElections").child(spinner.getSelectedItem().toString()).child(id).child("Option3C").setValue(0);
+
+                            apply.child("WaitingElections").child(spinner.getSelectedItem().toString()).child(id).child("ElectionName").setValue(ElectionName.getText().toString());
+                            apply.child("WaitingElections").child(spinner.getSelectedItem().toString()).child(id).child("Question").setValue(Question.getText().toString());
+                            apply.child("WaitingElections").child(spinner.getSelectedItem().toString()).child(id).child("AdminOnay").setValue(false);
+                            menuL5.child("Elections").child(id).setValue(id);
+                            AlertDialog.Builder builder1=new AlertDialog.Builder(ApplyElections.this);
+                            builder1.setTitle("Confirmation");
+                            builder1.setMessage("Your election apply is received to us!");
+                            builder1.setCancelable(false);
+                            builder1.setPositiveButton("Okey", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    Intent authIntent=new Intent(ApplyElections.this,MainPage.class);
+                                    startActivity(authIntent);
+                                }
+                            });
+                            builder1.show();
+                        }
+                    }if(month1<monthnow){
+                        Toast.makeText(getApplicationContext(), "You entered unvalid date!", Toast.LENGTH_SHORT).show();
                     }
-                });
-                builder1.show();
+                }
+                if(year1>yearnow){
+                    if(ElectionName.getText().length()<=0 || Question.getText().length()<=0 ||Option1.getText().length()<=0 ||Option2.getText().length()<=0 ||Option3.getText().length()<=0){
+                        Toast.makeText(getApplicationContext(), "Please fill the all blanks!", Toast.LENGTH_SHORT).show();
+                    }else{
+                        String id=apply.push().getKey();
+                        SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd / HH:mm:ss");
+                        apply.child("WaitingElections").child(spinner.getSelectedItem().toString()).child(id).child("DateType").setValue(sdf1.format(tarih));//başlangıç
+                        apply.child("WaitingElections").child(spinner.getSelectedItem().toString()).child(id).child("finishDate").setValue(spinner1.getSelectedItem().toString()+"-"+spinner2.getSelectedItem().toString()+"-"+spinner3.getSelectedItem().toString());//bitiş
+                        apply.child("WaitingElections").child(spinner.getSelectedItem().toString()).child(id).child("Type").setValue("User Type");
+                        apply.child("WaitingElections").child(spinner.getSelectedItem().toString()).child(id).child("VoteCount").setValue(0);
+                        apply.child("WaitingElections").child(spinner.getSelectedItem().toString()).child(id).child("Option1").setValue(Option1.getText().toString());
+                        apply.child("WaitingElections").child(spinner.getSelectedItem().toString()).child(id).child("Option2").setValue(Option2.getText().toString());
+                        apply.child("WaitingElections").child(spinner.getSelectedItem().toString()).child(id).child("Option3").setValue(Option3.getText().toString());
+
+                        apply.child("WaitingElections").child(spinner.getSelectedItem().toString()).child(id).child("Option1C").setValue(0);
+                        apply.child("WaitingElections").child(spinner.getSelectedItem().toString()).child(id).child("Option2C").setValue(0);
+                        apply.child("WaitingElections").child(spinner.getSelectedItem().toString()).child(id).child("Option3C").setValue(0);
+
+                        apply.child("WaitingElections").child(spinner.getSelectedItem().toString()).child(id).child("ElectionName").setValue(ElectionName.getText().toString());
+                        apply.child("WaitingElections").child(spinner.getSelectedItem().toString()).child(id).child("Question").setValue(Question.getText().toString());
+                        apply.child("WaitingElections").child(spinner.getSelectedItem().toString()).child(id).child("AdminOnay").setValue(false);
+                        menuL5.child("Elections").child(id).setValue(id);
+                        AlertDialog.Builder builder1=new AlertDialog.Builder(ApplyElections.this);
+                        builder1.setTitle("Confirmation");
+                        builder1.setMessage("Your election apply is received to us!");
+                        builder1.setCancelable(false);
+                        builder1.setPositiveButton("Okey", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialogInterface, int i) {
+                                Intent authIntent=new Intent(ApplyElections.this,MainPage.class);
+                                startActivity(authIntent);
+                            }
+                        });
+                        builder1.show();
+                    }
+
+
+                }
+                if(year1<yearnow){
+                    Toast.makeText(getApplicationContext(), "You entered unvalid date!", Toast.LENGTH_SHORT).show();
+                }
             }
         });
 

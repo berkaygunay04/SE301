@@ -36,87 +36,29 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.Random;
 
-/**
- * The type Election.
- */
 public class Election extends AppCompatActivity {//Election View
-    /**
-     * The constant Channel_1_ID.
-     */
     public  static  final String Channel_1_ID="channel1";
-    /**
-     * The constant Channel_2_ID.
-     */
     public  static  final String Channel_2_ID="channel2";
     private NotificationManagerCompat notificationManagerCompat;
-    /**
-     * The Selection.
-     */
     public String selection;
     private RadioButton radioButton;
     private RadioGroup radioGroup;
-    /**
-     * The Id.
-     */
-    String id, /**
-     * The Idelection.
-     */
-    idelection, /**
-     * The Anonymi.
-     */
+    String id,choosen,
+    idelection,
     Anonymi;
-    /**
-     * The B.
-     */
     Button b;
-    /**
-     * The Value.
-     */
-    Integer value, /**
-     * The Valuecount.
-     */
-    valuecount , /**
-     * The Opt 2.
-     */
-    opt2, /**
-     * The Opt 3.
-     */
+    Integer value,
+    valuecount ,
+    opt2,
     opt3;
-    /**
-     * The Radio 1.
-     */
     RadioButton radio1;
-    /**
-     * The Radio 2.
-     */
     RadioButton radio2;
-    /**
-     * The Radio 3.
-     */
     RadioButton radio3;
-    /**
-     * The Text view.
-     */
     TextView textView;
-    /**
-     * The Voteboolean.
-     */
     boolean voteboolean=true;
-    /**
-     * The Database.
-     */
     FirebaseDatabase database = FirebaseDatabase.getInstance();
-    /**
-     * The Anonym.
-     */
     DatabaseReference Anonym = database.getReference();
-    /**
-     * The My ref.
-     */
     DatabaseReference myRef = database.getReference("Elections");
-    /**
-     * The M auth.
-     */
     FirebaseAuth mAuth=FirebaseAuth.getInstance();
     private DatabaseReference menuL5;
     @Override
@@ -144,9 +86,9 @@ public class Election extends AppCompatActivity {//Election View
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     String category = ds.getKey();
 
-                    if (category.equals("Sport")) {
+                    if (category.equals(choosen)){
                         for (DataSnapshot ds1 : ds.getChildren()) {
-                            if (ds1.getKey().equals(id)){
+                            if (ds1.getKey().equals(id)) {
                                 String name = ds1.child("Option1").getValue(String.class);
                                 String date = ds1.child("Option2").getValue(String.class);
                                 String type = ds1.child("Option3").getValue(String.class);
@@ -157,8 +99,8 @@ public class Election extends AppCompatActivity {//Election View
                                 textView.setText(question);
                             }
                         }
+                }
 
-                    }
                 }
             }
             @Override
@@ -200,14 +142,14 @@ public class Election extends AppCompatActivity {//Election View
                                             for (DataSnapshot ds : dataSnapshot.getChildren()) {
                                                 String category = ds.getKey();
 
-                                                if (category.equals("Sport")) {
+                                                if (category.equals(choosen)) {
                                                     for (DataSnapshot ds1 : ds.getChildren()) {
                                                         value= ds1.child("Option1C").getValue(Integer.class);
                                                         valuecount=ds1.child("VoteCount").getValue(Integer.class);
                                                         value++;
                                                         valuecount++;
-                                                        myRef.child("Sport").child(id).child("Option1C").setValue(value);
-                                                        myRef.child("Sport").child(id).child("VoteCount").setValue(valuecount);
+                                                        myRef.child(choosen).child(id).child("Option1C").setValue(value);
+                                                        myRef.child(choosen).child(id).child("VoteCount").setValue(valuecount);
                                                         menuL5.child("Votes").child(id).child("SelectedOption").setValue(radio1.getText().toString());
                                                         sendOnChannel1();
                                                         startActivity(new Intent(Election.this, Elections.class));
@@ -230,14 +172,14 @@ public class Election extends AppCompatActivity {//Election View
                                             for (DataSnapshot ds : dataSnapshot.getChildren()) {
                                                 String category = ds.getKey();
 
-                                                if (category.equals("Sport")) {
+                                                if (category.equals(choosen)) {
                                                     for (DataSnapshot ds1 : ds.getChildren()) {
                                                         value= ds1.child("Option2C").getValue(Integer.class);
                                                         valuecount=ds1.child("VoteCount").getValue(Integer.class);
                                                         value++;
                                                         valuecount++;
-                                                        myRef.child("Sport").child(id).child("Option2C").setValue(value);
-                                                        myRef.child("Sport").child(id).child("VoteCount").setValue(valuecount);
+                                                        myRef.child(choosen).child(id).child("Option2C").setValue(value);
+                                                        myRef.child(choosen).child(id).child("VoteCount").setValue(valuecount);
                                                         menuL5.child("Votes").child(id).child("SelectedOption").setValue(radio2.getText().toString());
                                                         sendOnChannel1();
                                                         startActivity(new Intent(Election.this, Elections.class));
@@ -259,20 +201,20 @@ public class Election extends AppCompatActivity {//Election View
                                         public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                                             for (DataSnapshot ds : dataSnapshot.getChildren()) {
                                                 String category = ds.getKey();
-
-                                                if (category.equals("Sport")) {
+                                                if (category.equals(choosen)) {
                                                     for (DataSnapshot ds1 : ds.getChildren()) {
-                                                        value= ds1.child("Option3C").getValue(Integer.class);
-                                                        valuecount=ds1.child("VoteCount").getValue(Integer.class);
+                                                        value = ds1.child("Option3C").getValue(Integer.class);
+                                                        valuecount = ds1.child("VoteCount").getValue(Integer.class);
                                                         value++;
                                                         valuecount++;
-                                                        myRef.child("Sport").child(id).child("Option3C").setValue(value);
-                                                        myRef.child("Sport").child(id).child("VoteCount").setValue(valuecount);
+                                                        myRef.child(choosen).child(id).child("Option3C").setValue(value);
+                                                        myRef.child(choosen).child(id).child("VoteCount").setValue(valuecount);
                                                         menuL5.child("Votes").child(id).child("SelectedOption").setValue(radio3.getText().toString());
                                                         sendOnChannel1();
                                                         startActivity(new Intent(Election.this, Elections.class));
                                                     }
                                                 }
+
                                             }
                                         }
 
@@ -311,14 +253,14 @@ public class Election extends AppCompatActivity {//Election View
                                     for (DataSnapshot ds : dataSnapshot.getChildren()) {
                                         String category = ds.getKey();
 
-                                        if (category.equals("Sport")) {
+                                        if (category.equals(choosen)) {
                                             for (DataSnapshot ds1 : ds.getChildren()) {
                                                 value= ds1.child("Option1C").getValue(Integer.class);
                                                 valuecount=ds1.child("VoteCount").getValue(Integer.class);
                                                 value++;
                                                 valuecount++;
-                                                myRef.child("Sport").child(id).child("Option1C").setValue(value);
-                                                myRef.child("Sport").child(id).child("VoteCount").setValue(valuecount);
+                                                myRef.child(choosen).child(id).child("Option1C").setValue(value);
+                                                myRef.child(choosen).child(id).child("VoteCount").setValue(valuecount);
                                                 sendOnChannel1();
                                                 startActivity(new Intent(Election.this, Elections.class));
                                             }
@@ -340,14 +282,14 @@ public class Election extends AppCompatActivity {//Election View
                                     for (DataSnapshot ds : dataSnapshot.getChildren()) {
                                         String category = ds.getKey();
 
-                                        if (category.equals("Sport")) {
+                                        if (category.equals(choosen)) {
                                             for (DataSnapshot ds1 : ds.getChildren()) {
                                                 value= ds1.child("Option2C").getValue(Integer.class);
                                                 valuecount=ds1.child("VoteCount").getValue(Integer.class);
                                                 value++;
                                                 valuecount++;
-                                                myRef.child("Sport").child(id).child("Option2C").setValue(value);
-                                                myRef.child("Sport").child(id).child("VoteCount").setValue(valuecount);
+                                                myRef.child(choosen).child(id).child("Option2C").setValue(value);
+                                                myRef.child(choosen).child(id).child("VoteCount").setValue(valuecount);
                                                 sendOnChannel1();
                                                 startActivity(new Intent(Election.this, Elections.class));
                                             }
@@ -369,14 +311,14 @@ public class Election extends AppCompatActivity {//Election View
                                     for (DataSnapshot ds : dataSnapshot.getChildren()) {
                                         String category = ds.getKey();
 
-                                        if (category.equals("Sport")) {
+                                        if (category.equals(choosen)) {
                                             for (DataSnapshot ds1 : ds.getChildren()) {
                                                 value= ds1.child("Option3C").getValue(Integer.class);
                                                 valuecount=ds1.child("VoteCount").getValue(Integer.class);
                                                 value++;
                                                 valuecount++;
-                                                myRef.child("Sport").child(id).child("Option3C").setValue(value);
-                                                myRef.child("Sport").child(id).child("VoteCount").setValue(valuecount);
+                                                myRef.child(choosen).child(id).child("Option3C").setValue(value);
+                                                myRef.child(choosen).child(id).child("VoteCount").setValue(valuecount);
                                                 sendOnChannel1();
                                                 startActivity(new Intent(Election.this, Elections.class));
                                             }
@@ -418,14 +360,14 @@ public class Election extends AppCompatActivity {//Election View
                                                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                                                     String category = ds.getKey();
 
-                                                    if (category.equals("Sport")) {
+                                                    if (category.equals(choosen)) {
                                                         for (DataSnapshot ds1 : ds.getChildren()) {
                                                             value= ds1.child("Option1C").getValue(Integer.class);
                                                             valuecount=ds1.child("VoteCount").getValue(Integer.class);
                                                             value++;
                                                             valuecount++;
-                                                            myRef.child("Sport").child(id).child("Option1C").setValue(value);
-                                                            myRef.child("Sport").child(id).child("VoteCount").setValue(valuecount);
+                                                            myRef.child(choosen).child(id).child("Option1C").setValue(value);
+                                                            myRef.child(choosen).child(id).child("VoteCount").setValue(valuecount);
                                                             sendOnChannel1();
                                                             startActivity(new Intent(Election.this, Elections.class));
                                                         }
@@ -449,14 +391,14 @@ public class Election extends AppCompatActivity {//Election View
                                                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                                                     String category = ds.getKey();
 
-                                                    if (category.equals("Sport")) {
+                                                    if (category.equals(choosen)) {
                                                         for (DataSnapshot ds1 : ds.getChildren()) {
                                                             value= ds1.child("Option2C").getValue(Integer.class);
                                                             valuecount=ds1.child("VoteCount").getValue(Integer.class);
                                                             value++;
                                                             valuecount++;
-                                                            myRef.child("Sport").child(id).child("Option2C").setValue(value);
-                                                            myRef.child("Sport").child(id).child("VoteCount").setValue(valuecount);
+                                                            myRef.child(choosen).child(id).child("Option2C").setValue(value);
+                                                            myRef.child(choosen).child(id).child("VoteCount").setValue(valuecount);
                                                             sendOnChannel1();
                                                             startActivity(new Intent(Election.this, Elections.class));
                                                         }
@@ -478,14 +420,14 @@ public class Election extends AppCompatActivity {//Election View
                                                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                                                     String category = ds.getKey();
 
-                                                    if (category.equals("Sport")) {
+                                                    if (category.equals(choosen)) {
                                                         for (DataSnapshot ds1 : ds.getChildren()) {
                                                             value= ds1.child("Option3C").getValue(Integer.class);
                                                             valuecount=ds1.child("VoteCount").getValue(Integer.class);
                                                             value++;
                                                             valuecount++;
-                                                            myRef.child("Sport").child(id).child("Option3C").setValue(value);
-                                                            myRef.child("Sport").child(id).child("VoteCount").setValue(valuecount);
+                                                            myRef.child(choosen).child(id).child("Option3C").setValue(value);
+                                                            myRef.child(choosen).child(id).child("VoteCount").setValue(valuecount);
                                                             sendOnChannel1();
                                                             startActivity(new Intent(Election.this, Elections.class));
                                                         }
@@ -516,13 +458,11 @@ public class Election extends AppCompatActivity {//Election View
         });
     }
 
-    /**
-     * Selection.
-     */
     public void selection(){
         if (getIntent().getExtras() != null) {
             // selection = (getIntent().getExtras().getString("selection"));
             id = (getIntent().getExtras().getString("electionid"));
+            choosen = (getIntent().getExtras().getString("category"));
             //just test for selection post   Toast.makeText(Election.this, "Selection " + selection.toString(), Toast.LENGTH_SHORT).show();
         }
     }
@@ -547,9 +487,6 @@ public class Election extends AppCompatActivity {//Election View
         }
     }
 
-    /**
-     * Send on channel 1.
-     */
     public void sendOnChannel1(){
         Notification notification=new NotificationCompat.Builder(Election.this,Channel_1_ID)
                 .setSmallIcon(R.mipmap.ic_launcher)

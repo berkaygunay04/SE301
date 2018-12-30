@@ -32,131 +32,40 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 
-/**
- * The type Elections.
- */
 public class Elections extends AppCompatActivity {//bütün electionları burda basıyoruz
-    /**
-     * The Database.
-     */
     FirebaseDatabase database = FirebaseDatabase.getInstance();
-    /**
-     * The My ref.
-     */
     DatabaseReference myRef = database.getReference("Elections");
-    /**
-     * The My ref 1.
-     */
     DatabaseReference myRef1 = database.getReference("Elections");
-    /**
-     * The My ref 5.
-     */
     DatabaseReference myRef5 = database.getReference("Results");
-    /**
-     * The M auth.
-     */
     FirebaseAuth mAuth;
-    /**
-     * The List of elections.
-     */
     ArrayList<ElectionObject> listOfElections = new ArrayList<>();
-    /**
-     * The Adapter.
-     */
     ElectionsAdapter adapter;
-    /**
-     * The Adapter popular.
-     */
     PopularAdapter adapterPopular;
-    /**
-     * The Result adapter.
-     */
     ResultAdapter resultAdapter;
-    /**
-     * The Selection.
-     */
     public String Selection;
-    /**
-     * The Id.
-     */
-    String id, /**
-     * The U.
-     */
+    String id,
     u;
-    /**
-     * The Sport.
-     */
     Button sport,
-    /**
-     * The History.
-     */
     history,
-    /**
-     * The Culture.
-     */
-    culture, /**
-     * The Science.
-     */
+    culture,
     science,
-    /**
-     * The Cinema.
-     */
     cinema,
-    /**
-     * The Art.
-     */
     art,
-    /**
-     * The Categories.
-     */
     categories;
-    /**
-     * The Popular elections.
-     */
     Button popularElections,
-    /**
-     * The Results elections.
-     */
     resultsElections;
-    /**
-     * The Toolbarelections.
-     */
     Toolbar toolbarelections;
-    /**
-     * The ürünara.
-     */
     EditText ürünara;
-    /**
-     * The Choosencategory.
-     */
     String choosencategory;
-    /**
-     * The List view.
-     */
+    String choosenCategoryPopular;
     ListView listView,
-    /**
-     * The Popularlistview.
-     */
     popularlistview,
-    /**
-     * The Result list view.
-     */
     resultListView;
-    /**
-     * The Thereisno.
-     */
     TextView thereisno;
-    /**
-     * The Populars.
-     */
     ArrayList<PopularElections> populars;
-    /**
-     * The K.
-     */
+    ArrayList<String> popularsID;
+    ArrayList<String> CategoryPopular;
     boolean k=false;
-    /**
-     * The Butonlar.
-     */
     LinearLayout butonlar;
 
     @Override
@@ -164,6 +73,8 @@ public class Elections extends AppCompatActivity {//bütün electionları burda 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_elections);
         populars=new ArrayList<>();
+        popularsID=new ArrayList<>();
+        CategoryPopular=new ArrayList<>();
         sport=(Button)findViewById(R.id.sport);//
         history=(Button)findViewById(R.id.history);//
         culture=(Button)findViewById(R.id.culture);//
@@ -216,7 +127,7 @@ public class Elections extends AppCompatActivity {//bütün electionları burda 
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
-
+                        choosenCategoryPopular=ds.getKey();
                         for (DataSnapshot ds1 : ds.getChildren()) {
                             id = ds1.getKey();
                             String name = ds1.child("ElectionName").getValue(String.class);
@@ -224,12 +135,16 @@ public class Elections extends AppCompatActivity {//bütün electionları burda 
                             String type = ds1.child("Type").getValue(String.class);
                             Integer votec=ds1.child("VoteCount").getValue(Integer.class);
                             if(type!=null){
-                                if (type.equals("Admin Election")) {
+                                if (type.equals("Admin Type")) {
                                     PopularElections popular=new PopularElections(name,date,votec,R.drawable.adnmin);
                                     populars.add(popular);
+                                    popularsID.add(id);
+                                    CategoryPopular.add(choosenCategoryPopular);
                                 }else{
                                     PopularElections popular=new PopularElections(name,date,votec,R.drawable.user1);
                                     populars.add(popular);
+                                    popularsID.add(id);
+                                    CategoryPopular.add(choosenCategoryPopular);
                                 }
                             }
                         }
@@ -268,6 +183,7 @@ public class Elections extends AppCompatActivity {//bütün electionları burda 
                 ürünara.setVisibility(View.INVISIBLE);
                 butonlar.setVisibility(View.INVISIBLE);
                 thereisno.setVisibility(View.INVISIBLE);
+                popularlistview.setVisibility(View.INVISIBLE);
                 resultListView.setVisibility(View.VISIBLE);
 
             }
@@ -286,6 +202,7 @@ public class Elections extends AppCompatActivity {//bütün electionları burda 
                 myRef.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        adapter.deleteAll();
                         for (DataSnapshot ds : dataSnapshot.getChildren()) {
                             String category = ds.getKey();
 
@@ -297,7 +214,7 @@ public class Elections extends AppCompatActivity {//bütün electionları burda 
                                     String date = ds1.child("DateType").getValue(String.class);
                                     String type = ds1.child("Type").getValue(String.class);
                                     if(type!=null){
-                                        if (type.equals("Admin Election")) {
+                                        if (type.equals("Admin Type")) {
                                             adapter.addItem(new ElectionObject(name, date, R.drawable.adnmin, id));
                                             listOfElections.add(new ElectionObject(name, date, R.drawable.adnmin, id));
                                         }else{
@@ -348,6 +265,7 @@ public class Elections extends AppCompatActivity {//bütün electionları burda 
                 myRef.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        adapter.deleteAll();
                         for (DataSnapshot ds : dataSnapshot.getChildren()) {
                             String category = ds.getKey();
 
@@ -359,7 +277,7 @@ public class Elections extends AppCompatActivity {//bütün electionları burda 
                                     String date = ds1.child("DateType").getValue(String.class);
                                     String type = ds1.child("Type").getValue(String.class);
                                     if(type!=null){
-                                        if (type.equals("Admin Election")) {
+                                        if (type.equals("Admin Type")) {
                                             adapter.addItem(new ElectionObject(name, date, R.drawable.adnmin, id));
                                             listOfElections.add(new ElectionObject(name, date, R.drawable.adnmin, id));
                                         }else{
@@ -410,6 +328,7 @@ public class Elections extends AppCompatActivity {//bütün electionları burda 
                 myRef.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        adapter.deleteAll();
                         for (DataSnapshot ds : dataSnapshot.getChildren()) {
                             String category = ds.getKey();
 
@@ -421,7 +340,7 @@ public class Elections extends AppCompatActivity {//bütün electionları burda 
                                     String date = ds1.child("DateType").getValue(String.class);
                                     String type = ds1.child("Type").getValue(String.class);
                                     if(type!=null){
-                                        if (type.equals("Admin Election")) {
+                                        if (type.equals("Admin Type")) {
                                             adapter.addItem(new ElectionObject(name, date, R.drawable.adnmin, id));
                                             listOfElections.add(new ElectionObject(name, date, R.drawable.adnmin, id));
                                         }else{
@@ -472,6 +391,7 @@ public class Elections extends AppCompatActivity {//bütün electionları burda 
                 myRef.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        adapter.deleteAll();
                         for (DataSnapshot ds : dataSnapshot.getChildren()) {
                             String category = ds.getKey();
 
@@ -483,7 +403,7 @@ public class Elections extends AppCompatActivity {//bütün electionları burda 
                                     String date = ds1.child("DateType").getValue(String.class);
                                     String type = ds1.child("Type").getValue(String.class);
                                     if(type!=null){
-                                        if (type.equals("Admin Election")) {
+                                        if (type.equals("Admin Type")) {
                                             adapter.addItem(new ElectionObject(name, date, R.drawable.adnmin, id));
                                             listOfElections.add(new ElectionObject(name, date, R.drawable.adnmin, id));
                                         }else{
@@ -534,6 +454,7 @@ public class Elections extends AppCompatActivity {//bütün electionları burda 
                 myRef.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        adapter.deleteAll();
                         for (DataSnapshot ds : dataSnapshot.getChildren()) {
                             String category = ds.getKey();
 
@@ -545,7 +466,7 @@ public class Elections extends AppCompatActivity {//bütün electionları burda 
                                     String date = ds1.child("DateType").getValue(String.class);
                                     String type = ds1.child("Type").getValue(String.class);
                                     if(type!=null){
-                                        if (type.equals("Admin Election")) {
+                                        if (type.equals("Admin Type")) {
                                             adapter.addItem(new ElectionObject(name, date, R.drawable.adnmin, id));
                                             listOfElections.add(new ElectionObject(name, date, R.drawable.adnmin, id));
                                         }else{
@@ -596,6 +517,7 @@ public class Elections extends AppCompatActivity {//bütün electionları burda 
                 myRef.addValueEventListener(new ValueEventListener() {
                     @Override
                     public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                        adapter.deleteAll();
                         for (DataSnapshot ds : dataSnapshot.getChildren()) {
                             String category = ds.getKey();
 
@@ -607,7 +529,7 @@ public class Elections extends AppCompatActivity {//bütün electionları burda 
                                     String date = ds1.child("DateType").getValue(String.class);
                                     String type = ds1.child("Type").getValue(String.class);
                                     if(type!=null){
-                                        if (type.equals("Admin Election")) {
+                                        if (type.equals("Admin Type")) {
                                             adapter.addItem(new ElectionObject(name, date, R.drawable.adnmin, id));
                                             listOfElections.add(new ElectionObject(name, date, R.drawable.adnmin, id));
                                         }else{
@@ -680,6 +602,17 @@ public class Elections extends AppCompatActivity {//bütün electionları burda 
                 selector();
             }
         });
+        popularlistview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                //Test ok  Toast.makeText(vote.this,listOfElections.get(i).name, Toast.LENGTH_SHORT).show();
+                Selection = populars.get(i).getName().toString();
+                id = popularsID.get(i);
+                choosenCategoryPopular=CategoryPopular.get(i).toString();
+                selectorPopular();
+            }
+        });
+
 
 
 
@@ -700,7 +633,7 @@ public class Elections extends AppCompatActivity {//bütün electionları burda 
                         Integer option2C=ds1.child("Option2C").getValue(Integer.class);
                         Integer option3C=ds1.child("Option3C").getValue(Integer.class);
                         if(type!=null){
-                            if (type.equals("Admin Election")) {
+                            if (type.equals("Admin Type")) {
                                 Results result=new Results(name,question,option1,option2,option3,option1C,option2C,option3C,R.drawable.adnmin);
                                 resultAdapter.addItem(result);
                             }else{
@@ -720,12 +653,6 @@ public class Elections extends AppCompatActivity {//bütün electionları burda 
 
     }
 
-    /**
-     * Sort populars array list.
-     *
-     * @param k the k
-     * @return the array list
-     */
     public ArrayList<PopularElections> sortPopulars(ArrayList<PopularElections> k){
         ArrayList<PopularElections> a=new ArrayList<>();
         int max=0;
@@ -761,64 +688,43 @@ public class Elections extends AppCompatActivity {//bütün electionları burda 
         return a;
     }
 
-    /**
-     * Selector.
-     */
     public void selector() {
         Intent intent = new Intent(this, Election.class);
         // intent.putExtra("selection",Selection.toString());
         intent.putExtra("electionid", id.toString());
+        intent.putExtra("category", choosencategory.toString());
+        startActivity(intent);
+
+    }
+    public void selectorPopular() {
+        Intent intent = new Intent(this, Election.class);
+        // intent.putExtra("selection",Selection.toString());
+        intent.putExtra("electionid", id.toString());
+        intent.putExtra("category", choosenCategoryPopular.toString());
         startActivity(intent);
 
     }
 
-    /**
-     * The type Elections adapter.
-     */
     class ElectionsAdapter extends BaseAdapter {
-        /**
-         * The User ınflater.
-         */
         LayoutInflater userInflater;
-        /**
-         * The List of elections.
-         */
-        ArrayList<ElectionObject> ListOfElections = new ArrayList();
+        ArrayList<ElectionObject> ListOfElections = new ArrayList(50);
 
-        /**
-         * Instantiates a new Elections adapter.
-         *
-         * @param activity the activity
-         */
         ElectionsAdapter(Activity activity) {
             userInflater = (LayoutInflater) activity.getSystemService(
                     Context.LAYOUT_INFLATER_SERVICE);
 
         }
 
-        /**
-         * Add ıtem.
-         *
-         * @param item the item
-         */
         public void addItem(final ElectionObject item) {
             ListOfElections.add(item);
             notifyDataSetChanged();
         }
 
-        /**
-         * Delete all.
-         */
         public void deleteAll() {
             ListOfElections=new ArrayList<>();
             notifyDataSetChanged();
         }
 
-        /**
-         * Electionadapter empty boolean.
-         *
-         * @return the boolean
-         */
         public boolean ElectionadapterEmpty() {
             if(ListOfElections.size()==0){
                 return true;
@@ -868,11 +774,6 @@ public class Elections extends AppCompatActivity {//bütün electionları burda 
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * Search ıtem.
-     *
-     * @param textTo the text to
-     */
     public void searchItem(String textTo){
         u=textTo;
         myRef.addValueEventListener(new ValueEventListener() {
@@ -889,7 +790,7 @@ public class Elections extends AppCompatActivity {//bütün electionları burda 
                             String date = ds1.child("DateType").getValue(String.class);
                             String type = ds1.child("Type").getValue(String.class);
                             if(name.toLowerCase().contains(u.toLowerCase()) || name.toUpperCase().contains(u.toUpperCase())){
-                                if (type.equals("Admin Election")) {
+                                if (type.equals("Admin Type")) {
                                     adapter.addItem(new ElectionObject(name, date, R.drawable.adnmin, id));
                                 }else{
                                     adapter.addItem(new ElectionObject(name, date, R.drawable.user1, id));
@@ -912,9 +813,6 @@ public class Elections extends AppCompatActivity {//bütün electionları burda 
     }
 
 
-    /**
-     * Init list.
-     */
     public void initList(){
         myRef.addValueEventListener(new ValueEventListener() {
             @Override
@@ -930,7 +828,7 @@ public class Elections extends AppCompatActivity {//bütün electionları burda 
                             String date = ds1.child("DateType").getValue(String.class);
                             String type = ds1.child("Type").getValue(String.class);
 
-                            if (type.equals("Admin Election")) {
+                            if (type.equals("Admin Type")) {
                                 adapter.addItem(new ElectionObject(name, date, R.drawable.adnmin, id));
                                 listOfElections.add(new ElectionObject(name, date, R.drawable.adnmin, id));
                             }else{
@@ -953,43 +851,21 @@ public class Elections extends AppCompatActivity {//bütün electionları burda 
         listView.setAdapter(adapter);
     }
 
-    /**
-     * The type Popular adapter.
-     */
     class PopularAdapter extends BaseAdapter {
-        /**
-         * The User ınflater.
-         */
         LayoutInflater userInflater;
-        /**
-         * The List of populars.
-         */
         ArrayList<PopularElections> ListOfPopulars = new ArrayList();
 
-        /**
-         * Instantiates a new Popular adapter.
-         *
-         * @param activity the activity
-         */
         PopularAdapter(Activity activity) {
             userInflater = (LayoutInflater) activity.getSystemService(
                     Context.LAYOUT_INFLATER_SERVICE);
 
         }
 
-        /**
-         * Add ıtem.
-         *
-         * @param item the item
-         */
         public void addItem(final PopularElections item) {
             ListOfPopulars.add(item);
             notifyDataSetChanged();
         }
 
-        /**
-         * Delete all.
-         */
         public void deleteAll() {
             ListOfPopulars=new ArrayList<>();
             notifyDataSetChanged();
@@ -1029,43 +905,21 @@ public class Elections extends AppCompatActivity {//bütün electionları burda 
         }
     }
 
-    /**
-     * The type Result adapter.
-     */
     class ResultAdapter extends BaseAdapter {
-        /**
-         * The User ınflater.
-         */
         LayoutInflater userInflater;
-        /**
-         * The List of populars.
-         */
         ArrayList<Results> ListOfPopulars = new ArrayList();
 
-        /**
-         * Instantiates a new Result adapter.
-         *
-         * @param activity the activity
-         */
         ResultAdapter(Activity activity) {
             userInflater = (LayoutInflater) activity.getSystemService(
                     Context.LAYOUT_INFLATER_SERVICE);
 
         }
 
-        /**
-         * Add ıtem.
-         *
-         * @param item the item
-         */
         public void addItem(final Results item) {
             ListOfPopulars.add(item);
             notifyDataSetChanged();
         }
 
-        /**
-         * Delete all.
-         */
         public void deleteAll() {
             ListOfPopulars=new ArrayList<>();
             notifyDataSetChanged();

@@ -99,7 +99,7 @@ public class ProfileMenu extends ListActivity {
             startActivity(intent);
         }
         if(models.get(position).getTitle()=="Profile Settings"){
-            Intent intent = new Intent(ProfileMenu.this, UpdateProfile.class);//Geliştiriciler
+            Intent intent = new Intent(ProfileMenu.this, viewprofile.class);//Geliştiriciler
             startActivity(intent);
         }
         if(models.get(position).getTitle()=="User Agreement"){

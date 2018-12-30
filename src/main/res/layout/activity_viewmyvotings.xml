@@ -39,13 +39,23 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/relativelection"
             android:hint="Search My vote ..."/>
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
         <ExpandableListView
             android:id="@+id/viewvote"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="2dp"
-            >
+            android:layout_marginTop="2dp">
         </ExpandableListView>
+            <ExpandableListView
+                android:id="@+id/viewcontinuedvote"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp">
+            </ExpandableListView>
+        </RelativeLayout>
 
     </LinearLayout>
 
@@ -55,7 +65,7 @@
         android:orientation="horizontal"
         android:gravity="bottom"
         android:layout_weight="0"
-        android:weightSum="2"
+        android:weightSum="3"
 
         >
         <Button
@@ -64,6 +74,15 @@
             android:id="@+id/continuedelections"
             android:layout_weight="1"
             android:hint="Continued"
+            android:background="@drawable/vieweditbuttonleft"
+            android:textColorHint="#ffff"
+            />
+        <Button
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/yeni"
+            android:layout_weight="1"
+            android:hint="new"
             android:background="@drawable/vieweditbuttonleft"
             android:textColorHint="#ffff"
             />

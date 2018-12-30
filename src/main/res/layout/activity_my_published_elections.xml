@@ -5,12 +5,109 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".MyPublishedElections">
+ <RelativeLayout
+     android:id="@+id/toolba355"
+     android:layout_width="match_parent"
+     android:layout_height="51dp"
+     android:background="@drawable/back4">
 
+  <android.support.v7.widget.Toolbar
+      android:id="@+id/toolba34"
+      android:layout_width="match_parent"
+      android:layout_height="wrap_content"
+      android:minHeight="?attr/actionBarSize">
+
+  </android.support.v7.widget.Toolbar>
+ </RelativeLayout>
+
+ <LinearLayout
+     android:id="@+id/publishbutton"
+     android:layout_width="match_parent"
+     android:layout_height="wrap_content"
+     android:layout_below="@+id/toolba355"
+     android:orientation="horizontal">
+
+  <Button
+      android:id="@+id/appliedele"
+      android:layout_width="135dp"
+      android:layout_height="wrap_content"
+      android:text="Applied \nElections"
+      android:textSize="14sp" />
+
+  <Button
+      android:id="@+id/deletedele"
+      android:layout_width="135dp"
+      android:layout_height="wrap_content"
+      android:text="Deleted \nElections"
+      android:textSize="14sp" />
+
+  <Button
+      android:id="@+id/rejectedele"
+      android:layout_width="135dp"
+      android:layout_height="wrap_content"
+      android:text="Rejected \nElections"
+      android:textSize="14sp" />
+
+ </LinearLayout>
  <ListView
+android:layout_below="@id/publishbutton"
      android:layout_width="match_parent"
      android:layout_height="match_parent"
      android:id="@+id/published">
 
  </ListView>
+ <ListView
+     android:layout_below="@id/publishbutton"
+     android:layout_width="match_parent"
+     android:layout_height="match_parent"
+     android:visibility="invisible"
+     android:id="@+id/deleted">
+
+ </ListView>
+ <ListView
+     android:layout_below="@id/publishbutton"
+     android:layout_width="match_parent"
+     android:layout_height="match_parent"
+     android:visibility="invisible"
+     android:id="@+id/rejected">
+
+ </ListView>
+
+ <TextView
+     android:id="@+id/appliedText"
+     android:layout_width="match_parent"
+     android:layout_height="wrap_content"
+     android:layout_below="@id/publishbutton"
+     android:layout_centerHorizontal="true"
+     android:text="There is no Applied Elections"
+     android:textAlignment="center"
+     android:visibility="invisible"
+     android:textColor="@color/black"
+     android:textSize="18sp"
+     android:textStyle="bold" />
+ <TextView
+     android:id="@+id/deletedTxt"
+     android:layout_width="match_parent"
+     android:layout_height="wrap_content"
+     android:layout_below="@id/publishbutton"
+     android:layout_centerHorizontal="true"
+     android:text="There is no Deleted Elections"
+     android:textAlignment="center"
+     android:textColor="@color/black"
+     android:visibility="invisible"
+     android:textSize="18sp"
+     android:textStyle="bold" />
+ <TextView
+     android:id="@+id/rejectedTxt"
+     android:layout_width="match_parent"
+     android:layout_height="wrap_content"
+     android:layout_below="@id/publishbutton"
+     android:layout_centerHorizontal="true"
+     android:text="There is no Rejected Elections"
+     android:visibility="invisible"
+     android:textAlignment="center"
+     android:textColor="@color/black"
+     android:textSize="18sp"
+     android:textStyle="bold" />
 
 </RelativeLayout>

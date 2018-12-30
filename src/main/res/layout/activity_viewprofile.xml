@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".viewprofile"
+    android:orientation="vertical"
+    >
+    <RelativeLayout
+        android:id="@+id/toolba3555"
+        android:layout_width="match_parent"
+        android:layout_height="51dp"
+        android:background="@drawable/back4">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolba345"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="?attr/actionBarSize">
+
+        </android.support.v7.widget.Toolbar>
+    </RelativeLayout>
+    <LinearLayout
+        android:layout_width="fill_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="top"
+        android:gravity="center_vertical"
+        android:orientation="vertical"
+        android:weightSum="20"
+
+        >
+
+        <ImageView
+            android:id="@+id/userimg"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_gravity="center"
+            android:layout_weight="6"
+            android:foregroundGravity="center"
+            android:paddingTop="0dp"
+
+
+            android:src="@drawable/user" />
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="60dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="60dp"
+            android:layout_marginBottom="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/edittextradius"
+            android:gravity="center"
+            android:hint="Name"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/surname"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="60dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="60dp"
+            android:layout_marginBottom="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/edittextradius"
+            android:gravity="center"
+            android:hint="Surname"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/mail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginLeft="60dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="60dp"
+            android:layout_marginBottom="10dp"
+            android:layout_weight="1"
+            android:background="@drawable/edittextradius"
+            android:gravity="center"
+            android:hint="Mail"
+            android:textSize="18sp" />
+
+
+        <Button
+            android:id="@+id/edit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="0"
+            android:layout_gravity="center_horizontal"
+            android:gravity="center"
+            android:hint="Edit"
+            android:textColorHint="#ffff"
+            android:textStyle="bold"
+            android:background="@drawable/editbutton"
+            android:layout_marginBottom="10dp"
+            android:layout_marginTop="20dp"
+            android:maxWidth="150dp"
+            />
+
+
+        <Button
+            android:id="@+id/freeze"
+            android:layout_width="120dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginBottom="10dp"
+            android:layout_weight="0"
+            android:background="@drawable/editbutton1"
+            android:gravity="center"
+            android:hint="Freeze Profile"
+            android:maxWidth="150dp"
+            android:textColorHint="#ffff"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+
+</LinearLayout>

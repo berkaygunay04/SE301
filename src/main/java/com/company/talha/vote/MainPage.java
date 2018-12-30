@@ -2,10 +2,13 @@ package com.company.talha.vote;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,6 +17,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.Button;
+import android.widget.GridLayout;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -23,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -33,106 +39,43 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-/**
- * The type Main page.
- */
 public class MainPage extends AppCompatActivity {
-    /**
-     * The Database.
-     */
+    private DatabaseReference dbUser=FirebaseDatabase.getInstance().getReference("Kullanıcılar");
     FirebaseDatabase database = FirebaseDatabase.getInstance();
-    /**
-     * The Leaders 1.
-     */
     ArrayList<Leaders> leaders1;
-    /**
-     * The Leaders 2.
-     */
     ArrayList<Leaders> leaders2;
-    /**
-     * The Leader adapter.
-     */
     LeaderAdapter LeaderAdapter;
-    /**
-     * The Toolbar 1.
-     */
+    GridLayout gridLayout1;
     Toolbar toolbar1;
-    /**
-     * The Sdf 2.
-     */
     SimpleDateFormat sdf2;
-    /**
-     * The Image button 4.
-     */
-    ImageButton imageButton4, /**
-     * The Image button 5.
-     */
-    imageButton5, /**
-     * The Image button 6.
-     */
+    ImageButton imageButton4,
+    imageButton5,
     imageButton6;
-    /**
-     * The My ref 1.
-     */
     DatabaseReference myRef1 = database.getReference("Elections");
-    /**
-     * The My ref 3.
-     */
     DatabaseReference myRef3 = database.getReference("Elections");
-    /**
-     * The My ref 2.
-     */
     DatabaseReference myRef2 = database.getReference();
-    /**
-     * The Image view.
-     */
-    ImageView imageView, /**
-     * The Adres 14 k.
-     */
+    ImageView imageView,
     adres14k;
-    /**
-     * The Tarih.
-     */
     Date tarih = new Date();
-    /**
-     * The Text view 1.
-     */
     TextView textView1;
-    /**
-     * The Leaderlayout.
-     */
-    RelativeLayout leaderlayout, /**
-     * The Anasayfa.
-     */
+    RelativeLayout leaderlayout,
     anasayfa;
-    /**
-     * The Butonlar.
-     */
     LinearLayout butonlar,yazilar;
-    /**
-     * The Leaderlist.
-     */
     ListView leaderlist;
-    /**
-     * The Id.
-     */
     String id;
 
-    /**
-     * The Category.
-     */
     String category;
     boolean k=false;
     private FirebaseAuth mAuth=FirebaseAuth.getInstance();
     private DatabaseReference menuL2 = FirebaseDatabase.getInstance().getReference().child("Kullanıcılar");
-    private DatabaseReference menuL3 = FirebaseDatabase.getInstance().getReference().child("Leaders");
+    private DatabaseReference menuL3 = FirebaseDatabase.getInstance().getReference().child("Kullanıcılar");
     private DatabaseReference dbUser2=FirebaseDatabase.getInstance().getReference("Kullanıcılar");
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main4);
         sdf2 = new SimpleDateFormat("dd");
-
+        gridLayout1=(GridLayout)findViewById(R.id.bistro);
         LeaderAdapter=new LeaderAdapter(this);
         leaderlist=(ListView)findViewById(R.id.leaderlist);
         leaders2=new ArrayList<>();
@@ -140,70 +83,47 @@ public class MainPage extends AppCompatActivity {
         leaders1=new ArrayList<Leaders>();
         leaderlayout=(RelativeLayout)findViewById(R.id.leadership);
         leaderlayout.setVisibility(View.INVISIBLE);
-        imageButton4=(ImageButton)findViewById(R.id.imageButton4);
-        imageButton5=(ImageButton)findViewById(R.id.imageButton5);
-        imageButton6=(ImageButton)findViewById(R.id.imageButton6);
+
 
         toolbar1 = (Toolbar) findViewById(R.id.toolbar1);
         setSupportActionBar(toolbar1);
         anasayfa=(RelativeLayout)findViewById(R.id.anasayfa);
-        butonlar=(LinearLayout) findViewById(R.id.butonlar);
-        yazilar=(LinearLayout) findViewById(R.id.yazilar);
         imageView=(ImageView)findViewById(R.id.imageView);
         textView1=(TextView) findViewById(R.id.textView);
         final TextView leaderheader=new TextView(this);
         leaderheader.setText("LEADERS");
         adres14k=(ImageView)findViewById(R.id.adres14k);
-        imageButton4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                leaderlayout.setVisibility(View.VISIBLE);
-                butonlar.setVisibility(View.INVISIBLE);
-                imageView.setVisibility(View.INVISIBLE);
-                textView1.setVisibility(View.INVISIBLE);
-                yazilar.setVisibility(View.INVISIBLE);
-            }
-        });
-        imageButton6.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if(mAuth.getCurrentUser()==null){
-                    Toast.makeText(MainPage.this,"Lütfen giriş yapınız!",Toast.LENGTH_SHORT).show();
-                }else{
-                    Intent intentApply=new Intent(MainPage.this,ApplyElections.class);
-                    startActivity(intentApply);
+        setSingleItem(gridLayout1);
 
-                }
-            }
-        });
-        imageButton5.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intentVote=new Intent(MainPage.this,Elections.class);
-                startActivity(intentVote);
-            }
-        });
         adres14k.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 leaderlayout.setVisibility(View.INVISIBLE);
-                butonlar.setVisibility(View.VISIBLE);
                 imageView.setVisibility(View.VISIBLE);
                 textView1.setVisibility(View.VISIBLE);
-                yazilar.setVisibility(View.VISIBLE);
+                gridLayout1.setVisibility(View.VISIBLE);
             }
         });
         if (mAuth.getCurrentUser() != null) {
             menuL2.child(mAuth.getCurrentUser().getUid()).child("name").addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                    String value = dataSnapshot.getValue(String.class);
-                    if(value.equals("")){
-                        Intent intent12=new Intent(MainPage.this,Login.class);
-                        startActivity(intent12);
-                    }else{
-                        getSupportActionBar().setTitle(value);
-                    }
+
+                        String value = dataSnapshot.getValue(String.class);
+                        if(value==null){
+                            mAuth.signOut();
+                        }else{
+                            if(value.equals("")){
+                                Intent intent12=new Intent(MainPage.this,Login.class);
+                                startActivity(intent12);
+                            }else{
+                                getSupportActionBar().setTitle(value);
+                            }
+
+                        }
+
+
+
                 }
                 @Override
                 public void onCancelled(@NonNull DatabaseError databaseError) {
@@ -213,6 +133,47 @@ public class MainPage extends AppCompatActivity {
         }else{
             getSupportActionBar().setTitle("I-Voted");
         }
+        if (mAuth.getCurrentUser() != null) {
+       menuL3.child(mAuth.getCurrentUser().getUid()).child("Freeze").addValueEventListener(new ValueEventListener() {
+           @Override
+           public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+               Boolean freeze=dataSnapshot.getValue(Boolean.class);
+               if(freeze!=null)
+               if(freeze){
+                   AlertDialog.Builder builder1=new AlertDialog.Builder(MainPage.this);
+                   builder1.setTitle("Your Profile Freezed!");
+                   builder1.setMessage("Please repeat sign in or create new account!");
+                   builder1.setCancelable(false);
+                   builder1.setPositiveButton("Sıgn In", new DialogInterface.OnClickListener() {
+                       @Override
+                       public void onClick(DialogInterface dialogInterface, int i) {
+                           mAuth.signOut();
+                           Intent authIntent=new Intent(MainPage.this,Login.class);
+                           startActivity(authIntent);
+                       }
+
+                   });
+                   builder1.setNegativeButton("ReFreeze", new DialogInterface.OnClickListener() {
+                       @Override
+                       public void onClick(DialogInterface dialog, int which) {
+                           FirebaseUser currentUser = mAuth.getCurrentUser();
+                           dbUser.child(currentUser.getUid()).child("Free").setValue("Açmak istiyorum");
+                       }
+                   });
+                   builder1.show();
+               }
+           }
+
+           @Override
+           public void onCancelled(@NonNull DatabaseError databaseError) {
+
+           }
+       });
+
+        }
+
+
+
         toolbar1.setOnMenuItemClickListener(new Toolbar.OnMenuItemClickListener() {
             @Override
             public boolean onMenuItemClick(MenuItem menuItem) {
@@ -248,9 +209,9 @@ public class MainPage extends AppCompatActivity {
                     }
                 }
                 ArrayList<Leaders> b=sortArrayList(leaders2);
-                    LeaderAdapter.addItem(b.get(0));
-                    LeaderAdapter.addItem(b.get(1));
-                    LeaderAdapter.addItem(b.get(2));
+                LeaderAdapter.addItem(b.get(0));
+                LeaderAdapter.addItem(b.get(1));
+                LeaderAdapter.addItem(b.get(2));
 
             }
 
@@ -259,6 +220,7 @@ public class MainPage extends AppCompatActivity {
 
             }
         });
+
         k=true;
         if(k){
             myRef1.addListenerForSingleValueEvent(new ValueEventListener() {//popular elections
@@ -268,7 +230,7 @@ public class MainPage extends AppCompatActivity {
                         category=ds.getKey();
                         for (DataSnapshot ds1 : ds.getChildren()) {
                             id = ds1.getKey();
-                            String finishdate = ds1.child("finishDate").getValue(String.class).substring(8,10);
+                            String finishdate = ds1.child("finishDate").getValue(String.class).substring(0,2);
                             Integer a,b;
                             a=Integer.parseInt(sdf2.format(tarih));
                             b=Integer.parseInt(finishdate);
@@ -336,11 +298,34 @@ public class MainPage extends AppCompatActivity {
             k=false;
         }
 
+    }
+    private void setSingleItem(GridLayout gridLayout){
+        for(int i=0;i<gridLayout.getChildCount();i++){
+            CardView cardView=(CardView)gridLayout.getChildAt(i);
+            final int finalI=i;
+            cardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(finalI==0){
+                        leaderlayout.setVisibility(View.VISIBLE);
+                        imageView.setVisibility(View.INVISIBLE);
+                        textView1.setVisibility(View.INVISIBLE);
+                        gridLayout1.setVisibility(View.INVISIBLE);
+                    }else if(finalI==1){
+                        Intent intentVote=new Intent(MainPage.this,Elections.class);
+                        startActivity(intentVote);
+                    }else if(finalI==2){
+                        if(mAuth.getCurrentUser()==null){
+                            Toast.makeText(MainPage.this,"Lütfen giriş yapınız!",Toast.LENGTH_SHORT).show();
+                        }else{
+                            Intent intentApply=new Intent(MainPage.this,ApplyElections.class);
+                            startActivity(intentApply);
 
-
-
-
-
+                        }
+                    }
+                }
+            });
+        }
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -383,35 +368,16 @@ public class MainPage extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * The type Leader adapter.
-     */
     class LeaderAdapter extends BaseAdapter {
-        /**
-         * The User ınflater.
-         */
         LayoutInflater userInflater;
-        /**
-         * The List of elections.
-         */
         ArrayList<Leaders> ListOfElections = new ArrayList();
 
-        /**
-         * Instantiates a new Leader adapter.
-         *
-         * @param activity the activity
-         */
         LeaderAdapter(Activity activity) {
             userInflater = (LayoutInflater) activity.getSystemService(
                     Context.LAYOUT_INFLATER_SERVICE);
 
         }
 
-        /**
-         * Add ıtem.
-         *
-         * @param item the item
-         */
         public void addItem(final Leaders item) {
             ListOfElections.add(item);
             notifyDataSetChanged();
@@ -426,9 +392,6 @@ public class MainPage extends AppCompatActivity {
             return ListOfElections.get(i);
         }
 
-        /**
-         * Delete all.
-         */
         public void deleteAll() {
             ListOfElections=new ArrayList<>();
             notifyDataSetChanged();
@@ -454,12 +417,6 @@ public class MainPage extends AppCompatActivity {
         }
     }
 
-    /**
-     * Sort array list array list.
-     *
-     * @param k the k
-     * @return the array list
-     */
     public ArrayList<Leaders> sortArrayList(ArrayList<Leaders> k){
         ArrayList<Leaders> a=new ArrayList<>();
         int max=0;

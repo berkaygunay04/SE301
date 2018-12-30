@@ -12,37 +12,14 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
-/**
- * The type View my published elections.
- */
 public class ViewMyPublishedElections extends AppCompatActivity {
-    /**
-     * The Id.
-     */
     String id;
-    /**
-     * The Database.
-     */
     FirebaseDatabase database = FirebaseDatabase.getInstance();
-    /**
-     * The My ref.
-     */
     DatabaseReference myRef = database.getReference("Elections");
-    /**
-     * The Radio 1.
-     */
     RadioButton radio1;
-    /**
-     * The Radio 2.
-     */
     RadioButton radio2;
-    /**
-     * The Radio 3.
-     */
     RadioButton radio3;
-    /**
-     * The Text view.
-     */
+    String choosen;
     TextView textView;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,7 +36,7 @@ public class ViewMyPublishedElections extends AppCompatActivity {
                 for (DataSnapshot ds : dataSnapshot.getChildren()) {
                     String category = ds.getKey();
 
-                    if (category.equals("Sport")) {
+                    if (category.equals(choosen)) {
                         for (DataSnapshot ds1 : ds.getChildren()) {
                             if (ds1.getKey().equals(id)){
                                 String name = ds1.child("Option1").getValue(String.class);
@@ -83,13 +60,11 @@ public class ViewMyPublishedElections extends AppCompatActivity {
         });
     }
 
-    /**
-     * Selection.
-     */
     public void selection(){
         if (getIntent().getExtras() != null) {
             // selection = (getIntent().getExtras().getString("selection"));
             id = (getIntent().getExtras().getString("electionId"));
+            choosen = (getIntent().getExtras().getString("category"));
             //just test for selection post   Toast.makeText(Election.this, "Selection " + selection.toString(), Toast.LENGTH_SHORT).show();
         }
     }

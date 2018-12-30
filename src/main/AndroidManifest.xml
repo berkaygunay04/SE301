@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.company.talha.vote">
 
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:allowBackup="true"
         android:icon="@drawable/ic_launcher"
@@ -20,7 +23,8 @@
             </intent-filter>
         </service>
 
-        <activity android:name=".Register" />
+        <activity android:name=".Register">
+        </activity>
         <activity android:name=".Login" />
         <activity android:name=".MainPage">
             <intent-filter>
@@ -53,7 +57,8 @@
         <activity android:name=".viewmyvotings" />
         <activity android:name=".MyPublishedElections" />
         <activity android:name=".ViewMyPublishedElections" />
-        <activity android:name=".forgotPassword"></activity>
+        <activity android:name=".forgotPassword" />
+        <activity android:name=".viewprofile"></activity>
     </application>
 
 </manifest>
