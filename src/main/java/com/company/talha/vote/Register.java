@@ -117,11 +117,12 @@ public class Register extends AppCompatActivity {
                                   dbUser.child(user.getUid()).child("UserVoteCount").setValue(0);
                                   dbUser.child(currentUser.getUid()).child("Freeze").setValue(false);
                                   dbUser.child(currentUser.getUid()).child("Free").setValue("Stable");
+                                  dbUser.child(currentUser.getUid()).child("image").setValue("https://firebasestorage.googleapis.com/v0/b/vote-a0e5a.appspot.com/o/user.png?alt=media&token=36a5d78d-14f7-40a1-ba7e-0c6132b3178c");
                                   demDownload1.execute();
                                   circularProgressButton.setEnabled(false);
                                   AlertDialog.Builder builder1=new AlertDialog.Builder(Register.this);
-                                  builder1.setTitle("Onay Linki");
-                                  builder1.setMessage("Lütfen email adresinize gelen linki onaylayınız!");
+                                  builder1.setTitle("Verification Link");
+                                  builder1.setMessage("Please verify your email account!");
                                   builder1.setCancelable(false);
                                   builder1.setPositiveButton("Tamam", new DialogInterface.OnClickListener() {
                                       @Override
