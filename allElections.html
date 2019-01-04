@@ -13,17 +13,20 @@
     <link href="assets/css/custom.css" rel="stylesheet" />
      <!-- GOOGLE FONTS-->
    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
 
    <style>
    .btn {
      background-color: red;
      border: none;
      color: white;
-     padding: 8px 15px;
+     padding: 6px 12px;
      font-size: 20px;
      cursor: pointer;
      display: block;
      margin: auto;
+     margin-top: 1px;
+     margin-bottom: 1px;
      box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
    }
 
@@ -178,7 +181,7 @@ table
                       <a href="mainElections.html" ><i class="fa fa-desktop "></i>Dashboard <span id="spanID2" class="badge" style="background-color:red"></span></a>
                   </li>
                   <li>
-                     <a href="allUsers.html"><i class="fa fa-users "></i>Users</a>
+                     <a href="allUsers.html"><i class="fa fa-users "></i>Users <span id="spanID95"class="badge" style="background-color:red"></span></a>
                  </li>
                  <li class="active-link">
                     <a href="#"><i class="fa fa-edit "></i>User Elections</a>
@@ -313,6 +316,53 @@ table
     }
     badgePending();
 
+    countBadgeUser = 0;
+    var badgeUser = function(){
+      firebase.database().ref("Kullanıcılar").on("child_added",function(snapshot){
+        firebase.database().ref("Kullanıcılar").child(snapshot.key).on("value",function(snapshot2){
+          var ozgur = snapshot2.val().Free
+          if(ozgur == "Dondurmak istiyorum" || ozgur == "Açmak istiyorum"){
+            countBadgeUser += 1;
+            document.getElementById("spanID95").innerHTML = countBadgeUser
+          }
+        });
+      });
+
+    }
+    badgeUser();
+
+    function algoritma1(a,b,c){
+      console.log(a,b,c);
+      if(a == 0 && b == 0 && c == 0){
+        return -1;
+      }else{
+        var sorting = [];
+        sorting.push(a);
+        sorting.push(b);
+        sorting.push(c);
+
+        sorting.sort(function(a, b){return a-b});
+
+        if(sorting[2] == a){
+          return a;
+        }else if(sorting[2] == b){
+          return b;
+        }else if(sorting[2] == c){
+          return c;
+        }
+      }
+
+    }
+
+
+    function yuzdeCalculater(gelen,toplam){
+      var sonuc1 = (gelen * 100) / toplam;
+      var sonuc2 = sonuc1.toString();
+      var sonuc3 = sonuc2.substring(0,5);
+
+      return sonuc3;
+    }
+
 
 
     var count = 0;
@@ -330,10 +380,14 @@ table
                     firebase.database().ref("Kullanıcılar").child(userSnap1.key).child("Elections").on("child_added",function(userSnap2){
                         if(snapshot2.key == userSnap2.key){
                           count += 1;
+                          var sums = snapshot2.val().Option1C + snapshot2.val().Option2C + snapshot2.val().Option3C
+                          var algoritmadanGelenSonuc = algoritma1(snapshot2.val().Option1C,snapshot2.val().Option2C,snapshot2.val().Option3C);
                           if(count % 2 == 0){
-                            list_div.innerHTML += "<div style='background-color:#eeeaea'><table style='width:100%' border='1px solid black'><tr>" + count + "</tr><tr><th class='dsec'>Sender</th><th class='dsec'>Category</th><th class='dsec'>Name</th><th class='f'>Ouestion</th><th class='answers'>Option1</th><th class='answers'>Option2</th><th class='answers'>Option3</th><th class='dsec'>Due Date</th></tr><tr><td class='dsec'> " + userSnap1.val().name + " </td><td class='dsec'><b>" + snapshot.key + "</b></td><td class='dsec'>" + snapshot2.val().ElectionName + "</td><td class='f'><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td class='answers' style='text-decoration:underline'>" + snapshot2.val().Option1 + "</td><td class='answers' style='text-decoration:underline'>" + snapshot2.val().Option2 + "</td><td class='answers' style='text-decoration:underline'>" + snapshot2.val().Option3 + "</td><td class='dsec' style='text-color:green'>" + snapshot2.val().finishDate + "</td><td><button onclick='Delete(\"" +  snapshot2.key + "\")' class='btn'><i class='fa fa-trash'></i></button></td></tr></table></div>"
+                            list_div.innerHTML += "<div style='background-color:#eeeaea'><table style='width:100%' border='1px solid black'><tr>" + count + "</tr><tr><th class='dsec'>Sender</th><th class='dsec'>Category</th><th class='dsec'>Name</th><th class='f'>Ouestion</th><th class='answers'>Option1</th><th class='answers'>Option2</th><th class='answers'>Option3</th><th class='dsec'>Due Date</th></tr><tr><td class='dsec'> " + userSnap1.val().name + " </td><td class='dsec'><b>" + snapshot.key + "</b></td><td class='dsec'>" + snapshot2.val().ElectionName + "</td><td class='f'><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td class='answers' id='option101' style='text-align:center'>" + snapshot2.val().Option1 + "<br>" + yuzdeCalculater(snapshot2.val().Option1C,sums) + "%</td><td class='answers' id='option102' style='text-align:center'>" + snapshot2.val().Option2 + "<br>" + yuzdeCalculater(snapshot2.val().Option2C,sums) + "%</td><td class='answers' id='option103' style='text-align:center'>" + snapshot2.val().Option3 + "<br>" + yuzdeCalculater(snapshot2.val().Option3C,sums) + "%</td><td class='dsec' style='text-color:green'>" + snapshot2.val().finishDate + "</td><td><button type='button' onclick='Delete(\"" +  snapshot2.key + "\")' class='btn'><i class='fa fa-trash'></i></button></td></tr></table></div>"
+
                           }else{
-                            list_div.innerHTML += "<div style='background-color:#f9f9f9'><table style='width:100%' border='1px solid black'><tr>" + count + "</tr><tr><th class='dsec'>Sender</th><th class='dsec'>Category</th><th class='dsec'>Name</th><th class='f'>Ouestion</th><th class='answers'>Option1</th><th class='answers'>Option2</th><th class='answers'>Option3</th><th class='dsec'>Due Date</th></tr><tr><td class='dsec'> " + userSnap1.val().name + " </td><td class='dsec'><b>" + snapshot.key + "</b></td><td class='dsec'>" + snapshot2.val().ElectionName + "</td><td class='f'><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td class='answers' style='text-decoration:underline'>" + snapshot2.val().Option1 + "</td><td class='answers' style='text-decoration:underline'>" + snapshot2.val().Option2 + "</td><td class='answers' style='text-decoration:underline'>" + snapshot2.val().Option3 + "</td><td class='dsec' style='text-color:green'>" + snapshot2.val().finishDate + "</td><td><button onclick='Delete(\"" +  snapshot2.key + "\")' class='btn'><i class='fa fa-trash'></i></button></td></tr></table></div>"
+                            list_div.innerHTML += "<div style='background-color:#f9f9f9'><table style='width:100%' border='1px solid black'><tr>" + count + "</tr><tr><th class='dsec'>Sender</th><th class='dsec'>Category</th><th class='dsec'>Name</th><th class='f'>Ouestion</th><th class='answers'>Option1</th><th class='answers'>Option2</th><th class='answers'>Option3</th><th class='dsec'>Due Date</th></tr><tr><td class='dsec'> " + userSnap1.val().name + " </td><td class='dsec'><b>" + snapshot.key + "</b></td><td class='dsec'>" + snapshot2.val().ElectionName + "</td><td class='f'><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td class='answers' id='option111' style='text-align:center'>" + snapshot2.val().Option1 + "<br>" + yuzdeCalculater(snapshot2.val().Option1C,sums) + "%</td><td class='answers' id='option112' style='text-align:center'>" + snapshot2.val().Option2 + "<br>" + yuzdeCalculater(snapshot2.val().Option2C,sums) + "%</td><td class='answers' id='option113' style='text-align:center'>" + snapshot2.val().Option3 + "<br>" + yuzdeCalculater(snapshot2.val().Option3C,sums) + "%</td><td class='dsec' style='text-color:green'>" + snapshot2.val().finishDate + "</td><td><button type='button' onclick='Delete(\"" +  snapshot2.key + "\")' class='btn'><i class='fa fa-trash'></i></button></td></tr></table></div>"
+
                           }
                         }
                         if(count == 0){
@@ -377,10 +431,36 @@ table
                         // ve buraya tarih durumunu ekleyeceğiz. yani eğer bitme tarihi gelmemiş ve onaylanmış ise göster yapacağız.
                         if(snapshot2.key == userSnap2.key){
                           countFinish += 1;
+                          var sums = snapshot2.val().Option1C + snapshot2.val().Option2C + snapshot2.val().Option3C
+                          var algoritmadanGelenSonuc = algoritma1(snapshot2.val().Option1C,snapshot2.val().Option2C,snapshot2.val().Option3C);
                           if(countFinish % 2 == 0){
-                            list_div.innerHTML += "<div style='background-color:#eeeaea'><table style='width:100%' border='1px solid black'><tr>" + countFinish + "</tr><tr><th class='dsec'>Sender</th><th class='dsec'>Category</th><th class='dsec'>Name</th><th class='f'>Ouestion</th><th>Option1</th><th>Option2</th><th>Option3</th><th class='dsec'>Due Date</th></tr><tr><td class='dsec'> " + userSnap1.val().name + " </td><td class='dsec'><b>" + snapshot.key + "</b></td><td>" + snapshot2.val().ElectionName + "</td><td class='f'><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td style='text-decoration:underline'>" + snapshot2.val().Option1 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option2 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option3 + "</td><td class='dsec' style='text-color:red'>" + snapshot2.val().finishDate + "</td><td><button onclick='Delete(\"" +  snapshot2.key + "\")' class='btn'><i class='fa fa-trash'></i></button></td></tr></table></div>"
+                            list_div.innerHTML += "<div style='background-color:#eeeaea'><table style='width:100%' border='1px solid black'><tr>" + countFinish + "</tr><tr><th class='dsec'>Sender</th><th class='dsec'>Category</th><th class='dsec'>Name</th><th class='f'>Ouestion</th><th class='answers'>Option1</th><th class='answers'>Option2</th><th class='answers'>Option3</th><th class='dsec'>Due Date</th></tr><tr><td class='dsec'> " + userSnap1.val().name + " </td><td class='dsec'><b>" + snapshot.key + "</b></td><td>" + snapshot2.val().ElectionName + "</td><td class='f'><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td class='answers' id='option1' style='text-align:center'>" + snapshot2.val().Option1 + "<br>" + yuzdeCalculater(snapshot2.val().Option1C,sums) + "%</td><td class='answers' id='option2' style='text-align:center'>" + snapshot2.val().Option2 + "<br>" + yuzdeCalculater(snapshot2.val().Option2C,sums) + "%</td><td class='answers' id='option3' style='text-align:center'>" + snapshot2.val().Option3 + "<br>" + yuzdeCalculater(snapshot2.val().Option3C,sums) + "%</td><td class='dsec' style='text-color:red'>" + snapshot2.val().finishDate + "</td></tr></table></div>"
+                            if(algoritmadanGelenSonuc == snapshot2.val().Option1C){
+                              document.getElementById("option1").style.backgroundColor = "#66cb39";
+                              document.getElementById("option1").style.color = "white";
+
+                              console.log(algoritmadanGelenSonuc);
+                            }else if(algoritmadanGelenSonuc == snapshot2.val().Option2C){
+                              document.getElementById("option2").style.backgroundColor = "#66cb39";
+                              document.getElementById("option2").style.color = "white";
+                            }else{
+                              document.getElementById("option3").style.backgroundColor = "#66cb39";
+                              document.getElementById("option3").style.color = "white";
+                            }
                           }else{
-                            list_div.innerHTML += "<div style='background-color:#f9f9f9'><table style='width:100%' border='1px solid black'><tr>" + countFinish + "</tr><tr><th class='dsec'>Sender</th><th class='dsec'>Category</th><th class='dsec'>Name</th><th class='f'>Ouestion</th><th>Option1</th><th>Option2</th><th>Option3</th><th class='dsec'>Due Date</th></tr><tr><td class='dsec'> " + userSnap1.val().name + " </td><td class='dsec'><b>" + snapshot.key + "</b></td><td>" + snapshot2.val().ElectionName + "</td><td class='f'><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td style='text-decoration:underline'>" + snapshot2.val().Option1 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option2 + "</td><td style='text-decoration:underline'>" + snapshot2.val().Option3 + "</td><td class='dsec' style='text-color:red'>" + snapshot2.val().finishDate + "</td><td><button onclick='Delete(\"" +  snapshot2.key + "\")' class='btn'><i class='fa fa-trash'></i></button></td></tr></table></div>"
+                            list_div.innerHTML += "<div style='background-color:#f9f9f9'><table style='width:100%' border='1px solid black'><tr>" + countFinish + "</tr><tr><th class='dsec'>Sender</th><th class='dsec'>Category</th><th class='dsec'>Name</th><th class='f'>Ouestion</th><th class='answers'>Option1</th><th class='answers'>Option2</th><th class='answers'>Option3</th><th class='dsec'>Due Date</th></tr><tr><td class='dsec'> " + userSnap1.val().name + " </td><td class='dsec'><b>" + snapshot.key + "</b></td><td>" + snapshot2.val().ElectionName + "</td><td class='f'><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td class='answers' id='option11' style='text-align:center'>" + snapshot2.val().Option1 + "<br>" + yuzdeCalculater(snapshot2.val().Option1C,sums) + "%</td><td class='answers' id='option21' style='text-align:center'>" + snapshot2.val().Option2 + "<br>" + yuzdeCalculater(snapshot2.val().Option2C,sums) + "%</td><td class='answers'id='option31' style='text-align:center'>" + snapshot2.val().Option3 + "<br>" + yuzdeCalculater(snapshot2.val().Option3C,sums) + "%</td><td class='dsec' style='text-color:red'>" + snapshot2.val().finishDate + "</td></tr></table></div>"
+                            if(algoritmadanGelenSonuc == snapshot2.val().Option1C){
+                              document.getElementById("option11").style.backgroundColor = "#66cb39";
+                              document.getElementById("option11").style.color = "white";
+
+                              console.log(algoritmadanGelenSonuc);
+                            }else if(algoritmadanGelenSonuc == snapshot2.val().Option2C){
+                              document.getElementById("option21").style.backgroundColor = "#66cb39";
+                              document.getElementById("option21").style.color = "white";
+                            }else{
+                              document.getElementById("option31").style.backgroundColor = "#66cb39";
+                              document.getElementById("option31").style.color = "white";
+                            }
                           }
                         }
                         if(countFinish == 0){
@@ -423,37 +503,47 @@ table
     }
 
     function Delete(electionKey){
-      var electionRef = firebase.database().ref("Elections");
-      electionRef.on("child_added",function(snapshot){
-        var electionRef2 = firebase.database().ref("Elections").child(snapshot.key);
-        electionRef2.on("child_added",function(snapshot2){
-          if(snapshot2.key == electionKey){ // burda tarihe göre sıralandığı için db de gelen key de tarih key olduğundan karşılaştırma yapıp hangisi geldiyse onu siliyorum.
-            if(confirm("Silmek istediğinize eminmisiniz ?")){
+      var reason = prompt("Please enter reason for deleting:");
+        if(reason == null || reason == ""){
+          alert("Reason cannot be empty!");
+        }else{
+          var electionRef = firebase.database().ref("Elections");
+          electionRef.on("child_added",function(snapshot){
+            var electionRef2 = firebase.database().ref("Elections").child(snapshot.key);
+            electionRef2.on("child_added",function(snapshot2){
+              if(snapshot2.key == electionKey){ // burda tarihe göre sıralandığı için db de gelen key de tarih key olduğundan karşılaştırma yapıp hangisi geldiyse onu siliyorum.
+                var r=confirm("Do you want to delete election ?");
+                if(r){
 
-              firebase.database().ref("DeleteElections").child(snapshot.key).child(snapshot2.key).set({
-                ElectionName: snapshot2.val().ElectionName,
-                Option1: snapshot2.val().Option1,
-                Option2: snapshot2.val().Option2,
-                Option3: snapshot2.val().Option3,
-                Option1C: snapshot2.val().Option1C,
-                Option2C: snapshot2.val().Option2C,
-                Option3C: snapshot2.val().Option3C,
-                AdminOnay: false,
-                Question: snapshot2.val().Question,
-                VoteCount: snapshot2.val().VoteCount,
-                finishDate: snapshot2.val().finishDate
-              });
+                  firebase.database().ref("DeleteElections").child(snapshot.key).child(snapshot2.key).set({
+                    ElectionName: snapshot2.val().ElectionName,
+                    Option1: snapshot2.val().Option1,
+                    Option2: snapshot2.val().Option2,
+                    Option3: snapshot2.val().Option3,
+                    Option1C: snapshot2.val().Option1C,
+                    Option2C: snapshot2.val().Option2C,
+                    Option3C: snapshot2.val().Option3C,
+                    AdminOnay: false,
+                    Question: snapshot2.val().Question,
+                    VoteCount: snapshot2.val().VoteCount,
+                    finishDate: snapshot2.val().finishDate,
+                    Reason: reason
+                  });
 
-              snapshot2.ref.remove(function(error){
-                  window.onload = timedRefresh(1);
-              });
-            }
+                  snapshot2.ref.remove(function(error){
+                    alert("Deleting is success!");
+                      timedRefresh(1);
+                  });
+                }else {
+                  //return false;
+                }
 
-          }
-        });
-      });
-
+              }
+            });
+          });
+        }
     }
+
     console.log("Kontrol : ",localStorage.getItem("deleteDurumu"));
     var text = localStorage.getItem("deleteDurumu");
     console.log("text : ",text);
@@ -621,7 +711,7 @@ table
     }
 
 
-    var getData = function(){
+    /*var getData = function(){
          firebase.database().ref("Elections").on("child_added",function(electionSnap1){
            firebase.database().ref("Elections").child(electionSnap1.key).on("child_added",function(elecSnap2){
             var finishDate = elecSnap2.val().finishDate
@@ -644,7 +734,7 @@ table
              Durum: false
            });
          });
-       }
+       }*/
 
        function currentDay(){
        var dateObj = new Date();

@@ -13,6 +13,9 @@
     <link href="assets/css/custom.css" rel="stylesheet" />
      <!-- GOOGLE FONTS-->
    <link href='http://fonts.googleapis.com/css?family=Open+Sans' rel='stylesheet' type='text/css' />
+   <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+
 </head>
 <style>
 .textareaStyle{
@@ -29,6 +32,10 @@
 
 .addButton:hover{
   background-color: #a2eaee;
+}
+.selectCategory{
+  width: 30%;
+  height: 35px;
 }
 </style>
 <body>
@@ -63,7 +70,7 @@
                       <a href="mainElections.html" ><i class="fa fa-desktop "></i>Dashboard <span id="spanID3" class="badge" style="background-color:red"></span></a>
                   </li>
                   <li>
-                     <a href="allUsers.html"><i class="fa fa-users "></i>Users</a>
+                     <a href="allUsers.html"><i class="fa fa-users "></i>Users<span id="spanID98" class="badge" style="background-color:red"></span></a>
                  </li>
                  <li>
                     <a href="allElections.html"><i class="fa fa-edit "></i>User Elections</a>
@@ -107,11 +114,13 @@
                   </div>
 
                   <div>
-                    <select id="CategorySelect">
+                    <select class="selectCategory" id="CategorySelect">
                       <option value="Category" disabled selected>Select Category</option>
+                      <option value="Art">Art</option>
                       <option value="Cinema">Cinema</option>
                       <option value="Culture">Culture</option>
                       <option value="History">History</option>
+                      <option value="Science">Science</option>
                       <option value="Sport">Sport</option>
                     </select><br>
                     <label for="start">Finish date:</label>
@@ -190,16 +199,29 @@
 
     var countPending = 0;
     var badgePending = function(){
-      firebase.database().ref("Elections").on("child_added",function(elecSnap1){
-        firebase.database().ref("Elections").child(elecSnap1.key).on("child_added",function(elecSnap2){
-          if(elecSnap2.val().AdminOnay == false){
+      firebase.database().ref("WaitingElections").on("child_added",function(elecSnap1){
+        firebase.database().ref("WaitingElections").child(elecSnap1.key).on("child_added",function(elecSnap2){
             countPending += 1;
             document.getElementById("spanID3").innerHTML = countPending
-          }
         });
       });
     }
     badgePending();
+
+    countBadgeUser = 0;
+    var badgeUser = function(){
+      firebase.database().ref("Kullanıcılar").on("child_added",function(snapshot){
+        firebase.database().ref("Kullanıcılar").child(snapshot.key).on("value",function(snapshot2){
+          var ozgur = snapshot2.val().Free
+          if(ozgur == "Dondurmak istiyorum" || ozgur == "Açmak istiyorum"){
+            countBadgeUser += 1;
+            document.getElementById("spanID98").innerHTML = countBadgeUser
+          }
+        });
+      });
+
+    }
+    badgeUser();
 
     function addElection(){
       var yourQuestion = document.getElementById("textarea1").value
@@ -214,41 +236,94 @@
 
       var finishDate1 = document.getElementById("finishID").value
 
-     if(yourQuestion == "" || answer1 == "" || answer2 == "" || answer3 == "" || electionName == ""){
-        alert("Please fill the blank.");
-      }else if(category == "Category"){
-        alert("Please Select the Category.");
-      }else if(finishDate1 == ""){
-        alert("Please select finish date.");
+      if(calculateDiff(finishDate1) == "false"){
+        alert("Please enter the current date.");
+      }else if(calculateDiff(finishDate1) == "olmaz"){
+        alert("Please select a date within the current year.");
       }else{
-        var newPostKey = firebase.database().ref().push().key;
-        firebase.database().ref("Elections").child(category).child(newPostKey).set({
-          DateType: tarihSon,
-          ElectionName: electionName,
-          Option1: answer1,
-          Option2: answer2,
-          Option3: answer3,
-          Option1C: 0,
-          Option2C: 0,
-          Option3C: 0,
-          AdminOnay: true,
-          Question: yourQuestion,
-          Type: "Admin Election",
-          VoteCount: 0,
-          finishDate: finishDate1
-        }).then(function(error){
-          if(error){
-            alert("Upss! Please try again!");
-          }else {
-            firebase.database().ref("Admin").child(currentUserID).child("Elections").update({[newPostKey] : newPostKey});
-            alert("Adding is Success");
-          }
-        });
+        if(yourQuestion == "" || answer1 == "" || answer2 == "" || answer3 == "" || electionName == ""){
+           alert("Please fill the blank.");
+         }else if(category == "Category"){
+           alert("Please Select the Category.");
+         }else if(finishDate1 == ""){
+           alert("Please select finish date.");
+         }else{
+           var sonDate = finishDate1.split("-");
+           var sonDateTesult = sonDate[2] + "-" + sonDate[1] + "-" + sonDate[0];
+           var newPostKey = firebase.database().ref().push().key;
+           firebase.database().ref("Elections").child(category).child(newPostKey).set({
+             DateType: tarihSon,
+             ElectionName: electionName,
+             Option1: answer1,
+             Option2: answer2,
+             Option3: answer3,
+             Option1C: 0,
+             Option2C: 0,
+             Option3C: 0,
+             AdminOnay: true,
+             Question: yourQuestion,
+             Type: "Admin Type",
+             VoteCount: 0,
+             finishDate: sonDateTesult
+           }).then(function(error){
+             if(error){
+               alert("Upss! Please try again!");
+             }else {
+               firebase.database().ref("Admin").child(currentUserID).child("Elections").update({[newPostKey] : newPostKey});
+               alert("Adding is Success");
+             }
+           });
 
-        //timedRefresh(1);
-        // Database dizaynının tam olarak netleşmesini bekliyorum.
+           //timedRefresh(1);
+           // Database dizaynının tam olarak netleşmesini bekliyorum.
+         }
       }
 
+
+
+    }
+
+      var d = new Date();
+      var year = d.getFullYear();
+      var month = d.getMonth();
+      var day = d.getDate();
+      var c = new Date(year, month, day + 1);
+      var month1 = ("0" + (c.getMonth() + 1)).slice(-2); //months from 1-12
+      var day1 = ("0" + c.getDate()).slice(-2)
+      var year1 = c.getFullYear();
+      var newdate = year1 + "-" + month1 + "-" + day1;
+      console.log(newdate);
+
+
+
+    document.getElementById("finishID").setAttribute("max","2020-12-31");
+    document.getElementById("finishID").setAttribute("min",newdate);
+
+    function calculateDiff(gelenDay){
+      var day = currentDay();
+
+      var kes1 = day.split("-");
+      var currentYear = kes1[0]; // yıl
+      var kes2 = kes1[2]; // gün
+      var kes3 = kes1[1]; // ay
+      console.log("gün : ",kes2);
+      console.log("ay : ",kes3);
+
+      var gelen1 = gelenDay.split("-");
+      var gelenYil = gelen1[0]; // yil
+      var gelen3 = gelen1[1]; // ay
+      var gelen2 = gelen1[2]; // gün
+
+      if(currentYear < gelenYil){
+        return "olmaz";
+      }else if(kes3 > gelen3){
+        return "false";
+      }else if(kes2 > gelen2 || kes2 == gelen2){
+        return "false";
+      }else{
+        return "true";
+      }
+      //alert(diffDays);
     }
 
     function currentTime(){

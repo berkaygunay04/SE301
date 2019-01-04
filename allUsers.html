@@ -54,6 +54,28 @@
   background-color: blue;
 }
 
+.btn3 {
+  background-color: #e7b92d;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  padding: 4px 12px;
+  font-size: 13px;
+  cursor: pointer;
+  display: block;
+  margin: auto;
+  margin-top: 2px;
+  margin-bottom: 1px;
+  box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2), 0 6px 20px 0 rgba(0,0,0,0.19);
+  float: left;
+  margin-left: 5px;
+}
+
+/* Darker background on mouse-over */
+.btn3:hover {
+  background-color: blue;
+}
+
 #loader {
 position: absolute;
 left: 50%;
@@ -140,7 +162,7 @@ display: none;
                       <a href="mainElections.html" ><i class="fa fa-desktop "></i>Dashboard <span id="spanID7"class="badge" style="background-color:red"></span></a>
                   </li>
                   <li class="active-link">
-                     <a href="#"><i class="fa fa-users "></i>Users</a>
+                     <a href="#"><i class="fa fa-users "></i>Users<span id="spanID99"class="badge" style="background-color:red"></span></a>
                  </li>
                  <li>
                     <a href="allElections.html"><i class="fa fa-edit "></i>User Elections</a>
@@ -268,24 +290,91 @@ display: none;
     }
     badgePending();
 
+    countBadgeUser = 0;
+    var badgeUser = function(){
+      firebase.database().ref("Kullanıcılar").on("child_added",function(snapshot){
+        firebase.database().ref("Kullanıcılar").child(snapshot.key).on("value",function(snapshot2){
+          var ozgur = snapshot2.val().Free
+          if(ozgur == "Dondurmak istiyorum" || ozgur == "Açmak istiyorum"){
+            countBadgeUser += 1;
+            document.getElementById("spanID99").innerHTML = countBadgeUser
+          }
+        });
+      });
+
+    }
+    badgeUser();
+
+
     var userCount = 0;
     var toogleID = "";
     var getUsers = function(){
       showLoading();
       const list_div = document.querySelector("#userLists");
-      firebase.database().ref("Kullanıcılar").on("child_added",function(userSnap1){
-        firebase.database().ref("Kullanıcılar").child(userSnap1.key).on("value",function(userSnap2){
-          userCount += 1;
-          toogleID = userCount.toString();
-          var userName = userSnap2.val().name + " " + userSnap2.val().surname
+      list_div.innerHTML = "";
 
-          list_div.innerHTML += "<li class='list-group-item'><div class='row toggle' id='dropdown-detail' data-toggle='detail'><div onclick='ready(\"" +  toogleID + "\")' style='text-align:left' class='col-xs-10'><b>" + toogleID + "- </b>" + userName.toUpperCase() + "</div><div class='col-xs-2'><button onclick='deleteUser(\"" +  userSnap1.key + "\")' class='btn'><i class='fa fa-trash'></i></button><i onclick='ready(\"" +  toogleID + "\")' style='margin-top:7px;margin-right:20px' class='fa fa-chevron-down pull-right'></i></div></div><div style='display: none;' id=\"" +  toogleID + "\"><hr></hr><div class='container'><div style='text-align:left' class='fluid-row'><b>E-mail : </b>" + userSnap2.val().email + "<br><b>Vote Count : </b>" + userSnap2.val().UserVoteCount + "<br><button class='btn2' onclick='allOneUserElections(\"" +  userSnap1.key + "\")'><i class='fa fa-check'> Ongoing Elections</i></button></div></div></div></li>"
-        });
+        firebase.database().ref("Kullanıcılar").on("value",function(snapshotValue){
+          var exists = (snapshotValue.val() !== null);
+          list_div.innerHTML = "";
+          userCount = 0;
+          if(exists){
+            firebase.database().ref("Kullanıcılar").on("child_added",function(userSnap1){
+                firebase.database().ref("Kullanıcılar").child(userSnap1.key).on("value",function(userSnap2){
+                    userCount += 1;
+                    toogleID = userCount.toString();
+                    var userName = userSnap2.val().name + " " + userSnap2.val().surname
+
+                      var frezeee = userSnap2.val().Free
+                      console.log(frezeee);
+
+                      if(frezeee == "Dondurmak istiyorum"){
+                        list_div.innerHTML += "<li class='list-group-item'><div class='row toggle' id='dropdown-detail' data-toggle='detail'><div onclick='ready(\"" +  toogleID + "\")' style='text-align:left' class='col-xs-10'><b>" + toogleID + "- </b>" + userName.toUpperCase() + "<span id='spanIDUser' class='badge' style='background-color:red'>   User want to be frezee user. Please check!</span></div><div class='col-xs-2'><button onclick='deleteUser(\"" +  userSnap1.key + "\")' class='btn'><i class='fa fa-trash'></i></button><i onclick='ready(\"" +  toogleID + "\")' style='margin-top:7px;margin-right:20px' class='fa fa-chevron-down pull-right'></i></div></div><div style='display: none;' id=\"" +  toogleID + "\"><hr></hr><div class='container'><div style='text-align:left' class='fluid-row'><b>E-mail : </b>" + userSnap2.val().email + "<br><b>Vote Count : </b>" + userSnap2.val().UserVoteCount + "<br><button type='button' class='btn2' onclick='allOneUserElections(\"" +  userSnap1.key + "\")'><i class='fa fa-check'> Ongoing Elections</i></button><button type='button' class='btn3' onclick='makefreeze(\"" +  userSnap1.key + "\")'><i class='fa fa-remove'>  Make Freeze</i></button></div></div></div></li>"
+
+                      }else if(frezeee == "Açmak istiyorum"){
+                        list_div.innerHTML += "<li class='list-group-item'><div class='row toggle' id='dropdown-detail' data-toggle='detail'><div onclick='ready(\"" +  toogleID + "\")' style='text-align:left' class='col-xs-10'><b>" + toogleID + "- </b>" + userName.toUpperCase() + "<span id='spanIDUser' class='badge' style='background-color:red'>   User want to be unfrezee user. Please check!</span></div><div class='col-xs-2'><button onclick='deleteUser(\"" +  userSnap1.key + "\")' class='btn'><i class='fa fa-trash'></i></button><i onclick='ready(\"" +  toogleID + "\")' style='margin-top:7px;margin-right:20px' class='fa fa-chevron-down pull-right'></i></div></div><div style='display: none;' id=\"" +  toogleID + "\"><hr></hr><div class='container'><div style='text-align:left' class='fluid-row'><b>E-mail : </b>" + userSnap2.val().email + "<br><b>Vote Count : </b>" + userSnap2.val().UserVoteCount + "<br><button type='button' class='btn2' type='button' onclick='allOneUserElections(\"" +  userSnap1.key + "\")'><i class='fa fa-check'> Ongoing Elections</i></button><button type='button' class='btn3' onclick='notfreeze(\"" +  userSnap1.key + "\")'><i class='fa fa-check'>  Make unFreeze</i></button></div></div></div></li>"
+                      }else{
+                        list_div.innerHTML += "<li class='list-group-item'><div class='row toggle' id='dropdown-detail' data-toggle='detail'><div onclick='ready(\"" +  toogleID + "\")' style='text-align:left' class='col-xs-10'><b>" + toogleID + "- </b>" + userName.toUpperCase() + "<span id='spanIDUser' class='badge' style='background-color:red'></span></div><div class='col-xs-2'><button onclick='deleteUser(\"" +  userSnap1.key + "\")' class='btn'><i class='fa fa-trash'></i></button><i onclick='ready(\"" +  toogleID + "\")' style='margin-top:7px;margin-right:20px' class='fa fa-chevron-down pull-right'></i></div></div><div style='display: none;' id=\"" +  toogleID + "\"><hr></hr><div class='container'><div style='text-align:left' class='fluid-row'><b>E-mail : </b>" + userSnap2.val().email + "<br><b>Vote Count : </b>" + userSnap2.val().UserVoteCount + "<br><button type='button' class='btn2' onclick='allOneUserElections(\"" +  userSnap1.key + "\")'><i class='fa fa-check'> Ongoing Elections</i></button></div></div></div></li>"
+                      }
+
+
+
+                });
+                });
+          }else{
+            list_div.innerHTML = "<h3>There is not any user.</h3>"
+          }
         showPage();
 
     });
   }
     getUsers();
+
+    function notfreeze(userKey){
+      firebase.database().ref("Kullanıcılar").on("child_added",function(snapshot){
+        firebase.database().ref("Kullanıcılar").child(snapshot.key).update({
+          Free: "Stable",
+          Freeze: false
+        });
+      });
+      alert("Success!");
+      timedRefresh(1);
+
+    }
+
+    function makefreeze(userKey){
+      firebase.database().ref("Kullanıcılar").on("child_added",function(snapshot){
+        firebase.database().ref("Kullanıcılar").child(snapshot.key).update({
+          Free: "Stable",
+          Freeze: true
+        });
+      });
+      alert("Success!");
+      timedRefresh(1);
+    }
+
+    function timedRefresh(timeoutPeriod) {
+    setTimeout("location.reload(true);",timeoutPeriod); // otomatik refresh.
+    }
 
     function deleteUser(userID){
       if(confirm("Are you sure delete user ?")){
@@ -293,6 +382,7 @@ display: none;
           if(snapshot.key == userID){
             snapshot.ref.remove(function(error){
               alert("User is deleted.");
+              timedRefresh(1);
             });
           }
         });

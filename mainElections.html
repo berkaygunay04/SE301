@@ -99,7 +99,7 @@
                       <a href="mainElections.html" ><i class="fa fa-desktop "></i>Dashboard <span class="badge">Main</span></a>
                   </li>
                   <li>
-                     <a href="allUsers.html"><i class="fa fa-users "></i>Users</a>
+                     <a href="allUsers.html"><i class="fa fa-users "></i>Users <span id="spanID94"class="badge" style="background-color:red"></span></a>
                  </li>
                  <li>
                     <a href="allElections.html"><i class="fa fa-edit "></i>User Elections</a>
@@ -114,6 +114,8 @@
                   <li>
                      <a onclick="logout1()" href="#"><i class="fa fa-power-off "></i>Logout</a>
                  </li>
+
+
 
 
 
@@ -202,8 +204,6 @@
        <!-- /. PAGE WRAPPER  -->
       </div>
   <div class="footer">
-
-
           <div class="row">
               <div class="col-lg-12" >
                   &copy;  2018 | Design by: <a style="color:#fff;" target="_blank">SE301-Voted Group</a>
@@ -261,6 +261,35 @@
       });
     }
 
+    var countPending = 0;
+    var badgePending = function(){
+      firebase.database().ref("WaitingElections").on("child_added",function(elecSnap1){
+        firebase.database().ref("WaitingElections").child(elecSnap1.key).on("child_added",function(elecSnap2){
+
+            countPending += 1;
+              document.getElementById("welcomeID").innerHTML = "You have " + countPending + " elections waiting today."
+            document.getElementById("spanID").innerHTML = countPending
+
+        });
+      });
+    }
+    badgePending();
+
+    countBadgeUser = 0;
+    var badgeUser = function(){
+      firebase.database().ref("Kullanıcılar").on("child_added",function(snapshot){
+        firebase.database().ref("Kullanıcılar").child(snapshot.key).on("value",function(snapshot2){
+          var ozgur = snapshot2.val().Free
+          if(ozgur == "Dondurmak istiyorum" || ozgur == "Açmak istiyorum"){
+            countBadgeUser += 1;
+            document.getElementById("spanID94").innerHTML = countBadgeUser
+          }
+        });
+      });
+
+    }
+    badgeUser();
+
     var count = 0;
     var electionlariCek = function(){
 
@@ -281,16 +310,14 @@
                     if(snapshot2.key == snapshot4.key){
                       count += 1;
 
-                      document.getElementById("welcomeID").innerHTML = "You have " + count + " elections waiting today."
-                      document.getElementById("spanID").innerHTML = count
                     }
                   });
                 });
 
             });
-
           });
         }
+
         showPage();
       });
 

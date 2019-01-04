@@ -176,7 +176,7 @@ display: none;
                       <a href="mainElections.html" ><i class="fa fa-desktop "></i>Dashboard <span id="spanID5" class="badge">Main</span></a>
                   </li>
                   <li>
-                     <a href="allUsers.html"><i class="fa fa-users "></i>Users</a>
+                     <a href="allUsers.html"><i class="fa fa-users "></i>Users <span id="spanID97" class="badge" style="background-color:red"></span></a>
                  </li>
                  <li>
                     <a type="reset" href="allElections.html"><i class="fa fa-edit "></i>User Elections</a>
@@ -296,38 +296,64 @@ display: none;
       });
     }
 
+    countBadgeUser = 0;
+    var badgeUser = function(){
+      firebase.database().ref("Kullanıcılar").on("child_added",function(snapshot){
+        firebase.database().ref("Kullanıcılar").child(snapshot.key).on("value",function(snapshot2){
+          var ozgur = snapshot2.val().Free
+          if(ozgur == "Dondurmak istiyorum" || ozgur == "Açmak istiyorum"){
+            countBadgeUser += 1;
+            document.getElementById("spanID97").innerHTML = countBadgeUser
+          }
+        });
+      });
+
+    }
+    badgeUser();
+
+
+
+
+
     var count = 0;
+    var elecDurum = false;
     var electionlariCek = function(){
+      var usersElec = [];
+      var userlariCek = firebase.database().ref("Kullanıcılar").on("child_added",function(userlar){
+        firebase.database().ref("Kullanıcılar").child(userlar.key).child("Elections").on("child_added",function(userlar2){
+          firebase.database().ref("Kullanıcılar").child(userlar.key).on("value",function(user11){
+            usersElec.push({id: userlar2.key, name: user11.val().name,email: user11.val().email});
+          });
+
+        });
+      });
       const list_div = document.querySelector("#list_div");
       var userRef = firebase.database().ref().child("WaitingElections");
+
         userRef.on("value",function(snapshotValue){
           var exists = (snapshotValue.val() !== null);
+          list_div.innerHTML = "";
+          count = 0;
           if(exists){
             userRef.on("child_added",function(snapshot){
+
               var userRef2 = firebase.database().ref().child("WaitingElections").child(snapshot.key);
-
               userRef2.on("child_added",function(snapshot2){
-                  var userRef3 = firebase.database().ref().child("Kullanıcılar");
-                  userRef3.on("child_added",function(snapshot3){
-                    var userRef4 = firebase.database().ref().child("Kullanıcılar").child(snapshot3.key).child("Elections");
-                    userRef4.on("child_added",function(snapshot4){
-                      if(snapshot2.key == snapshot4.key){
-                        count += 1;
-                        document.getElementById("strongID").innerHTML = "Waiting " + count + " election for Approve or Reject "
-                        if(count % 2 == 0){
-                          list_div.innerHTML += "<div style='background-color:#eeeaea'><table style='width:100%' border='1px solid black'><tr>" + count + "</tr><tr><th class='dsec'>Sender</th><th class='dsec'>Category</th><th class='dsec'>Name</th><th class='f'>Ouestion</th><th class='answers'>Option1</th><th class='answers'>Option2</th><th class='answers'>Option3</th><th class='dsec'>Due Date</th></tr><tr><td class='dsec'> " + snapshot3.val().name + " </td><td class='dsec'><b>" + snapshot.key + "</b></td><td class='dsec'>" + snapshot2.val().ElectionName + "</td><td class='f'><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td class='answers' style='text-decoration:underline'>" + snapshot2.val().Option1 + "</td><td class='answers' style='text-decoration:underline'>" + snapshot2.val().Option2 + "</td><td class='answers' style='text-decoration:underline'>" + snapshot2.val().Option3 + "</td><td class='dsec'>" + snapshot2.val().finishDate + "</td><td><button title='Approve' onclick='approve(\"" +  snapshot.key + "\",\"" +  snapshot4.key + "\",\"" +  snapshot3.val().email + "\",\"" +  snapshot2.val().ElectionName + "\")'  class='btn'><i class='fa fa-check'></i></button><button title='Reject' onclick='reject(\"" +  snapshot4.key + "\",\"" +  snapshot3.val().email + "\",\"" +  snapshot2.val().ElectionName + "\")' class='btn2'><i class='fa fa-remove'></i></button></td></tr></table></div>"
-                        }else{
-                          list_div.innerHTML += "<div style='background-color:#f9f9f9'><table style='width:100%' border='1px solid black'><tr>" + count + "</tr><tr><th class='dsec'>Sender</th><th class='dsec'>Category</th><th class='dsec'>Name</th><th class='f'>Ouestion</th><th class='answers'>Option1</th><th class='answers'>Option2</th><th class='answers'>Option3</th><th class='dsec'>Due Date</th></tr><tr><td class='dsec'> " + snapshot3.val().name + " </td><td class='dsec'><b>" + snapshot.key + "</b></td><td class='dsec'>" + snapshot2.val().ElectionName + "</td><td class='f'><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td class='answers' style='text-decoration:underline'>" + snapshot2.val().Option1 + "</td><td class='answers' style='text-decoration:underline'>" + snapshot2.val().Option2 + "</td><td class='answers' style='text-decoration:underline'>" + snapshot2.val().Option3 + "</td><td class='dsec'>" + snapshot2.val().finishDate + "</td><td><button title='Approve' onclick='approve(\"" +  snapshot.key + "\",\"" +  snapshot4.key + "\",\"" +  snapshot3.val().email + "\",\"" +  snapshot2.val().ElectionName + "\")' class='btn'><i class='fa fa-check'></i></button><button title='Reject' onclick='reject(\"" +  snapshot4.key + "\",\"" +  snapshot3.val().email + "\",\"" +  snapshot2.val().ElectionName + "\")' class='btn2'><i class='fa fa-remove'></i></button></td></tr></table></div>"
 
-                        }
+                for(var i = 0; i < usersElec.length; i++){
+                  if(snapshot2.key == usersElec[i].id){
+                    count += 1;
+                    document.getElementById("strongID").innerHTML = "Waiting " + count + " election for Approve or Reject "
+                    if(count % 2 == 0){
+                      list_div.innerHTML += "<div style='background-color:#eeeaea'><table style='width:100%' border='1px solid black'><tr>" + count + "</tr><tr><th class='dsec'>Sender</th><th class='dsec'>Category</th><th class='dsec'>Name</th><th class='f'>Ouestion</th><th class='answers'>Option1</th><th class='answers'>Option2</th><th class='answers'>Option3</th><th class='dsec'>Due Date</th></tr><tr><td class='dsec'> " + usersElec[i].name + " </td><td class='dsec'><b>" + snapshot.key + "</b></td><td class='dsec'>" + snapshot2.val().ElectionName + "</td><td class='f'><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td class='answers' style='text-decoration:underline'>" + snapshot2.val().Option1 + "</td><td class='answers' style='text-decoration:underline'>" + snapshot2.val().Option2 + "</td><td class='answers' style='text-decoration:underline'>" + snapshot2.val().Option3 + "</td><td class='dsec'>" + snapshot2.val().finishDate + "</td><td><button type='button' title='Approve' onclick='approve(\"" +  snapshot.key + "\",\"" +  snapshot2.key + "\",\"" +  usersElec[i].email + "\",\"" +  snapshot2.val().ElectionName + "\")'  class='btn'><i class='fa fa-check'></i></button><button type='button' title='Reject' onclick='reject(\"" +  snapshot2.key + "\",\"" +  usersElec[i].email + "\",\"" +  snapshot2.val().ElectionName + "\")' class='btn2'><i class='fa fa-remove'></i></button></td></tr></table></div>"
+                    }else{
+                      list_div.innerHTML += "<div style='background-color:#f9f9f9'><table style='width:100%' border='1px solid black'><tr>" + count + "</tr><tr><th class='dsec'>Sender</th><th class='dsec'>Category</th><th class='dsec'>Name</th><th class='f'>Ouestion</th><th class='answers'>Option1</th><th class='answers'>Option2</th><th class='answers'>Option3</th><th class='dsec'>Due Date</th></tr><tr><td class='dsec'> " + usersElec[i].name + " </td><td class='dsec'><b>" + snapshot.key + "</b></td><td class='dsec'>" + snapshot2.val().ElectionName + "</td><td class='f'><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td class='answers' style='text-decoration:underline'>" + snapshot2.val().Option1 + "</td><td class='answers' style='text-decoration:underline'>" + snapshot2.val().Option2 + "</td><td class='answers' style='text-decoration:underline'>" + snapshot2.val().Option3 + "</td><td class='dsec'>" + snapshot2.val().finishDate + "</td><td><button type='button' title='Approve' onclick='approve(\"" +  snapshot.key + "\",\"" +  snapshot2.key + "\",\"" +  usersElec[i].email + "\",\"" +  snapshot2.val().ElectionName + "\")' class='btn'><i class='fa fa-check'></i></button><button type='button' title='Reject' onclick='reject(\"" +  snapshot2.key + "\",\"" +  usersElec[i].email + "\",\"" +  snapshot2.val().ElectionName + "\")' class='btn2'><i class='fa fa-remove'></i></button></td></tr></table></div>"
 
-                      }
+                    }
 
-                    });
-
-                  });
-                  thereIsNoElection2();
-                console.log(snapshot2.val().AdminOnay);
+                  }
+                }
+                thereIsNoElection2();
               });
             })
 
@@ -342,9 +368,9 @@ display: none;
 
     function approve(categoriKey,electionKey,email,electionName){
         if(confirm("Are you sure approve election ?")){
-        firebase.database().ref("WaitingElections").on("child_added",function(approveSnap1){
+        var k = firebase.database().ref("WaitingElections").on("child_added",function(approveSnap1){
             firebase.database().ref("WaitingElections").child(approveSnap1.key).child(electionKey).on("value",function(snapshot2){
-              firebase.database().ref("Elections").child(approveSnap1.key).child(electionKey).update({
+              firebase.database().ref("Elections").child(approveSnap1.key).child(electionKey).set({
                 ElectionName: snapshot2.val().ElectionName,
                 Option1: snapshot2.val().Option1,
                 Option2: snapshot2.val().Option2,
@@ -356,15 +382,22 @@ display: none;
                 DateType: snapshot2.val().DateType,
                 Type: snapshot2.val().Type,
                 finishDate: snapshot2.val().finishDate,
-
                 Question: snapshot2.val().Question,
                 VoteCount: snapshot2.val().VoteCount,
+
               });
               snapshot2.ref.remove(function(error){
-                  //window.onload = timedRefresh(1);
+                alert("Approved is success!");
+                timedRefresh(1);
               });
+
             });
+
           });
+
+
+
+
 
           var from,to,subject,text;
             to= email
@@ -376,7 +409,9 @@ display: none;
               console.log("success");
             }
           });
+          //sil(categoriKey,electionKey);
         }
+
       }
 
 
@@ -385,7 +420,7 @@ display: none;
         var electionRef = firebase.database().ref("WaitingElections");
         electionRef.on("child_added",function(snapshot){
           var electionRef2 = firebase.database().ref("WaitingElections").child(snapshot.key).child(electionKey).on("value",function(snapshot2){
-            firebase.database().ref("RejectedElections").child(snapshot.key).child(electionKey).update({
+            firebase.database().ref("RejectedElections").child(snapshot.key).child(electionKey).set({
               DateType: snapshot2.val().DateType,
               Option1: snapshot2.val().Option1,
               Option2: snapshot2.val().Option2,
@@ -394,7 +429,8 @@ display: none;
               finishDate: snapshot2.val().finishDate
             });// burda tarihe göre sıralandığı için db de gelen key de tarih key olduğundan karşılaştırma yapıp hangisi geldiyse onu siliyorum.
                 snapshot2.ref.remove(function(error){
-                    //window.onload = timedRefresh(1);
+                  alert("Rejected is success!");
+                  timedRefresh(1);
                 });
           });;
         });
