@@ -383,10 +383,10 @@ table
                           var sums = snapshot2.val().Option1C + snapshot2.val().Option2C + snapshot2.val().Option3C
                           var algoritmadanGelenSonuc = algoritma1(snapshot2.val().Option1C,snapshot2.val().Option2C,snapshot2.val().Option3C);
                           if(count % 2 == 0){
-                            list_div.innerHTML += "<div style='background-color:#eeeaea'><table style='width:100%' border='1px solid black'><tr>" + count + "</tr><tr><th class='dsec'>Sender</th><th class='dsec'>Category</th><th class='dsec'>Name</th><th class='f'>Ouestion</th><th class='answers'>Option1</th><th class='answers'>Option2</th><th class='answers'>Option3</th><th class='dsec'>Due Date</th></tr><tr><td class='dsec'> " + userSnap1.val().name + " </td><td class='dsec'><b>" + snapshot.key + "</b></td><td class='dsec'>" + snapshot2.val().ElectionName + "</td><td class='f'><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td class='answers' id='option101' style='text-align:center'>" + snapshot2.val().Option1 + "<br>" + yuzdeCalculater(snapshot2.val().Option1C,sums) + "%</td><td class='answers' id='option102' style='text-align:center'>" + snapshot2.val().Option2 + "<br>" + yuzdeCalculater(snapshot2.val().Option2C,sums) + "%</td><td class='answers' id='option103' style='text-align:center'>" + snapshot2.val().Option3 + "<br>" + yuzdeCalculater(snapshot2.val().Option3C,sums) + "%</td><td class='dsec' style='text-color:green'>" + snapshot2.val().finishDate + "</td><td><button type='button' onclick='Delete(\"" +  snapshot2.key + "\")' class='btn'><i class='fa fa-trash'></i></button></td></tr></table></div>"
+                            list_div.innerHTML += "<div style='background-color:#eeeaea'><table style='width:100%' border='1px solid black'><tr>" + count + "</tr><tr><th class='dsec'>Sender</th><th class='dsec'>Category</th><th class='dsec'>Name</th><th class='f'>Ouestion</th><th class='answers'>Option1</th><th class='answers'>Option2</th><th class='answers'>Option3</th><th class='dsec'>Due Date</th></tr><tr><td class='dsec'> " + userSnap1.val().name + " </td><td class='dsec'><b>" + snapshot.key + "</b></td><td class='dsec'>" + snapshot2.val().ElectionName + "</td><td class='f'><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td class='answers' id='option101' style='text-align:center'>" + snapshot2.val().Option1 + "<br>" + yuzdeCalculater(snapshot2.val().Option1C,sums) + "%</td><td class='answers' id='option102' style='text-align:center'>" + snapshot2.val().Option2 + "<br>" + yuzdeCalculater(snapshot2.val().Option2C,sums) + "%</td><td class='answers' id='option103' style='text-align:center'>" + snapshot2.val().Option3 + "<br>" + yuzdeCalculater(snapshot2.val().Option3C,sums) + "%</td><td class='dsec' style='text-color:green'>" + snapshot2.val().finishDate + "</td><td><button type='button' onclick='Delete(\"" +  snapshot2.key + "\",\"" +  userSnap1.val().email + "\",\"" +  snapshot2.val().ElectionName + "\")' class='btn'><i class='fa fa-trash'></i></button></td></tr></table></div>"
 
                           }else{
-                            list_div.innerHTML += "<div style='background-color:#f9f9f9'><table style='width:100%' border='1px solid black'><tr>" + count + "</tr><tr><th class='dsec'>Sender</th><th class='dsec'>Category</th><th class='dsec'>Name</th><th class='f'>Ouestion</th><th class='answers'>Option1</th><th class='answers'>Option2</th><th class='answers'>Option3</th><th class='dsec'>Due Date</th></tr><tr><td class='dsec'> " + userSnap1.val().name + " </td><td class='dsec'><b>" + snapshot.key + "</b></td><td class='dsec'>" + snapshot2.val().ElectionName + "</td><td class='f'><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td class='answers' id='option111' style='text-align:center'>" + snapshot2.val().Option1 + "<br>" + yuzdeCalculater(snapshot2.val().Option1C,sums) + "%</td><td class='answers' id='option112' style='text-align:center'>" + snapshot2.val().Option2 + "<br>" + yuzdeCalculater(snapshot2.val().Option2C,sums) + "%</td><td class='answers' id='option113' style='text-align:center'>" + snapshot2.val().Option3 + "<br>" + yuzdeCalculater(snapshot2.val().Option3C,sums) + "%</td><td class='dsec' style='text-color:green'>" + snapshot2.val().finishDate + "</td><td><button type='button' onclick='Delete(\"" +  snapshot2.key + "\")' class='btn'><i class='fa fa-trash'></i></button></td></tr></table></div>"
+                            list_div.innerHTML += "<div style='background-color:#f9f9f9'><table style='width:100%' border='1px solid black'><tr>" + count + "</tr><tr><th class='dsec'>Sender</th><th class='dsec'>Category</th><th class='dsec'>Name</th><th class='f'>Ouestion</th><th class='answers'>Option1</th><th class='answers'>Option2</th><th class='answers'>Option3</th><th class='dsec'>Due Date</th></tr><tr><td class='dsec'> " + userSnap1.val().name + " </td><td class='dsec'><b>" + snapshot.key + "</b></td><td class='dsec'>" + snapshot2.val().ElectionName + "</td><td class='f'><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td class='answers' id='option111' style='text-align:center'>" + snapshot2.val().Option1 + "<br>" + yuzdeCalculater(snapshot2.val().Option1C,sums) + "%</td><td class='answers' id='option112' style='text-align:center'>" + snapshot2.val().Option2 + "<br>" + yuzdeCalculater(snapshot2.val().Option2C,sums) + "%</td><td class='answers' id='option113' style='text-align:center'>" + snapshot2.val().Option3 + "<br>" + yuzdeCalculater(snapshot2.val().Option3C,sums) + "%</td><td class='dsec' style='text-color:green'>" + snapshot2.val().finishDate + "</td><td><button type='button' onclick='Delete(\"" +  snapshot2.key + "\",\"" +  userSnap1.val().email + "\",\"" +  snapshot2.val().ElectionName + "\")' class='btn'><i class='fa fa-trash'></i></button></td></tr></table></div>"
 
                           }
                         }
@@ -502,7 +502,7 @@ table
       alert("Bitirme işlemi eklenecek");
     }
 
-    function Delete(electionKey){
+    function Delete(electionKey,email,electionName){
       var reason = prompt("Please enter reason for deleting:");
         if(reason == null || reason == ""){
           alert("Reason cannot be empty!");
@@ -533,6 +533,16 @@ table
                   snapshot2.ref.remove(function(error){
                     alert("Deleting is success!");
                       timedRefresh(1);
+                  });
+                  var from,to,subject,text;
+                    to= email
+                    subject= electionName
+                    text="Your election is deleted by admin. If you see delete reason, please enter 'my delete elections' in app.\n\n\nHave a good day :) \n\nContact us : info@ivoted.com"
+                    $.get("http://localhost:3000/send",{to:to,subject:subject,text:text},function(data){
+                    if(data=="sent")
+                    {
+                      console.log("success");
+                    }
                   });
                 }else {
                   //return false;

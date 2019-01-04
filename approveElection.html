@@ -142,6 +142,38 @@ display: none;
   margin-top: 5px;
 }
 
+
+.optionsMenu {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  border: 1px solid #e7e7e7;
+  background-color: #f3f3f3;
+}
+
+.lili {
+  float: left;
+}
+
+.lili a {
+  display: block;
+  color: black;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+
+.lili a:hover:not(.active) {
+  background-color: #ddd;
+}
+
+.lili a.active {
+  color: white;
+  background-color: #15adcb;
+
+}
+
 </style>
 <body style="margin:0;">
 
@@ -209,15 +241,19 @@ display: none;
               </div>
                <!-- /. ROW  -->
                 <hr />
-              <div class="row">
-                  <div class="col-lg-12 ">
-                      <div class="alert alert-info">
 
-                           <strong id="strongID">There is no notificaiton.</strong>
+
+                  <div class="row">
+                      <div class="col-lg-12 ">
+                          <div>
+                            <ul class="optionsMenu">
+                              <li id="newApproveElection" class="lili"><a onclick="newApproveElection()" href="#">New Elections<span id="newBadge" class="badge" style="background-color:red"></span></a></li>
+                              <li id="returnApproveElection" class="lili"><a onclick="returnApproveElections()" href="#">Re-Approved Elections<span id="returnBadge" class="badge" style="background-color:red"></span></a></li>
+                            </ul>
+                          </div>
+
                       </div>
-
-                  </div>
-                  </div>
+                      </div>
 
                   <div>
                     <h3 id="elecTitle">Waiting Elections For Approve or Rejected</h3>
@@ -312,12 +348,12 @@ display: none;
     badgeUser();
 
 
-
-
+    var badgeCountNew = 0;
+    var badgeCountOld = 0;
 
     var count = 0;
-    var elecDurum = false;
     var electionlariCek = function(){
+      badgeCountOld = 0;
       var usersElec = [];
       var userlariCek = firebase.database().ref("Kullanıcılar").on("child_added",function(userlar){
         firebase.database().ref("Kullanıcılar").child(userlar.key).child("Elections").on("child_added",function(userlar2){
@@ -338,23 +374,31 @@ display: none;
             userRef.on("child_added",function(snapshot){
 
               var userRef2 = firebase.database().ref().child("WaitingElections").child(snapshot.key);
+
               userRef2.on("child_added",function(snapshot2){
 
                 for(var i = 0; i < usersElec.length; i++){
-                  if(snapshot2.key == usersElec[i].id){
+                  if(snapshot2.key == usersElec[i].id && snapshot2.val().Rejected == false){
                     count += 1;
-                    document.getElementById("strongID").innerHTML = "Waiting " + count + " election for Approve or Reject "
+                  //  document.getElementById("returnBadge").innerHTML = countReturn
                     if(count % 2 == 0){
                       list_div.innerHTML += "<div style='background-color:#eeeaea'><table style='width:100%' border='1px solid black'><tr>" + count + "</tr><tr><th class='dsec'>Sender</th><th class='dsec'>Category</th><th class='dsec'>Name</th><th class='f'>Ouestion</th><th class='answers'>Option1</th><th class='answers'>Option2</th><th class='answers'>Option3</th><th class='dsec'>Due Date</th></tr><tr><td class='dsec'> " + usersElec[i].name + " </td><td class='dsec'><b>" + snapshot.key + "</b></td><td class='dsec'>" + snapshot2.val().ElectionName + "</td><td class='f'><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td class='answers' style='text-decoration:underline'>" + snapshot2.val().Option1 + "</td><td class='answers' style='text-decoration:underline'>" + snapshot2.val().Option2 + "</td><td class='answers' style='text-decoration:underline'>" + snapshot2.val().Option3 + "</td><td class='dsec'>" + snapshot2.val().finishDate + "</td><td><button type='button' title='Approve' onclick='approve(\"" +  snapshot.key + "\",\"" +  snapshot2.key + "\",\"" +  usersElec[i].email + "\",\"" +  snapshot2.val().ElectionName + "\")'  class='btn'><i class='fa fa-check'></i></button><button type='button' title='Reject' onclick='reject(\"" +  snapshot2.key + "\",\"" +  usersElec[i].email + "\",\"" +  snapshot2.val().ElectionName + "\")' class='btn2'><i class='fa fa-remove'></i></button></td></tr></table></div>"
                     }else{
                       list_div.innerHTML += "<div style='background-color:#f9f9f9'><table style='width:100%' border='1px solid black'><tr>" + count + "</tr><tr><th class='dsec'>Sender</th><th class='dsec'>Category</th><th class='dsec'>Name</th><th class='f'>Ouestion</th><th class='answers'>Option1</th><th class='answers'>Option2</th><th class='answers'>Option3</th><th class='dsec'>Due Date</th></tr><tr><td class='dsec'> " + usersElec[i].name + " </td><td class='dsec'><b>" + snapshot.key + "</b></td><td class='dsec'>" + snapshot2.val().ElectionName + "</td><td class='f'><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td class='answers' style='text-decoration:underline'>" + snapshot2.val().Option1 + "</td><td class='answers' style='text-decoration:underline'>" + snapshot2.val().Option2 + "</td><td class='answers' style='text-decoration:underline'>" + snapshot2.val().Option3 + "</td><td class='dsec'>" + snapshot2.val().finishDate + "</td><td><button type='button' title='Approve' onclick='approve(\"" +  snapshot.key + "\",\"" +  snapshot2.key + "\",\"" +  usersElec[i].email + "\",\"" +  snapshot2.val().ElectionName + "\")' class='btn'><i class='fa fa-check'></i></button><button type='button' title='Reject' onclick='reject(\"" +  snapshot2.key + "\",\"" +  usersElec[i].email + "\",\"" +  snapshot2.val().ElectionName + "\")' class='btn2'><i class='fa fa-remove'></i></button></td></tr></table></div>"
 
                     }
-
+                  }else if(snapshot2.key == usersElec[i].id && snapshot2.val().Rejected == true){
+                    badgeCountOld += 1;
+                    document.getElementById("returnBadge").innerHTML = " " +badgeCountOld
                   }
                 }
                 thereIsNoElection2();
               });
+              if(count == 0){
+                thereIsNoElection();
+              }else{
+                thereIsNoElection2();
+              }
             })
 
           }else{
@@ -365,6 +409,92 @@ display: none;
 
     }
     electionlariCek();
+    document.getElementById("newApproveElection").style.backgroundColor = "#15adcb";
+
+    var countReturn = 0;
+    function returnElectionlariCek(){
+      badgeCountNew = 0;
+      var usersElec = [];
+      var userlariCek = firebase.database().ref("Kullanıcılar").on("child_added",function(userlar){
+        firebase.database().ref("Kullanıcılar").child(userlar.key).child("Elections").on("child_added",function(userlar2){
+          firebase.database().ref("Kullanıcılar").child(userlar.key).on("value",function(user11){
+            usersElec.push({id: userlar2.key, name: user11.val().name,email: user11.val().email});
+          });
+
+        });
+      });
+      const list_div = document.querySelector("#list_div");
+      var userRef = firebase.database().ref().child("WaitingElections");
+
+        userRef.on("value",function(snapshotValue){
+          var exists = (snapshotValue.val() !== null);
+          list_div.innerHTML = "";
+          countReturn = 0;
+          if(exists){
+            userRef.on("child_added",function(snapshot){
+
+              var userRef2 = firebase.database().ref().child("WaitingElections").child(snapshot.key);
+              userRef2.on("child_added",function(snapshot2){
+
+                for(var i = 0; i < usersElec.length; i++){
+                  if(snapshot2.key == usersElec[i].id && snapshot2.val().Rejected == true){
+                    countReturn += 1;
+                    //document.getElementById("newBadge").innerHTML = count
+                    if(countReturn % 2 == 0){
+                      list_div.innerHTML += "<div style='background-color:#eeeaea'><table style='width:100%' border='1px solid black'><tr>" + countReturn + "</tr><tr><th class='dsec'>Sender</th><th class='dsec'>Category</th><th class='dsec'>Name</th><th class='f'>Ouestion</th><th class='answers'>Option1</th><th class='answers'>Option2</th><th class='answers'>Option3</th><th class='dsec'>Due Date</th></tr><tr><td class='dsec'> " + usersElec[i].name + " </td><td class='dsec'><b>" + snapshot.key + "</b></td><td class='dsec'>" + snapshot2.val().ElectionName + "</td><td class='f'><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td class='answers' style='text-decoration:underline'>" + snapshot2.val().Option1 + "</td><td class='answers' style='text-decoration:underline'>" + snapshot2.val().Option2 + "</td><td class='answers' style='text-decoration:underline'>" + snapshot2.val().Option3 + "</td><td class='dsec'>" + snapshot2.val().finishDate + "</td><td><button type='button' title='Approve' onclick='approve(\"" +  snapshot.key + "\",\"" +  snapshot2.key + "\",\"" +  usersElec[i].email + "\",\"" +  snapshot2.val().ElectionName + "\")'  class='btn'><i class='fa fa-rotate-left'></i></button><button type='button' title='Reject' onclick='reject(\"" +  snapshot2.key + "\",\"" +  usersElec[i].email + "\",\"" +  snapshot2.val().ElectionName + "\")' class='btn2'><i class='fa fa-remove'></i></button></td></tr></table></div>"
+                    }else{
+                      list_div.innerHTML += "<div style='background-color:#f9f9f9'><table style='width:100%' border='1px solid black'><tr>" + countReturn + "</tr><tr><th class='dsec'>Sender</th><th class='dsec'>Category</th><th class='dsec'>Name</th><th class='f'>Ouestion</th><th class='answers'>Option1</th><th class='answers'>Option2</th><th class='answers'>Option3</th><th class='dsec'>Due Date</th></tr><tr><td class='dsec'> " + usersElec[i].name + " </td><td class='dsec'><b>" + snapshot.key + "</b></td><td class='dsec'>" + snapshot2.val().ElectionName + "</td><td class='f'><b style='color:blue'>" + snapshot2.val().Question + "</b></td><td class='answers' style='text-decoration:underline'>" + snapshot2.val().Option1 + "</td><td class='answers' style='text-decoration:underline'>" + snapshot2.val().Option2 + "</td><td class='answers' style='text-decoration:underline'>" + snapshot2.val().Option3 + "</td><td class='dsec'>" + snapshot2.val().finishDate + "</td><td><button type='button' title='Approve' onclick='approve(\"" +  snapshot.key + "\",\"" +  snapshot2.key + "\",\"" +  usersElec[i].email + "\",\"" +  snapshot2.val().ElectionName + "\")' class='btn'><i class='fa fa-rotate-left'></i></button><button type='button' title='Reject' onclick='reject(\"" +  snapshot2.key + "\",\"" +  usersElec[i].email + "\",\"" +  snapshot2.val().ElectionName + "\")' class='btn2'><i class='fa fa-remove'></i></button></td></tr></table></div>"
+
+                    }
+
+                  }else if(snapshot2.key == usersElec[i].id && snapshot2.val().Rejected == false){
+                    badgeCountNew += 1;
+                    document.getElementById("newBadge").innerHTML = badgeCountNew
+                  }
+
+                }
+                thereIsNoElection2();
+              });
+              if(countReturn == 0){
+                thereIsNoElection();
+              }else{
+                thereIsNoElection2();
+              }
+            })
+
+          }else{
+            thereIsNoElection();
+          }
+          showPage();
+        });
+    }
+
+    function returnApproveElections(){
+      //countReturn = 0;
+      if(badgeCountNew != 0){
+        document.getElementById("newBadge").innerHTML = badgeCountNew
+      }
+      document.getElementById("returnBadge").innerHTML = ""
+
+      const list_div = document.querySelector("#list_div");
+      list_div.innerHTML = ""
+      returnElectionlariCek();
+      document.getElementById("newApproveElection").style.backgroundColor = "#f3f3f3";
+      document.getElementById("returnApproveElection").style.backgroundColor = "#15adcb";
+    }
+
+    function newApproveElection(){
+      //count = 0;
+      if(badgeCountOld != 0){
+        document.getElementById("returnBadge").innerHTML = badgeCountOld
+      }
+      document.getElementById("newBadge").innerHTML = ""
+      const list_div = document.querySelector("#list_div");
+      list_div.innerHTML = ""
+      electionlariCek();
+      document.getElementById("newApproveElection").style.backgroundColor = "#15adcb";
+      document.getElementById("returnApproveElection").style.backgroundColor = "#f3f3f3";
+    }
 
     function approve(categoriKey,electionKey,email,electionName){
         if(confirm("Are you sure approve election ?")){
@@ -395,10 +525,6 @@ display: none;
 
           });
 
-
-
-
-
           var from,to,subject,text;
             to= email
             subject= electionName
@@ -416,36 +542,42 @@ display: none;
 
 
     function reject(electionKey,email,electionName){
-      if(confirm("Are you sure reject election ?")){
-        var electionRef = firebase.database().ref("WaitingElections");
-        electionRef.on("child_added",function(snapshot){
-          var electionRef2 = firebase.database().ref("WaitingElections").child(snapshot.key).child(electionKey).on("value",function(snapshot2){
-            firebase.database().ref("RejectedElections").child(snapshot.key).child(electionKey).set({
-              DateType: snapshot2.val().DateType,
-              Option1: snapshot2.val().Option1,
-              Option2: snapshot2.val().Option2,
-              Option3: snapshot2.val().Option3,
-              Question: snapshot2.val().Question,
-              finishDate: snapshot2.val().finishDate
-            });// burda tarihe göre sıralandığı için db de gelen key de tarih key olduğundan karşılaştırma yapıp hangisi geldiyse onu siliyorum.
-                snapshot2.ref.remove(function(error){
-                  alert("Rejected is success!");
-                  timedRefresh(1);
-                });
-          });;
-        });
-        var from,to,subject,text;
-          to= email
-          subject= electionName
-          text="Your election is rejected by admin. Incorrect questions, incorrect answers, irregularities or incomplete information. Please review these conditions and try again.\n\n\nHave a good day :) \n\nContact us : info@ivoted.com"
-          $.get("http://localhost:3000/send",{to:to,subject:subject,text:text},function(data){
-          if(data=="sent")
-          {
-            console.log("success");
+      var reason = prompt("Please enter reason for rejected:");
+        if(reason == null || reason == ""){
+          alert("Reason cannot be empty!");
+        }else{
+          if(confirm("Are you sure reject election ?")){
+            var electionRef = firebase.database().ref("WaitingElections");
+            electionRef.on("child_added",function(snapshot){
+              var electionRef2 = firebase.database().ref("WaitingElections").child(snapshot.key).child(electionKey).on("value",function(snapshot2){
+                firebase.database().ref("RejectedElections").child(snapshot.key).child(electionKey).set({
+                  ElectionName: snapshot2.val().ElectionName,
+                  DateType: snapshot2.val().DateType,
+                  Option1: snapshot2.val().Option1,
+                  Option2: snapshot2.val().Option2,
+                  Option3: snapshot2.val().Option3,
+                  Question: snapshot2.val().Question,
+                  finishDate: snapshot2.val().finishDate,
+                  Reason: reason
+                });// burda tarihe göre sıralandığı için db de gelen key de tarih key olduğundan karşılaştırma yapıp hangisi geldiyse onu siliyorum.
+                    snapshot2.ref.remove(function(error){
+                      alert("Rejected is success!");
+                      timedRefresh(1);
+                    });
+              });;
+            });
+            var from,to,subject,text;
+              to= email
+              subject= electionName
+              text="Your election is rejected by admin. Incorrect questions, incorrect answers, irregularities or incomplete information. Please review these conditions and try again.\n\n\nHave a good day :) \n\nContact us : info@ivoted.com"
+              $.get("http://localhost:3000/send",{to:to,subject:subject,text:text},function(data){
+              if(data=="sent")
+              {
+                console.log("success");
+              }
+            });
           }
-        });
-      }
-
+        }
     }
 
     function currentTime(){

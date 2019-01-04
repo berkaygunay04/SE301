@@ -115,22 +115,17 @@
 
                   <div>
                     <select class="selectCategory" id="CategorySelect">
-                      <option value="Category" disabled selected>Select Category</option>
-                      <option value="Art">Art</option>
-                      <option value="Cinema">Cinema</option>
-                      <option value="Culture">Culture</option>
-                      <option value="History">History</option>
-                      <option value="Science">Science</option>
-                      <option value="Sport">Sport</option>
-                    </select><br>
-                    <label for="start">Finish date:</label>
+                      <option value="Category" disabled selected>Select Category*</option>
+                    </select>
+                    <label>Add New Category :</label> <input id="categoryInput" placeholder="Enter Category"></input><button onclick="addCategory()" style="margin-left:5px">Add</button><br>
+                    <label for="start">Finish date*:</label>
                     <input type="date" id="finishID" name="trip-start"><br>
-                    <input id="electionName" placeholder="Enter Election Name"></input><br>
-                    <textarea class="textareaStyle" id="textarea1" placeholder="Your Ouestion"></textarea>
+                    <input id="electionName" placeholder="Enter Election Name*"></input><br>
+                    <textarea class="textareaStyle" id="textarea1" placeholder="Your Ouestion*"></textarea>
                     <br>
-                    <input id="answer1" placeholder="Enter Answer"></input><br>
-                    <input id="answer2" placeholder="Enter Answer"></input><br>
-                    <input id="answer3" placeholder="Enter Answer"></input><br>
+                    <input id="answer1" placeholder="Enter Answer*"></input><br>
+                    <input id="answer2" placeholder="Enter Answer*"></input><br>
+                    <input id="answer3" placeholder="Enter Answer*"></input><br>
                     <button type="reset" class="addButton" onclick="addElection()">Add Election</button>
                   </div>
 
@@ -196,6 +191,31 @@
         console.error('Sign Out Error', error);
       });
     }
+
+    //addnewCategory
+
+    function addCategory(){
+      var categoryStr = document.getElementById("categoryInput").value
+      if(categoryStr == ""){
+        alert("Please enter category");
+      }else{
+        firebase.database().ref("Category").update({
+          [categoryStr] : categoryStr
+        });
+        alert("Category adding is success!");
+      }
+    }
+
+    function getCategories(){
+      var x = document.getElementById("CategorySelect");
+      firebase.database().ref("Category").on("child_added",function(snapshot){
+        var option = document.createElement("option");
+        option.text = snapshot.key;
+        x.add(option);
+      });
+    }
+
+    getCategories();
 
     var countPending = 0;
     var badgePending = function(){
