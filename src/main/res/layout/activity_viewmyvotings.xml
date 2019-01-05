@@ -68,34 +68,24 @@
         android:weightSum="3"
 
         >
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/continuedelections"
-            android:layout_weight="1"
-            android:hint="Continued"
-            android:background="@drawable/vieweditbuttonleft"
-            android:textColorHint="#ffff"
-            />
-        <Button
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/yeni"
-            android:layout_weight="1"
-            android:hint="new"
-            android:background="@drawable/vieweditbuttonleft"
-            android:textColorHint="#ffff"
-            />
 
         <Button
-            android:layout_width="match_parent"
+            android:id="@+id/continuedelections"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:id="@+id/completeelections"
             android:layout_weight="1"
-            android:hint="Completed"
+            android:background="@drawable/vieweditbuttonleft"
+            android:hint="Continued"
+            android:textColorHint="#ffff" />
+
+        <Button
+            android:id="@+id/completeelections"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
             android:background="@drawable/vieweditbuttonright"
-            android:textColorHint="#ffff"
-            />
+            android:hint="Completed"
+            android:textColorHint="#ffff" />
 
     </LinearLayout>
 

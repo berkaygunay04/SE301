@@ -15,18 +15,29 @@
         android:weightSum="16"
 
         >
-        <ImageView
-            android:id="@+id/speaker"
+        <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_gravity="center"
-            android:foregroundGravity="center"
-            android:layout_weight="8"
-            android:src="@drawable/user"
-            android:paddingTop="20dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
 
 
-            />
+            <ImageView
+                android:id="@+id/speaker"
+                android:layout_width="wrap_content"
+                android:layout_height="100dp"
+                android:layout_gravity="center"
+                android:layout_centerHorizontal="true"
+                android:foregroundGravity="center"
+                android:src="@drawable/user" />
+
+            <Button
+                android:id="@+id/changephoto"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/speaker"
+                android:layout_centerHorizontal="true"
+                android:text="Change Photo" />
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/emailUpdate"
@@ -35,7 +46,7 @@
             android:layout_marginLeft="50dp"
             android:layout_marginTop="5dp"
             android:layout_marginRight="50dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="5dp"
             android:layout_weight="1"
             android:background="@drawable/edittextradius"
             android:inputType="textPersonName"
@@ -43,8 +54,7 @@
             android:paddingTop="4dp"
             android:textColor="@color/black"
             android:textSize="24sp"
-            android:textStyle="bold"
-            />
+            android:textStyle="bold" />
 
         <EditText
             android:id="@+id/name"
@@ -54,7 +64,7 @@
             android:layout_marginLeft="50dp"
             android:layout_marginTop="5dp"
             android:layout_marginRight="50dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="5dp"
             android:layout_weight="1"
             android:background="@drawable/edittextradius"
             android:clickable="false"
@@ -73,12 +83,12 @@
             android:layout_marginLeft="50dp"
             android:layout_marginTop="5dp"
             android:layout_marginRight="50dp"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="5dp"
             android:layout_weight="1"
             android:background="@drawable/edittextradius"
+            android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
             android:gravity="center"
             android:inputType="textPersonName"
-            android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
             android:maxLength="10"
             android:maxLines="1"
             android:textSize="24sp" />

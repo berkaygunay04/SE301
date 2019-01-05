@@ -12,7 +12,15 @@
         android:layout_width="match_parent"
         android:layout_height="51dp"
         android:background="@drawable/back4">
-
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="60dp"
+            android:gravity="center_vertical|center_horizontal"
+            android:text="Profile Settings"
+            android:textColor="@android:color/white"
+            android:textSize="18sp"
+            android:textStyle="bold" />
         <android.support.v7.widget.Toolbar
             android:id="@+id/toolba345"
             android:layout_width="match_parent"
@@ -21,89 +29,85 @@
 
         </android.support.v7.widget.Toolbar>
     </RelativeLayout>
+
     <LinearLayout
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
         android:layout_gravity="top"
         android:gravity="center_vertical"
         android:orientation="vertical"
-        android:weightSum="20"
-
         >
 
-        <ImageView
-            android:id="@+id/userimg"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:layout_gravity="center"
-            android:layout_weight="6"
-            android:foregroundGravity="center"
-            android:paddingTop="0dp"
 
 
-            android:src="@drawable/user" />
+            <ImageView
+                android:id="@+id/userimg"
+                android:layout_width="wrap_content"
+                android:layout_height="100dp"
+                android:layout_gravity="center"
+                android:foregroundGravity="center"
+                android:src="@drawable/user" />
+
 
         <TextView
             android:id="@+id/name"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_height="40dp"
             android:layout_marginLeft="60dp"
             android:layout_marginTop="10dp"
             android:layout_marginRight="60dp"
             android:layout_marginBottom="10dp"
-            android:layout_weight="1"
             android:background="@drawable/edittextradius"
             android:gravity="center"
             android:hint="Name"
-            android:textSize="18sp" />
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/surname"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_height="40dp"
             android:layout_marginLeft="60dp"
             android:layout_marginTop="10dp"
             android:layout_marginRight="60dp"
             android:layout_marginBottom="10dp"
-            android:layout_weight="1"
             android:background="@drawable/edittextradius"
             android:gravity="center"
             android:hint="Surname"
-            android:textSize="18sp" />
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
         <TextView
             android:id="@+id/mail"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_height="40dp"
             android:layout_marginLeft="60dp"
             android:layout_marginTop="10dp"
             android:layout_marginRight="60dp"
             android:layout_marginBottom="10dp"
-            android:layout_weight="1"
             android:background="@drawable/edittextradius"
             android:gravity="center"
             android:hint="Mail"
-            android:textSize="18sp" />
+            android:textColor="@color/black"
+            android:textSize="18sp"
+            android:textStyle="bold" />
 
 
         <Button
             android:id="@+id/edit"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0"
             android:layout_gravity="center_horizontal"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/editbutton"
             android:gravity="center"
             android:hint="Edit"
-            android:textColorHint="#ffff"
-            android:textStyle="bold"
-            android:background="@drawable/editbutton"
-            android:layout_marginBottom="10dp"
-            android:layout_marginTop="20dp"
             android:maxWidth="150dp"
-            />
+            android:textColorHint="#ffff"
+            android:textStyle="bold" />
 
 
         <Button
@@ -112,7 +116,6 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal"
             android:layout_marginBottom="10dp"
-            android:layout_weight="0"
             android:background="@drawable/editbutton1"
             android:gravity="center"
             android:hint="Freeze Profile"

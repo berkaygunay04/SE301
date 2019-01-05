@@ -4,16 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ApplyElections">
+    tools:context=".EditElection">
     <LinearLayout
-        android:id="@+id/electionlayout"
+        android:id="@+id/electionlayout1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         >
 
         <Spinner
-            android:id="@+id/spinner"
+            android:id="@+id/spinner1"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_centerHorizontal="true"
@@ -31,7 +31,7 @@
 
 
             <TextView
-                android:id="@+id/edittext_tarih"
+                android:id="@+id/edittext_tarih1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -42,7 +42,7 @@
                 android:textStyle="bold" />
 
             <Button
-                android:id="@+id/pickdate"
+                android:id="@+id/pickdate1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Pick Date" />
@@ -50,7 +50,7 @@
 
         </LinearLayout>
         <EditText
-            android:id="@+id/electionname"
+            android:id="@+id/electionname1"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginLeft="10dp"
@@ -60,7 +60,7 @@
             android:inputType="text" />
 
         <EditText
-            android:id="@+id/question"
+            android:id="@+id/question1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
@@ -70,7 +70,7 @@
             android:inputType="text" />
 
         <EditText
-            android:id="@+id/option1"
+            android:id="@+id/option11"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
@@ -80,7 +80,7 @@
             android:inputType="text" />
 
         <EditText
-            android:id="@+id/option2"
+            android:id="@+id/option21"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
@@ -90,7 +90,7 @@
             android:inputType="text" />
 
         <EditText
-            android:id="@+id/option3"
+            android:id="@+id/option31"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
@@ -103,12 +103,12 @@
     </LinearLayout>
 
     <Button
-        android:id="@+id/applybutton"
+        android:id="@+id/applybutton1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-      android:layout_below="@+id/electionlayout"
+        android:layout_below="@+id/electionlayout1"
         android:layout_centerHorizontal="true"
-        android:text="Apply Electıon" />
+        android:text="Edit Electıon" />
 
 
 </RelativeLayout>

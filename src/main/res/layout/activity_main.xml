@@ -25,85 +25,86 @@
         android:clickable="true"
         android:elevation="5dp"
         android:src="@drawable/ic_delete" />
+
     <LinearLayout
-     android:id="@+id/need"
-     android:layout_width="match_parent"
-     android:layout_height="wrap_content"
-     android:orientation="vertical"
-     android:layout_centerInParent="true">
+        android:id="@+id/need"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical">
 
 
-     <LinearLayout
-         android:layout_width="match_parent"
-         android:layout_height="wrap_content"
-         android:layout_marginBottom="10dp"
-         android:orientation="horizontal">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="10dp"
+            android:orientation="horizontal">
 
-         <EditText
-             android:id="@+id/name"
-             android:layout_width="wrap_content"
-             android:layout_height="50dp"
-             android:layout_marginLeft="8dp"
-             android:hint="Enter Your Name"
-             android:inputType="textPersonName"
-             android:maxLength="25"
-             android:maxLines="1"
-             android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ" />
+            <EditText
+                android:id="@+id/name"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_marginLeft="8dp"
+                android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                android:hint="Enter Your Name"
+                android:inputType="textPersonName"
+                android:maxLength="25"
+                android:maxLines="1" />
 
-         <EditText
-             android:id="@+id/surname"
-             android:layout_width="wrap_content"
-             android:layout_height="50dp"
-             android:layout_marginLeft="10dp"
-             android:hint="Enter Your SurName"
-             android:inputType="textPersonName"
-             android:maxLength="20"
-             android:maxLines="1"
-             android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"/>
-     </LinearLayout>
+            <EditText
+                android:id="@+id/surname"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_marginLeft="10dp"
+                android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ"
+                android:hint="Enter Your SurName"
+                android:inputType="textPersonName"
+                android:maxLength="20"
+                android:maxLines="1" />
+        </LinearLayout>
 
-     <EditText
-         android:id="@+id/email"
-         android:layout_width="match_parent"
-         android:layout_height="50dp"
-         android:layout_marginLeft="10dp"
-         android:layout_marginRight="10dp"
-         android:hint="Enter Your Email"
-         android:maxLength="40"
-         android:maxLines="1"
-         android:inputType="textEmailAddress" />
+        <EditText
+            android:id="@+id/email"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:hint="Enter Your Email"
+            android:inputType="textEmailAddress"
+            android:maxLength="40"
+            android:maxLines="1" />
 
-     <EditText
-         android:id="@+id/password"
-         android:layout_width="match_parent"
-         android:layout_height="50dp"
-         android:layout_marginLeft="10dp"
-         android:layout_marginRight="10dp"
-         android:hint="Enter Password"
-         android:maxLength="25"
-         android:maxLines="1"
-         android:inputType="textPassword" />
+        <EditText
+            android:id="@+id/password"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:hint="Enter Password"
+            android:inputType="textPassword"
+            android:maxLength="25"
+            android:maxLines="1" />
 
-     <TextView
-         android:layout_width="match_parent"
-         android:layout_height="match_parent"
-         android:layout_marginLeft="10dp"
-         android:layout_marginRight="10dp"
-         android:text="Password must be at least 8 characters(1 Upper word,1 integer,1 special character)" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:text="Password must be at least 8 characters(1 Upper word,1 integer,1 special character)" />
 
-     <EditText
-         android:id="@+id/confirmpass"
-         android:layout_width="match_parent"
-         android:layout_height="50dp"
-         android:layout_marginLeft="10dp"
-         android:layout_marginTop="2dp"
-         android:layout_marginRight="10dp"
-         android:maxLength="25"
-         android:maxLines="1"
-         android:hint="Confirm Password"
-         android:inputType="textPassword" />
+        <EditText
+            android:id="@+id/confirmpass"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginRight="10dp"
+            android:hint="Confirm Password"
+            android:inputType="textPassword"
+            android:maxLength="25"
+            android:maxLines="1" />
 
- </LinearLayout>
+    </LinearLayout>
 
     <br.com.simplepass.loading_button_lib.customViews.CircularProgressButton
         android:id="@+id/kodgir"

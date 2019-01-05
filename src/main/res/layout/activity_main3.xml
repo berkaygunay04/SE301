@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/ph6"
     >
     <LinearLayout
         android:id="@+id/login1"
@@ -13,18 +14,23 @@
         android:layout_marginLeft="16dp"
         android:layout_marginRight="16dp"
         android:layout_centerInParent="true">
+
         <EditText
+            android:id="@+id/email"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="E-mail"
-            android:id="@+id/email"/>
+            android:textColor="@android:color/white"
+            android:textColorHint="@android:color/white" />
+
         <EditText
+            android:id="@+id/password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Password"
-            android:id="@+id/password"
             android:inputType="textPassword"
-            />
+            android:textColor="@android:color/white"
+            android:textColorHint="@android:color/white" />
 
         <Button
             android:id="@+id/login"
@@ -44,6 +50,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="15dp"
         android:onClick="openActivity15"
+        android:textColor="@android:color/white"
         android:textSize="18sp"
         android:textStyle="bold" />
 

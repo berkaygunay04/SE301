@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ApplyElections">
+    tools:context=".EditDeleted">
     <LinearLayout
         android:id="@+id/electionlayout"
         android:layout_width="match_parent"
@@ -13,7 +13,7 @@
         >
 
         <Spinner
-            android:id="@+id/spinner"
+            android:id="@+id/spinnerdeleted"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_centerHorizontal="true"
@@ -31,7 +31,7 @@
 
 
             <TextView
-                android:id="@+id/edittext_tarih"
+                android:id="@+id/edittext_tarih11"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
@@ -42,73 +42,103 @@
                 android:textStyle="bold" />
 
             <Button
-                android:id="@+id/pickdate"
+                android:id="@+id/pickdate11"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="Pick Date" />
 
 
         </LinearLayout>
-        <EditText
-            android:id="@+id/electionname"
+
+        <TextView
+            android:id="@+id/electionname11"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
             android:layout_marginRight="10dp"
-            android:hint="Enter Election Name"
-            android:inputType="text" />
+            android:hint="Election Name"
+            android:inputType="text"
+            android:textColor="@color/black"
+            android:textSize="24sp"
+            android:textStyle="bold" />
 
-        <EditText
-            android:id="@+id/question"
+        <TextView
+            android:id="@+id/question11"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
             android:layout_marginRight="10dp"
-            android:hint="Enter Question"
-            android:inputType="text" />
+            android:hint="Question"
+            android:inputType="text"
+            android:textColor="@color/black"
+            android:textSize="24sp"
+            android:textStyle="bold" />
 
-        <EditText
-            android:id="@+id/option1"
+        <TextView
+            android:id="@+id/option11"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
             android:layout_marginRight="10dp"
-            android:hint="Enter Option 1"
-            android:inputType="text" />
+            android:hint="Option 1"
+            android:inputType="text"
+            android:textColor="@color/black"
+            android:textSize="24sp"
+            android:textStyle="bold" />
 
-        <EditText
-            android:id="@+id/option2"
+        <TextView
+            android:id="@+id/option21"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
             android:layout_marginRight="10dp"
-            android:hint=" Enter Option 2"
-            android:inputType="text" />
+            android:hint="Option 2"
+            android:inputType="text"
+            android:textColor="@color/black"
+            android:textSize="24sp"
+            android:textStyle="bold" />
 
-        <EditText
-            android:id="@+id/option3"
+        <TextView
+            android:id="@+id/option31"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
             android:layout_marginRight="10dp"
-            android:hint="Enter Option 3"
-            android:inputType="text" />
+            android:hint="Option 3"
+            android:inputType="text"
+            android:textColor="@color/black"
+            android:textSize="24sp"
+            android:textStyle="bold" />
 
+        <EditText
+            android:id="@+id/contact"
+            android:layout_width="match_parent"
+            android:layout_height="88dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginRight="10dp"
+            android:gravity="top|left"
+            android:hint="Write Your Comment"
+            android:inputType="textMultiLine|textNoSuggestions"
+            android:maxLength="150"
+            android:paddingLeft="3dp" />
 
     </LinearLayout>
 
     <Button
-        android:id="@+id/applybutton"
+        android:id="@+id/editdeleted"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-      android:layout_below="@+id/electionlayout"
+        android:layout_below="@+id/electionlayout"
         android:layout_centerHorizontal="true"
-        android:text="Apply Electıon" />
+        android:text="Send" />
 
 
 </RelativeLayout>

@@ -5,6 +5,7 @@
     android:id="@+id/anasayfa"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/ph"
     tools:context=".MainPage">
 
     <RelativeLayout
@@ -55,30 +56,28 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/textView"
         android:layout_marginTop="40dp"
-        android:layout_weight="8"
-        android:alignmentMode="alignMargins"
         android:columnCount="3"
-        android:columnOrderPreserved="false"
         android:padding="5dp"
         android:rowCount="1">
 
         <android.support.v7.widget.CardView
             android:layout_width="45dp"
-            android:layout_height="110dp"
+            android:layout_height="wrap_content"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
             android:layout_marginLeft="4dp"
             android:layout_marginRight="4dp"
             android:layout_marginBottom="5dp"
             app:cardCornerRadius="8dp"
+
             app:cardElevation="8dp">
 
             <LinearLayout
                 android:layout_width="141dp"
                 android:layout_height="110dp"
+                android:orientation="vertical"
                 android:layout_gravity="center_horizontal|center_vertical"
-                android:layout_margin="16dp"
-                android:orientation="vertical">
+          >
 
                 <ImageView
                     android:id="@+id/burgerr"
@@ -101,7 +100,7 @@
 
         <android.support.v7.widget.CardView
             android:layout_width="45dp"
-            android:layout_height="110dp"
+            android:layout_height="wrap_content"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
             android:layout_marginLeft="4dp"
@@ -113,9 +112,8 @@
             <LinearLayout
                 android:layout_width="141dp"
                 android:layout_height="87dp"
-                android:layout_gravity="center_horizontal|center_vertical"
-                android:layout_margin="16dp"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:layout_gravity="center_horizontal|center_vertical">
 
                 <ImageView
                     android:id="@+id/içecekk"
@@ -138,7 +136,7 @@
 
         <android.support.v7.widget.CardView
             android:layout_width="45dp"
-            android:layout_height="110dp"
+            android:layout_height="wrap_content"
             android:layout_rowWeight="1"
             android:layout_columnWeight="1"
             android:layout_marginLeft="4dp"
@@ -150,9 +148,8 @@
             <LinearLayout
                 android:layout_width="141dp"
                 android:layout_height="87dp"
-                android:layout_gravity="center_horizontal|center_vertical"
-                android:layout_margin="16dp"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:layout_gravity="center_horizontal|center_vertical">
 
                 <ImageView
                     android:id="@+id/bakla"
