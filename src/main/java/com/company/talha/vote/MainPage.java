@@ -47,7 +47,7 @@ public class MainPage extends AppCompatActivity {
     LeaderAdapter LeaderAdapter;
     GridLayout gridLayout1;
     Toolbar toolbar1;
-    SimpleDateFormat sdf2;
+    SimpleDateFormat sdf2,sdf3;
     ImageButton imageButton4,
     imageButton5,
     imageButton6;
@@ -75,6 +75,7 @@ public class MainPage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main4);
         sdf2 = new SimpleDateFormat("dd");
+        sdf3 = new SimpleDateFormat("MM");
         gridLayout1=(GridLayout)findViewById(R.id.bistro);
         LeaderAdapter=new LeaderAdapter(this);
         leaderlist=(ListView)findViewById(R.id.leaderlist);
@@ -83,8 +84,6 @@ public class MainPage extends AppCompatActivity {
         leaders1=new ArrayList<Leaders>();
         leaderlayout=(RelativeLayout)findViewById(R.id.leadership);
         leaderlayout.setVisibility(View.INVISIBLE);
-
-
         toolbar1 = (Toolbar) findViewById(R.id.toolbar1);
         setSupportActionBar(toolbar1);
         anasayfa=(RelativeLayout)findViewById(R.id.anasayfa);
@@ -134,12 +133,13 @@ public class MainPage extends AppCompatActivity {
             getSupportActionBar().setTitle("I-Voted");
         }
         if (mAuth.getCurrentUser() != null) {
-       menuL3.child(mAuth.getCurrentUser().getUid()).child("Freeze").addValueEventListener(new ValueEventListener() {
+       menuL3.child(mAuth.getCurrentUser().getUid()).addValueEventListener(new ValueEventListener() {
            @Override
            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-               Boolean freeze=dataSnapshot.getValue(Boolean.class);
-               if(freeze!=null)
-               if(freeze){
+               Boolean freeze=dataSnapshot.child("Freeze").getValue(Boolean.class);
+               String free=dataSnapshot.child("Free").getValue(String.class);
+               if(freeze!=null && free!=null){
+               if(freeze && !free.equals("Açmak istiyorum")){
                    AlertDialog.Builder builder1=new AlertDialog.Builder(MainPage.this);
                    builder1.setTitle("Your Profile Freezed!");
                    builder1.setMessage("Please repeat sign in or create new account!");
@@ -158,9 +158,25 @@ public class MainPage extends AppCompatActivity {
                        public void onClick(DialogInterface dialog, int which) {
                            FirebaseUser currentUser = mAuth.getCurrentUser();
                            dbUser.child(currentUser.getUid()).child("Free").setValue("Açmak istiyorum");
+
                        }
                    });
                    builder1.show();
+               }
+               if(freeze && free.equals("Açmak istiyorum")){
+                   AlertDialog.Builder builder2=new AlertDialog.Builder(MainPage.this);
+                   builder2.setTitle("Refreezing Operation");
+                   builder2.setMessage("We are doing your profile Refreeze.Please wait 1 or 2 hours!");
+                   builder2.setCancelable(false);
+                   builder2.setPositiveButton("Okey", new DialogInterface.OnClickListener() {
+                       @Override
+                       public void onClick(DialogInterface dialogInterface, int i) {
+                           finish();
+                       }
+                   });
+
+                   builder2.show();
+               }
                }
            }
 
@@ -231,10 +247,15 @@ public class MainPage extends AppCompatActivity {
                         for (DataSnapshot ds1 : ds.getChildren()) {
                             id = ds1.getKey();
                             String finishdate = ds1.child("finishDate").getValue(String.class).substring(0,2);
-                            Integer a,b;
+                            String finishmonth=ds1.child("finishDate").getValue(String.class).substring(3,5);
+                            Integer a,b,c,cnow;
                             a=Integer.parseInt(sdf2.format(tarih));
                             b=Integer.parseInt(finishdate);
-                            if(a>b){
+                            c=Integer.parseInt(finishmonth);
+                            cnow=Integer.parseInt(sdf3.format(tarih));
+                             System.out.println("cnow"+cnow);
+                            System.out.println("c"+c);
+                            if(a>b && c==cnow){
                                 Boolean admin = ds1.child("AdminOnay").getValue(Boolean.class);
                                 String dateType=ds1.child("DateType").getValue(String.class);
                                 Boolean durum=ds1.child("Durum").getValue(Boolean.class);
@@ -313,10 +334,13 @@ public class MainPage extends AppCompatActivity {
                         gridLayout1.setVisibility(View.INVISIBLE);
                     }else if(finalI==1){
                         Intent intentVote=new Intent(MainPage.this,Elections.class);
+                        if(getSupportActionBar()!=null){
+                            intentVote.putExtra("nameUser", getSupportActionBar().getTitle().toString());
+                        }
                         startActivity(intentVote);
                     }else if(finalI==2){
                         if(mAuth.getCurrentUser()==null){
-                            Toast.makeText(MainPage.this,"Lütfen giriş yapınız!",Toast.LENGTH_SHORT).show();
+                            Toast.makeText(MainPage.this,"Please Login to create elections!",Toast.LENGTH_SHORT).show();
                         }else{
                             Intent intentApply=new Intent(MainPage.this,ApplyElections.class);
                             startActivity(intentApply);

@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -39,11 +40,13 @@ public class Elections extends AppCompatActivity {//bütün electionları burda 
     DatabaseReference myRef5 = database.getReference("Results");
     FirebaseAuth mAuth;
     ArrayList<ElectionObject> listOfElections = new ArrayList<>();
+    DatabaseReference dynamic = database.getReference("Category");
+    DynamicButton dynamicButtonAdapter;
     ElectionsAdapter adapter;
     PopularAdapter adapterPopular;
     ResultAdapter resultAdapter;
     public String Selection;
-    String id,
+    String id,userName,
     u;
     Button sport,
     history,
@@ -60,10 +63,11 @@ public class Elections extends AppCompatActivity {//bütün electionları burda 
     String choosenCategoryPopular;
     ListView listView,
     popularlistview,
-    resultListView;
-    TextView thereisno;
+    resultListView,dynamicList;
+    TextView thereisno,userNameTextView;
     ArrayList<PopularElections> populars;
     ArrayList<String> popularsID;
+    ArrayList<String>dynamicListClick;
     ArrayList<String> CategoryPopular;
     boolean k=false;
     LinearLayout butonlar;
@@ -75,34 +79,38 @@ public class Elections extends AppCompatActivity {//bütün electionları burda 
         populars=new ArrayList<>();
         popularsID=new ArrayList<>();
         CategoryPopular=new ArrayList<>();
-        sport=(Button)findViewById(R.id.sport);//
-        history=(Button)findViewById(R.id.history);//
-        culture=(Button)findViewById(R.id.culture);//
-        science=(Button)findViewById(R.id.science);
-        cinema=(Button)findViewById(R.id.cinema);//
-        art=(Button)findViewById(R.id.art);//
+        dynamicListClick=new ArrayList<>();
         popularElections=(Button)findViewById(R.id.popularelections);
         resultsElections=(Button)findViewById(R.id.results);
         categories=(Button)findViewById(R.id.categories);
         ürünara=(EditText)findViewById(R.id.ürünara);
-        butonlar=(LinearLayout)findViewById(R.id.butonlar);
+        //butonlar=(LinearLayout)findViewById(R.id.butonlar);
         mAuth = FirebaseAuth.getInstance();
         thereisno=(TextView)findViewById(R.id.noelection);
         listView = (ListView) findViewById(R.id.listView);
         popularlistview = (ListView) findViewById(R.id.popularE);
         resultListView=(ListView)findViewById(R.id.resutsE);
+        dynamicList=(ListView)findViewById(R.id.dynamicList);
         toolbarelections=(Toolbar)findViewById(R.id.toolbaelections);
+        userNameTextView=(TextView)findViewById(R.id.userName);
         setSupportActionBar(toolbarelections);
         if(getSupportActionBar()!=null) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
             getSupportActionBar().setDisplayShowHomeEnabled(true);
         }
+
         FirebaseUser user = mAuth.getCurrentUser();
         if (user != null) {
 
         } else if (mAuth != null) {
 
+        }
+        if (getIntent().getExtras() != null) {//toolbar isim bastırma işlmeini burda yaptım
+            // selection = (getIntent().getExtras().getString("selection"));
+            userName = (getIntent().getExtras().getString("nameUser"));
+            userNameTextView.setText(userName);
+            //just test for selection post   Toast.makeText(Election.this, "Selection " + selection.toString(), Toast.LENGTH_SHORT).show();
         }
         adapter=new ElectionsAdapter(this);
         listView.setAdapter(adapter);
@@ -110,6 +118,8 @@ public class Elections extends AppCompatActivity {//bütün electionları burda 
         popularlistview.setAdapter(adapterPopular);
         resultAdapter=new ResultAdapter(this);
         resultListView.setAdapter(resultAdapter);
+        dynamicButtonAdapter=new DynamicButton(this);
+        dynamicList.setAdapter(dynamicButtonAdapter);
         categories.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -117,7 +127,8 @@ public class Elections extends AppCompatActivity {//bütün electionları burda 
                 ürünara.setVisibility(View.INVISIBLE);
                 thereisno.setVisibility(View.INVISIBLE);
                 resultListView.setVisibility(View.INVISIBLE);
-                butonlar.setVisibility(View.VISIBLE);
+               // butonlar.setVisibility(View.VISIBLE);
+                dynamicList.setVisibility(View.VISIBLE);
                 popularlistview.setVisibility(View.INVISIBLE);
                 adapter.deleteAll();
 
@@ -164,12 +175,31 @@ public class Elections extends AppCompatActivity {//bütün electionları burda 
 
             }
         });
+        dynamic.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                dynamicButtonAdapter.deleteAll();
+                for (DataSnapshot ds1 : dataSnapshot.getChildren()) {
+                    String dynamicCategory=ds1.getValue(String.class);
+                    if(dynamicCategory!=null){
+                        dynamicButtonAdapter.addItem(dynamicCategory);
+                        dynamicListClick.add(dynamicCategory);
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
         popularElections.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 listView.setVisibility(View.INVISIBLE);
                 ürünara.setVisibility(View.INVISIBLE);
-                butonlar.setVisibility(View.INVISIBLE);
+                //butonlar.setVisibility(View.INVISIBLE);
+                dynamicList.setVisibility(View.INVISIBLE);
                 thereisno.setVisibility(View.INVISIBLE);
                 resultListView.setVisibility(View.INVISIBLE);
                 popularlistview.setVisibility(View.VISIBLE);
@@ -181,389 +211,12 @@ public class Elections extends AppCompatActivity {//bütün electionları burda 
             public void onClick(View v) {
                 listView.setVisibility(View.INVISIBLE);
                 ürünara.setVisibility(View.INVISIBLE);
-                butonlar.setVisibility(View.INVISIBLE);
+                //butonlar.setVisibility(View.INVISIBLE);
+                dynamicList.setVisibility(View.INVISIBLE);
                 thereisno.setVisibility(View.INVISIBLE);
                 popularlistview.setVisibility(View.INVISIBLE);
                 resultListView.setVisibility(View.VISIBLE);
 
-            }
-        });
-        sport.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                k=false;
-                ürünara.getText().clear();
-                adapter.deleteAll();
-                k=true;
-                listView.setVisibility(View.VISIBLE);
-                ürünara.setVisibility(View.VISIBLE);
-                butonlar.setVisibility(View.INVISIBLE);
-                choosencategory="Sport";
-                myRef.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        adapter.deleteAll();
-                        for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                            String category = ds.getKey();
-
-                            if (category.equals("Sport")) {
-
-                                for (DataSnapshot ds1 : ds.getChildren()) {
-                                    id = ds1.getKey();
-                                    String name = ds1.child("ElectionName").getValue(String.class);
-                                    String date = ds1.child("DateType").getValue(String.class);
-                                    String type = ds1.child("Type").getValue(String.class);
-                                    if(type!=null){
-                                        if (type.equals("Admin Type")) {
-                                            adapter.addItem(new ElectionObject(name, date, R.drawable.adnmin, id));
-                                            listOfElections.add(new ElectionObject(name, date, R.drawable.adnmin, id));
-                                        }else{
-                                            adapter.addItem(new ElectionObject(name, date, R.drawable.user1, id));
-                                            listOfElections.add(new ElectionObject(name, date, R.drawable.user1, id));
-                                        }
-                                    }
-                                }
-                            }
-
-                        }
-                        if(adapter.ElectionadapterEmpty()){
-                            thereisno.setVisibility(View.VISIBLE);
-                        }else{
-                            thereisno.setVisibility(View.INVISIBLE);
-                        }
-
-                        // listOfElections.add(new Elections("Fatma vs Ayşegül","Time remain : 11 days 3 hour",R.drawable.user1));
-                        //listOfElections.add(new Elections("Selma vs Selen","Time remain : 10 days 3 hour",R.drawable.user1));
-                        // listOfElections.add(new Elections("Derya vs Fatmagül","Time remain : 10 days 3 hour",R.drawable.adnmin));
-                        // listOfElections.add(new Elections("Seher vs Ayşenur","Time remain : 9 days 3 hour",R.drawable.user1));
-                        //listOfElections.add(new Elections("Elif vs Deniz","Time remain : 5 days 3 hour",R.drawable.adnmin));
-                        //listOfElections.add(new Elections("Esra vs Esmanur","Time remain : 4 days 3 hour",R.drawable.user1));
-                        //listOfElections.add(new Elections("Ece vs Ceyda","Time remain : 3 days 3 hour",R.drawable.user1));
-                        //listOfElections.add(new Elections("Elif vs Naz","Time remain : 2 days 3 hour",R.drawable.adnmin));
-                        //listOfElections.add(new Elections("Esra vs Esma","Time remain : 3 days 3 hour",R.drawable.adnmin));
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-            }
-        });
-        cinema.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                k=false;
-                ürünara.getText().clear();
-                adapter.deleteAll();
-                k=true;
-                listView.setVisibility(View.VISIBLE);
-                ürünara.setVisibility(View.VISIBLE);
-                butonlar.setVisibility(View.INVISIBLE);
-                choosencategory="Cinema";
-                myRef.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        adapter.deleteAll();
-                        for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                            String category = ds.getKey();
-
-                            if (category.equals("Cinema")) {
-
-                                for (DataSnapshot ds1 : ds.getChildren()) {
-                                    id = ds1.getKey();
-                                    String name = ds1.child("ElectionName").getValue(String.class);
-                                    String date = ds1.child("DateType").getValue(String.class);
-                                    String type = ds1.child("Type").getValue(String.class);
-                                    if(type!=null){
-                                        if (type.equals("Admin Type")) {
-                                            adapter.addItem(new ElectionObject(name, date, R.drawable.adnmin, id));
-                                            listOfElections.add(new ElectionObject(name, date, R.drawable.adnmin, id));
-                                        }else{
-                                            adapter.addItem(new ElectionObject(name, date, R.drawable.user1, id));
-                                            listOfElections.add(new ElectionObject(name, date, R.drawable.user1, id));
-                                        }
-                                    }
-                                }
-                            }
-
-                        }
-                        if(adapter.ElectionadapterEmpty()){
-                            thereisno.setVisibility(View.VISIBLE);
-                        }else{
-                            thereisno.setVisibility(View.INVISIBLE);
-                        }
-
-                        // listOfElections.add(new Elections("Fatma vs Ayşegül","Time remain : 11 days 3 hour",R.drawable.user1));
-                        //listOfElections.add(new Elections("Selma vs Selen","Time remain : 10 days 3 hour",R.drawable.user1));
-                        // listOfElections.add(new Elections("Derya vs Fatmagül","Time remain : 10 days 3 hour",R.drawable.adnmin));
-                        // listOfElections.add(new Elections("Seher vs Ayşenur","Time remain : 9 days 3 hour",R.drawable.user1));
-                        //listOfElections.add(new Elections("Elif vs Deniz","Time remain : 5 days 3 hour",R.drawable.adnmin));
-                        //listOfElections.add(new Elections("Esra vs Esmanur","Time remain : 4 days 3 hour",R.drawable.user1));
-                        //listOfElections.add(new Elections("Ece vs Ceyda","Time remain : 3 days 3 hour",R.drawable.user1));
-                        //listOfElections.add(new Elections("Elif vs Naz","Time remain : 2 days 3 hour",R.drawable.adnmin));
-                        //listOfElections.add(new Elections("Esra vs Esma","Time remain : 3 days 3 hour",R.drawable.adnmin));
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-            }
-        });
-        culture.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                k=false;
-                ürünara.getText().clear();
-                adapter.deleteAll();
-                k=true;
-                listView.setVisibility(View.VISIBLE);
-                ürünara.setVisibility(View.VISIBLE);
-                butonlar.setVisibility(View.INVISIBLE);
-                choosencategory="Culture";
-                myRef.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        adapter.deleteAll();
-                        for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                            String category = ds.getKey();
-
-                            if (category.equals("Culture")) {
-
-                                for (DataSnapshot ds1 : ds.getChildren()) {
-                                    id = ds1.getKey();
-                                    String name = ds1.child("ElectionName").getValue(String.class);
-                                    String date = ds1.child("DateType").getValue(String.class);
-                                    String type = ds1.child("Type").getValue(String.class);
-                                    if(type!=null){
-                                        if (type.equals("Admin Type")) {
-                                            adapter.addItem(new ElectionObject(name, date, R.drawable.adnmin, id));
-                                            listOfElections.add(new ElectionObject(name, date, R.drawable.adnmin, id));
-                                        }else{
-                                            adapter.addItem(new ElectionObject(name, date, R.drawable.user1, id));
-                                            listOfElections.add(new ElectionObject(name, date, R.drawable.user1, id));
-                                        }
-                                    }
-                                }
-                            }
-
-                        }
-                        if(adapter.ElectionadapterEmpty()){
-                            thereisno.setVisibility(View.VISIBLE);
-                        }else{
-                            thereisno.setVisibility(View.INVISIBLE);
-                        }
-
-                        // listOfElections.add(new Elections("Fatma vs Ayşegül","Time remain : 11 days 3 hour",R.drawable.user1));
-                        //listOfElections.add(new Elections("Selma vs Selen","Time remain : 10 days 3 hour",R.drawable.user1));
-                        // listOfElections.add(new Elections("Derya vs Fatmagül","Time remain : 10 days 3 hour",R.drawable.adnmin));
-                        // listOfElections.add(new Elections("Seher vs Ayşenur","Time remain : 9 days 3 hour",R.drawable.user1));
-                        //listOfElections.add(new Elections("Elif vs Deniz","Time remain : 5 days 3 hour",R.drawable.adnmin));
-                        //listOfElections.add(new Elections("Esra vs Esmanur","Time remain : 4 days 3 hour",R.drawable.user1));
-                        //listOfElections.add(new Elections("Ece vs Ceyda","Time remain : 3 days 3 hour",R.drawable.user1));
-                        //listOfElections.add(new Elections("Elif vs Naz","Time remain : 2 days 3 hour",R.drawable.adnmin));
-                        //listOfElections.add(new Elections("Esra vs Esma","Time remain : 3 days 3 hour",R.drawable.adnmin));
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-            }
-        });
-        history.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                k=false;
-                ürünara.getText().clear();
-                adapter.deleteAll();
-                k=true;
-                listView.setVisibility(View.VISIBLE);
-                ürünara.setVisibility(View.VISIBLE);
-                butonlar.setVisibility(View.INVISIBLE);
-                choosencategory="History";
-                myRef.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        adapter.deleteAll();
-                        for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                            String category = ds.getKey();
-
-                            if (category.equals("History")) {
-
-                                for (DataSnapshot ds1 : ds.getChildren()) {
-                                    id = ds1.getKey();
-                                    String name = ds1.child("ElectionName").getValue(String.class);
-                                    String date = ds1.child("DateType").getValue(String.class);
-                                    String type = ds1.child("Type").getValue(String.class);
-                                    if(type!=null){
-                                        if (type.equals("Admin Type")) {
-                                            adapter.addItem(new ElectionObject(name, date, R.drawable.adnmin, id));
-                                            listOfElections.add(new ElectionObject(name, date, R.drawable.adnmin, id));
-                                        }else{
-                                            adapter.addItem(new ElectionObject(name, date, R.drawable.user1, id));
-                                            listOfElections.add(new ElectionObject(name, date, R.drawable.user1, id));
-                                        }
-                                    }
-                                }
-                            }
-
-                        }
-                        if(adapter.ElectionadapterEmpty()){
-                            thereisno.setVisibility(View.VISIBLE);
-                        }else{
-                            thereisno.setVisibility(View.INVISIBLE);
-                        }
-
-                        // listOfElections.add(new Elections("Fatma vs Ayşegül","Time remain : 11 days 3 hour",R.drawable.user1));
-                        //listOfElections.add(new Elections("Selma vs Selen","Time remain : 10 days 3 hour",R.drawable.user1));
-                        // listOfElections.add(new Elections("Derya vs Fatmagül","Time remain : 10 days 3 hour",R.drawable.adnmin));
-                        // listOfElections.add(new Elections("Seher vs Ayşenur","Time remain : 9 days 3 hour",R.drawable.user1));
-                        //listOfElections.add(new Elections("Elif vs Deniz","Time remain : 5 days 3 hour",R.drawable.adnmin));
-                        //listOfElections.add(new Elections("Esra vs Esmanur","Time remain : 4 days 3 hour",R.drawable.user1));
-                        //listOfElections.add(new Elections("Ece vs Ceyda","Time remain : 3 days 3 hour",R.drawable.user1));
-                        //listOfElections.add(new Elections("Elif vs Naz","Time remain : 2 days 3 hour",R.drawable.adnmin));
-                        //listOfElections.add(new Elections("Esra vs Esma","Time remain : 3 days 3 hour",R.drawable.adnmin));
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-            }
-        });
-        science.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                k=false;
-                ürünara.getText().clear();
-                adapter.deleteAll();
-                k=true;
-                listView.setVisibility(View.VISIBLE);
-                ürünara.setVisibility(View.VISIBLE);
-                butonlar.setVisibility(View.INVISIBLE);
-                choosencategory="Science";
-                myRef.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        adapter.deleteAll();
-                        for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                            String category = ds.getKey();
-
-                            if (category.equals("Science")) {
-
-                                for (DataSnapshot ds1 : ds.getChildren()) {
-                                    id = ds1.getKey();
-                                    String name = ds1.child("ElectionName").getValue(String.class);
-                                    String date = ds1.child("DateType").getValue(String.class);
-                                    String type = ds1.child("Type").getValue(String.class);
-                                    if(type!=null){
-                                        if (type.equals("Admin Type")) {
-                                            adapter.addItem(new ElectionObject(name, date, R.drawable.adnmin, id));
-                                            listOfElections.add(new ElectionObject(name, date, R.drawable.adnmin, id));
-                                        }else{
-                                            adapter.addItem(new ElectionObject(name, date, R.drawable.user1, id));
-                                            listOfElections.add(new ElectionObject(name, date, R.drawable.user1, id));
-                                        }
-                                    }
-                                }
-                            }
-
-                        }
-                        if(adapter.ElectionadapterEmpty()){
-                            thereisno.setVisibility(View.VISIBLE);
-                        }else{
-                            thereisno.setVisibility(View.INVISIBLE);
-                        }
-
-                        // listOfElections.add(new Elections("Fatma vs Ayşegül","Time remain : 11 days 3 hour",R.drawable.user1));
-                        //listOfElections.add(new Elections("Selma vs Selen","Time remain : 10 days 3 hour",R.drawable.user1));
-                        // listOfElections.add(new Elections("Derya vs Fatmagül","Time remain : 10 days 3 hour",R.drawable.adnmin));
-                        // listOfElections.add(new Elections("Seher vs Ayşenur","Time remain : 9 days 3 hour",R.drawable.user1));
-                        //listOfElections.add(new Elections("Elif vs Deniz","Time remain : 5 days 3 hour",R.drawable.adnmin));
-                        //listOfElections.add(new Elections("Esra vs Esmanur","Time remain : 4 days 3 hour",R.drawable.user1));
-                        //listOfElections.add(new Elections("Ece vs Ceyda","Time remain : 3 days 3 hour",R.drawable.user1));
-                        //listOfElections.add(new Elections("Elif vs Naz","Time remain : 2 days 3 hour",R.drawable.adnmin));
-                        //listOfElections.add(new Elections("Esra vs Esma","Time remain : 3 days 3 hour",R.drawable.adnmin));
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
-            }
-        });
-        art.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                k=false;
-                ürünara.getText().clear();
-                adapter.deleteAll();
-                k=true;
-                listView.setVisibility(View.VISIBLE);
-                ürünara.setVisibility(View.VISIBLE);
-                butonlar.setVisibility(View.INVISIBLE);
-                choosencategory="Art";
-                myRef.addValueEventListener(new ValueEventListener() {
-                    @Override
-                    public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                        adapter.deleteAll();
-                        for (DataSnapshot ds : dataSnapshot.getChildren()) {
-                            String category = ds.getKey();
-
-                            if (category.equals("Art")) {
-
-                                for (DataSnapshot ds1 : ds.getChildren()) {
-                                    id = ds1.getKey();
-                                    String name = ds1.child("ElectionName").getValue(String.class);
-                                    String date = ds1.child("DateType").getValue(String.class);
-                                    String type = ds1.child("Type").getValue(String.class);
-                                    if(type!=null){
-                                        if (type.equals("Admin Type")) {
-                                            adapter.addItem(new ElectionObject(name, date, R.drawable.adnmin, id));
-                                            listOfElections.add(new ElectionObject(name, date, R.drawable.adnmin, id));
-                                        }else{
-                                            adapter.addItem(new ElectionObject(name, date, R.drawable.user1, id));
-                                            listOfElections.add(new ElectionObject(name, date, R.drawable.user1, id));
-                                        }
-                                    }
-                                }
-                            }
-
-                        }
-                        if(adapter.ElectionadapterEmpty()){
-                            thereisno.setVisibility(View.VISIBLE);
-                        }else{
-                            thereisno.setVisibility(View.INVISIBLE);
-                        }
-
-                        // listOfElections.add(new Elections("Fatma vs Ayşegül","Time remain : 11 days 3 hour",R.drawable.user1));
-                        //listOfElections.add(new Elections("Selma vs Selen","Time remain : 10 days 3 hour",R.drawable.user1));
-                        // listOfElections.add(new Elections("Derya vs Fatmagül","Time remain : 10 days 3 hour",R.drawable.adnmin));
-                        // listOfElections.add(new Elections("Seher vs Ayşenur","Time remain : 9 days 3 hour",R.drawable.user1));
-                        //listOfElections.add(new Elections("Elif vs Deniz","Time remain : 5 days 3 hour",R.drawable.adnmin));
-                        //listOfElections.add(new Elections("Esra vs Esmanur","Time remain : 4 days 3 hour",R.drawable.user1));
-                        //listOfElections.add(new Elections("Ece vs Ceyda","Time remain : 3 days 3 hour",R.drawable.user1));
-                        //listOfElections.add(new Elections("Elif vs Naz","Time remain : 2 days 3 hour",R.drawable.adnmin));
-                        //listOfElections.add(new Elections("Esra vs Esma","Time remain : 3 days 3 hour",R.drawable.adnmin));
-
-                    }
-
-                    @Override
-                    public void onCancelled(@NonNull DatabaseError databaseError) {
-
-                    }
-                });
             }
         });
 
@@ -597,9 +250,22 @@ public class Elections extends AppCompatActivity {//bütün electionları burda 
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 //Test ok  Toast.makeText(vote.this,listOfElections.get(i).name, Toast.LENGTH_SHORT).show();
-                Selection = listOfElections.get(i).name;
-                id = listOfElections.get(i).id.toString();
-                selector();
+                if(mAuth.getCurrentUser()!=null){
+                    Selection = listOfElections.get(i).name;
+                    id = listOfElections.get(i).id.toString();
+                    selector();
+                }else{
+                    if(listOfElections.get(i).image==R.drawable.adnmin){
+                        Selection = listOfElections.get(i).name;
+                        id = listOfElections.get(i).id.toString();
+                        selector();
+                    }else{
+                        Toast.makeText(Elections.this,"Just Login Users can vote User's Elections",Toast.LENGTH_SHORT).show();
+                    }
+
+
+                }
+
             }
         });
         popularlistview.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -612,7 +278,6 @@ public class Elections extends AppCompatActivity {//bütün electionları burda 
                 selectorPopular();
             }
         });
-
 
 
 
@@ -981,6 +646,123 @@ public class Elections extends AppCompatActivity {//bütün electionları burda 
             return myView;
         }
     }
+
+
+    class DynamicButton extends BaseAdapter {
+        LayoutInflater userInflater;
+        ArrayList<String> ListOfCategories= new ArrayList(50);
+
+        DynamicButton(Activity activity) {
+            userInflater = (LayoutInflater) activity.getSystemService(
+                    Context.LAYOUT_INFLATER_SERVICE);
+
+        }
+
+        public void addItem(final String item) {
+            ListOfCategories.add(item);
+            notifyDataSetChanged();
+        }
+
+        public void deleteAll() {
+            ListOfCategories=new ArrayList<>();
+            notifyDataSetChanged();
+        }
+
+        public boolean ElectionadapterEmpty() {
+            if(ListOfCategories.size()==0){
+                return true;
+            }else{
+                return false;
+            }
+        }
+        @Override
+        public int getCount() {
+            return ListOfCategories.size();
+        }
+
+        @Override
+        public Object getItem(int i) {
+            return ListOfCategories.get(i);
+        }
+
+        @Override
+        public long getItemId(int i) {
+            return (i);
+        }
+
+        @Override
+        public View getView(final int i, View view, ViewGroup viewGroup) {
+            View myView = userInflater.inflate(R.layout.dynamic_category, null);
+            Button dynamicButton=(Button)myView.findViewById(R.id.dynamic);
+            dynamicButton.setText(ListOfCategories.get(i).toString());
+            dynamicButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    k=false;
+                    ürünara.getText().clear();
+                    adapter.deleteAll();
+                    k=true;
+                    listView.setVisibility(View.VISIBLE);
+                    ürünara.setVisibility(View.VISIBLE);
+                   // butonlar.setVisibility(View.INVISIBLE);
+                    dynamicList.setVisibility(View.INVISIBLE);
+                    choosencategory=ListOfCategories.get(i);
+                    myRef.addValueEventListener(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                            adapter.deleteAll();
+                            for (DataSnapshot ds : dataSnapshot.getChildren()) {
+                                String category = ds.getKey();
+
+                                if (category.equals(choosencategory)) {
+                                    for (DataSnapshot ds1 : ds.getChildren()) {
+                                        id = ds1.getKey();
+                                        String name = ds1.child("ElectionName").getValue(String.class);
+                                        String date = ds1.child("DateType").getValue(String.class);
+                                        String type = ds1.child("Type").getValue(String.class);
+                                        if(type!=null){
+                                            if (type.equals("Admin Type")) {
+                                                adapter.addItem(new ElectionObject(name, date, R.drawable.adnmin, id));
+                                                listOfElections.add(new ElectionObject(name, date, R.drawable.adnmin, id));
+                                            }else{
+                                                adapter.addItem(new ElectionObject(name, date, R.drawable.user1, id));
+                                                listOfElections.add(new ElectionObject(name, date, R.drawable.user1, id));
+                                            }
+                                        }
+                                    }
+                                }
+
+                            }
+                            if(adapter.ElectionadapterEmpty()){
+                                thereisno.setVisibility(View.VISIBLE);
+                            }else{
+                                thereisno.setVisibility(View.INVISIBLE);
+                            }
+
+                            // listOfElections.add(new Elections("Fatma vs Ayşegül","Time remain : 11 days 3 hour",R.drawable.user1));
+                            //listOfElections.add(new Elections("Selma vs Selen","Time remain : 10 days 3 hour",R.drawable.user1));
+                            // listOfElections.add(new Elections("Derya vs Fatmagül","Time remain : 10 days 3 hour",R.drawable.adnmin));
+                            // listOfElections.add(new Elections("Seher vs Ayşenur","Time remain : 9 days 3 hour",R.drawable.user1));
+                            //listOfElections.add(new Elections("Elif vs Deniz","Time remain : 5 days 3 hour",R.drawable.adnmin));
+                            //listOfElections.add(new Elections("Esra vs Esmanur","Time remain : 4 days 3 hour",R.drawable.user1));
+                            //listOfElections.add(new Elections("Ece vs Ceyda","Time remain : 3 days 3 hour",R.drawable.user1));
+                            //listOfElections.add(new Elections("Elif vs Naz","Time remain : 2 days 3 hour",R.drawable.adnmin));
+                            //listOfElections.add(new Elections("Esra vs Esma","Time remain : 3 days 3 hour",R.drawable.adnmin));
+
+                        }
+
+                        @Override
+                        public void onCancelled(@NonNull DatabaseError databaseError) {
+
+                        }
+                    });
+                }
+            });
+            return myView;
+        }
+    }
+
+
     @Override
     public void onBackPressed() {
         Intent intent = new Intent(Elections.this, MainPage.class);

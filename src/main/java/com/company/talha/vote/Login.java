@@ -166,7 +166,7 @@ public class Login extends AppCompatActivity {
 
                                                         } else {
                                                             Intent intent = new Intent(Login.this, MainPage.class)
-                                                                    .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                                                   .setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
                                                             finish();
                                                             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
                                                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);

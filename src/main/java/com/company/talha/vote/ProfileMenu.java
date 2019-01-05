@@ -106,6 +106,10 @@ public class ProfileMenu extends ListActivity {
             Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://nefisss.net/sozlesme.html"));
             startActivity(intent);
         }
+        if(models.get(position).getTitle()=="Web"){
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://nefisss.net/AdminPanel-301/login.html"));
+            startActivity(intent);
+        }
         if(models.get(position).getTitle()=="Developers"){
             Intent intent = new Intent(ProfileMenu.this, Developers.class);//Geliştiriciler
             startActivity(intent);
